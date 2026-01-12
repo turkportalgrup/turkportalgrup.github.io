@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TV Box Player</title>
+    <!-- HLS.js Player -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         * {
             margin: 0;
@@ -31,12 +33,12 @@
         /* Sol Kısım - Kanallar Listesi (30%) */
         .channels-sidebar {
             width: 30%;
-            max-width: 400px;
-            min-width: 250px;
+            max-width: 350px;
+            min-width: 280px;
             background-color: #111;
-            border-right: 3px solid #222;
+            border-right: 2px solid #222;
             overflow-y: auto;
-            padding: 15px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             z-index: 10;
@@ -59,69 +61,38 @@
             position: relative;
         }
         
-        /* Shaka Player için özel stil */
+        /* Video Player */
         #video-player {
             width: 100%;
             height: 100%;
             background-color: #000;
+            outline: none;
         }
         
-        /* Player Kontrolleri */
-        .player-controls {
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
-            padding: 20px;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 5;
-        }
-        
-        #player-container:hover .player-controls {
-            opacity: 1;
-        }
-        
-        .player-btn {
-            width: 50px;
-            height: 50px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border: 2px solid #555;
-            border-radius: 50%;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-        
-        .player-btn:hover {
-            background-color: rgba(76, 175, 80, 0.8);
-            border-color: #4CAF50;
-        }
-        
-        /* Şu anki Kanal Bilgisi */
-        .current-channel-display {
+        /* Kanal Değişimi Bildirimi */
+        .channel-notification {
             position: absolute;
             top: 20px;
-            left: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.85);
             padding: 12px 20px;
             border-radius: 10px;
             display: flex;
             align-items: center;
             z-index: 50;
-            border: 2px solid #444;
-            max-width: 350px;
+            border: 2px solid #4CAF50;
+            max-width: 400px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
         }
         
-        .current-channel-logo {
+        .channel-notification.show {
+            opacity: 1;
+        }
+        
+        .notif-channel-logo {
             width: 40px;
             height: 40px;
             border-radius: 6px;
@@ -132,7 +103,7 @@
             flex-shrink: 0;
         }
         
-        .current-channel-name {
+        .notif-channel-name {
             font-size: 18px;
             font-weight: bold;
             white-space: nowrap;
@@ -142,13 +113,18 @@
         
         /* Sidebar Başlık */
         .sidebar-header {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
             border-bottom: 2px solid #333;
+            position: sticky;
+            top: 0;
+            background-color: #111;
+            z-index: 1;
+            padding-top: 5px;
         }
         
         .sidebar-title {
-            font-size: 22px;
+            font-size: 20px;
             color: #fff;
             font-weight: bold;
             margin-bottom: 5px;
@@ -168,14 +144,14 @@
             display: inline-block;
             background: #4CAF50;
             color: white;
-            width: 26px;
-            height: 26px;
+            width: 24px;
+            height: 24px;
             border-radius: 4px;
             text-align: center;
-            line-height: 26px;
-            font-size: 14px;
+            line-height: 24px;
+            font-size: 12px;
             font-weight: bold;
-            margin-right: 10px;
+            margin-right: 8px;
         }
         
         /* Kanal Listesi */
@@ -187,8 +163,8 @@
         .channel-item {
             display: flex;
             align-items: center;
-            padding: 12px 15px;
-            margin-bottom: 8px;
+            padding: 10px 12px;
+            margin-bottom: 6px;
             background-color: #222;
             border-radius: 8px;
             cursor: pointer;
@@ -197,8 +173,7 @@
             position: relative;
         }
         
-        .channel-item:hover,
-        .channel-item:focus {
+        .channel-item:hover {
             background-color: #333;
             border-color: #4CAF50;
         }
@@ -210,13 +185,13 @@
         }
         
         .channel-logo {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
-            margin-right: 15px;
+            width: 45px;
+            height: 45px;
+            border-radius: 6px;
+            margin-right: 12px;
             object-fit: contain;
             background-color: #111;
-            padding: 5px;
+            padding: 4px;
             flex-shrink: 0;
         }
         
@@ -226,7 +201,7 @@
         }
         
         .channel-name {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             margin-bottom: 3px;
             white-space: nowrap;
@@ -235,11 +210,37 @@
         }
         
         .channel-group {
-            font-size: 12px;
+            font-size: 11px;
             color: #888;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+        
+        /* Scrollbar Stili - Akışkanlık için */
+        .channels-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .channels-sidebar::-webkit-scrollbar-track {
+            background: #222;
+            border-radius: 3px;
+        }
+        
+        .channels-sidebar::-webkit-scrollbar-thumb {
+            background: #4CAF50;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+        
+        .channels-sidebar::-webkit-scrollbar-thumb:hover {
+            background: #3d8b40;
+        }
+        
+        /* TV Box için optimizasyonlar */
+        .channel-item:focus {
+            outline: 3px solid #4CAF50;
+            outline-offset: 2px;
         }
         
         /* Tam Ekran Modu */
@@ -256,68 +257,30 @@
             height: 100%;
         }
         
-        body.fullscreen-mode .current-channel-display {
-            top: 30px;
-            left: 30px;
-            font-size: 20px;
-            padding: 15px 25px;
-        }
-        
-        body.fullscreen-mode .current-channel-name {
-            font-size: 22px;
-        }
-        
-        body.fullscreen-mode .current-channel-logo {
-            width: 50px;
-            height: 50px;
-        }
-        
-        /* Scrollbar Stili */
-        .channels-sidebar::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        .channels-sidebar::-webkit-scrollbar-track {
-            background: #222;
-        }
-        
-        .channels-sidebar::-webkit-scrollbar-thumb {
-            background: #555;
-            border-radius: 4px;
-        }
-        
-        .channels-sidebar::-webkit-scrollbar-thumb:hover {
-            background: #777;
-        }
-        
-        /* TV Box için optimizasyonlar */
-        .channel-item:focus {
-            outline: 3px solid #4CAF50;
-            outline-offset: 2px;
-        }
-        
         /* Kısayol Bilgilendirmesi */
         .shortcut-info {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            bottom: 15px;
+            right: 15px;
             background-color: rgba(0, 0, 0, 0.7);
-            padding: 10px 15px;
+            padding: 8px 12px;
             border-radius: 8px;
             z-index: 50;
-            border: 2px solid #444;
-            font-size: 12px;
+            border: 1px solid #444;
+            font-size: 11px;
             color: #aaa;
+            opacity: 0.7;
         }
         
         .shortcut-key {
             display: inline-block;
             background: #333;
             color: #4CAF50;
-            padding: 2px 6px;
-            border-radius: 4px;
+            padding: 1px 5px;
+            border-radius: 3px;
             margin: 0 2px;
             font-weight: bold;
+            font-size: 10px;
         }
         
         /* Yükleme göstergesi */
@@ -326,11 +289,11 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 20px;
+            font-size: 18px;
             color: #4CAF50;
             z-index: 10;
             background-color: rgba(0, 0, 0, 0.8);
-            padding: 15px 30px;
+            padding: 12px 25px;
             border-radius: 8px;
             display: none;
         }
@@ -339,34 +302,14 @@
             display: block;
         }
         
-        /* Çift tıklama bilgisi */
-        .double-click-info {
-            position: absolute;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 10px 20px;
-            border-radius: 8px;
-            z-index: 50;
-            border: 2px solid #444;
-            font-size: 14px;
-            color: #4CAF50;
-            display: none;
-        }
-        
-        body.fullscreen-mode .double-click-info {
-            display: block;
-        }
-        
         /* Küçük ekranlar için */
         @media (max-width: 768px) {
             .channels-sidebar {
-                width: 250px;
+                width: 280px;
             }
             
             .channel-item {
-                padding: 10px;
+                padding: 8px 10px;
             }
             
             .channel-logo {
@@ -377,13 +320,19 @@
             .channel-name {
                 font-size: 14px;
             }
+            
+            .channel-notification {
+                top: 10px;
+                padding: 10px 15px;
+                max-width: 300px;
+            }
         }
         
         /* Dikey mod için */
         @media (max-height: 600px) {
             .channel-item {
-                padding: 8px 10px;
-                margin-bottom: 5px;
+                padding: 6px 8px;
+                margin-bottom: 4px;
             }
             
             .channel-logo {
@@ -391,9 +340,27 @@
                 height: 35px;
             }
         }
+        
+        /* Çift tıklama bilgisi */
+        .double-click-hint {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 8px 12px;
+            border-radius: 8px;
+            z-index: 50;
+            border: 1px solid #444;
+            font-size: 11px;
+            color: #4CAF50;
+            opacity: 0.7;
+            display: none;
+        }
+        
+        body.fullscreen-mode .double-click-hint {
+            display: block;
+        }
     </style>
-    <!-- Shaka Player CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.7/controls.css">
 </head>
 <body>
     <div class="split-container">
@@ -401,7 +368,7 @@
         <div class="channels-sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-title">TV KANALLARI <span class="channel-count" id="channel-count">0</span></div>
-                <div style="font-size: 12px; color: #888; margin-top: 5px;">Çift tıklama: Tam ekran</div>
+                <div style="font-size: 11px; color: #888; margin-top: 3px;">Çift tıklama: Tam ekran</div>
             </div>
             
             <!-- Kanallar Listesi -->
@@ -414,127 +381,189 @@
         <div class="player-section">
             <div id="player-container">
                 <!-- Video Player -->
-                <video id="video-player" autoplay playsinline></video>
+                <video id="video-player" controls playsinline></video>
                 
-                <!-- Şu anki Kanal Bilgisi -->
-                <div class="current-channel-display">
-                    <img id="current-channel-logo" class="current-channel-logo" src="https://via.placeholder.com/40x40/111/fff?text=TV" alt="Kanal">
-                    <div id="current-channel-name" class="current-channel-name">Kanal Seçin</div>
+                <!-- Kanal Değişimi Bildirimi -->
+                <div class="channel-notification" id="channel-notification">
+                    <img id="notif-channel-logo" class="notif-channel-logo" src="https://via.placeholder.com/40x40/111/fff?text=TV" alt="Kanal">
+                    <div id="notif-channel-name" class="notif-channel-name">Kanal Seçin</div>
                 </div>
                 
                 <!-- Çift Tıklama Bilgisi -->
-                <div class="double-click-info">
+                <div class="double-click-hint">
                     Çift tıklayarak kanal değiştirin | ESC: Çıkış
                 </div>
                 
                 <!-- Yükleme Göstergesi -->
                 <div class="loading" id="loading">Yükleniyor...</div>
-                
-                <!-- Player Kontrolleri -->
-                <div class="player-controls">
-                    <button class="player-btn" id="play-pause-btn" title="Oynat/Duraklat">
-                        ⏸️
-                    </button>
-                    <button class="player-btn" id="volume-up-btn" title="Ses Aç">
-                        🔊
-                    </button>
-                    <button class="player-btn" id="volume-down-btn" title="Ses Kapat">
-                        🔈
-                    </button>
-                    <button class="player-btn" id="fullscreen-btn" title="Tam Ekran">
-                        ⛶
-                    </button>
-                </div>
             </div>
         </div>
         
         <!-- Kısayol Bilgilendirmesi -->
         <div class="shortcut-info">
-            <div><span class="shortcut-key">▲▼</span> Kanal Değiştir | <span class="shortcut-key">0-9</span> Kanal Seç | <span class="shortcut-key">ESC</span> Çıkış</div>
+            <div><span class="shortcut-key">▲▼</span> Kanal | <span class="shortcut-key">0-9</span> Seçim | <span class="shortcut-key">ESC</span> Çıkış</div>
         </div>
     </div>
 
-    <!-- Shaka Player Script -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.7/shaka-player.ui.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.7/shaka-player.compiled.js"></script>
-    
     <script>
-        // M3U verisi
-        const m3uData = `#EXTM3U x-tvg-url="https://epg.tvcdn.net/guide/tr-guide.xml"
-#EXTINF:-1 tvg-id="TRT1.tr" tvg-logo="http://assets.tvcdn.net/1045ea2f-2453-451d-a55f-ba17539641dd.png" group-title="Ulusal",FURKAN &SÜMEYYE
-https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdyqZLAjhCHVKsSfWJTjHrW_2MqYcwoJgKrTABw-e1ew&s=10
-#EXTINF:-1 tvg-id="TRT1.tr" tvg-logo="http://assets.tvcdn.net/1045ea2f-2453-451d-a55f-ba17539641dd.png" group-title="Ulusal",TRT 1
-https://trt.daioncdn.net/trt-1/master.m3u8?app=web
-#EXTINF:-1 tvg-id="ATV.tr" tvg-logo="http://assets.tvcdn.net/89a47b4b-5d20-4248-9f4c-a3d2756072dd.png" group-title="Ulusal",ATV
-http://116.202.238.88/ATV_TR/tracks-v1a1/index.m3u8
-#EXTINF:-1 tvg-id="ATV.tr" tvg-logo="http://assets.tvcdn.net/89a47b4b-5d20-4248-9f4c-a3d2756072dd.png" group-title="Ulusal - Yurt Disi",ATV AVRUPA
-http://162.212.179.33/dvrfl05/gin-atvavrupa/playlist.m3u8
-#EXTINF:-1 tvg-id="ShowTV.tr" tvg-logo="http://assets.tvcdn.net/9d873881-bb5e-40f0-88db-8c47aa215e5a.png" group-title="Ulusal",SHOW TV
-https://ciner.daioncdn.net/showtv/showtv.m3u8?ce=3&app=4bc856ef-4c68-4a94-bc87-37dfaaa66558
-#EXTINF:-1 tvg-id="ShowTV.tr" tvg-logo="https://i.imgur.com/456FWA7.png" group-title="Ulusal - Yurt Disi",SHOW TV MAX
-https://raw.githubusercontent.com/ipstreet312/freeiptv/master/ressources/tur/shmax.m3u8
-#EXTINF:-1 tvg-id="StarTV.tr" tvg-logo="http://assets.tvcdn.net/0c5204fb-e613-4084-b300-8cdcc46309f9.png" group-title="Ulusal",STAR TV
-https://raw.githubusercontent.com/ipstreet312/freeiptv/refs/heads/master/ressources/tur/star.m3u8
-#EXTINF:-1 tvg-id="StarTV.tr" tvg-logo="https://i.imgur.com/kb165Ot.png" group-title="Ulusal - Yurt Disi",EUROSTAR
-https://raw.githubusercontent.com/ipstreet312/freeiptv/master/ressources/tur/estar.m3u8
-#EXTINF:-1 tvg-id="KanalD.tr" tvg-logo="http://assets.tvcdn.net/a06096dc-fd5e-4103-bfb4-83e612df23ec.png" group-title="Ulusal",KANAL D
-http://live.duhnet.tv/S2/HLS_LIVE/kanalddainp/playlist.m3u8
-#EXTINF:-1 tvg-id="EuroD.tr" tvg-logo="http://assets.tvcdn.net/f4a83153-48c6-4ece-8082-1b370768f88a.png" group-title="Ulusal - Yurt Disi",EURO D
-http://live.duhnet.tv/S2/HLS_LIVE/eurodnp/playlist.m3u8
-#EXTINF:-1 tvg-id="Now.tr" tvg-logo="http://assets.tvcdn.net/80eb8816-1855-41f5-9002-7a05cc93fe4f.png" group-title="Ulusal",NOW TV
-http://116.202.238.88/FOXTV_TR/index.m3u8
-#EXTINF:-1 tvg-id="TV8.tr" tvg-logo="http://assets.tvcdn.net/f91342d2-bcae-4ee0-a6f8-76a8d32b891b.png" group-title="Ulusal",TV8
-https://tv8.daioncdn.net/tv8/tv8.m3u8?app=7ddc255a-ef47-4e81-ab14-c0e5f2949788
-#EXTINF:-1 tvg-logo="https://i.ibb.co/dgj3MTh/tv85.png" group-title="Ulusal,TV8 5
-https://tv8.daioncdn.net/tv8bucuk/tv8bucuk.m3u8?app=tv8bucuk_web
-#EXTINF:-1 tvg-id="Kanal7.tr" tvg-logo="http://assets.tvcdn.net/1125734c-3525-4390-b8ed-c50380c70e4d.png" group-title="Ulusal",KANAL 7
-https://kanal7-live.daioncdn.net/kanal7/kanal7.m3u8
-#EXTINF:-1 tvg-id="Kanal7.tr" tvg-logo="https://i.imgur.com/wlfyj5l.png" group-title="Ulusal - Yurt Disi",KANAL 7 AVRUPA
-https://livetv.radyotvonline.net/kanal7live/kanal7avr/playlist.m3u8
-#EXTINF:-1 tvg-logo="https://i.ibb.co/F5FcvbZ/flash4ok.png",FLASH HABER
-https://flashhaber-live.ercdn.net/flashhaber/flashhaber.m3u8
-#EXTINF:-1 tvg-id="A2TV.tr" tvg-logo="http://assets.tvcdn.net/9db055df-4bc8-4a68-b0fd-766a5a3113bc.png" group-title="Eglence",A2
-https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/a2tv/a2tv.m3u8
-#EXTINF:-1 tvg-id="Teve2.tr" tvg-logo="http://assets.tvcdn.net/4cad68c0-fa2c-4b84-a1c2-1f0704eca7a4.png" group-title="Eglence",TEVE2
-http://live.duhnet.tv/S2/HLS_LIVE/teve2np/playlist.m3u8
-#EXTINF:-1 tvg-id="DMAX.tr" tvg-logo="http://assets.tvcdn.net/32da9e04-0514-4e3c-b8e1-854f1fc175ed.png" group-title="Eglence",DMAX
-http://dygvideo.dygdigital.com/live/hls/dmaxdai?m3u8
-#EXTINF:-1 tvg-id="TLC.tr" tvg-logo="http://assets.tvcdn.net/9871d781-b961-45cc-a287-c304f02bef1d.png" group-title="Eglence",TLC
-http://dygvideo.dygdigital.com/live/hls/tlctvdai?m3u8
-#EXTINF:-1 tvg-id="TV100.tr" tvg-logo="http://assets.tvcdn.net/d7741078-ccce-47d8-ba1c-a041b659bad6.png" group-title="Ulusal",TV 100
-https://tv100-live.daioncdn.net/tv100/tv100_1080p.m3u8
-#EXTINF:-1 tvg-id="TRTTurk.tr" tvg-logo="http://assets.tvcdn.net/fbaaa75c-0a2d-4ed6-b498-d32a59ddb899.png" group-title="Ulusal ",TRT TURK
-https://tv-trtturk.medya.trt.com.tr/master.m3u8
-#EXTINF:-1 tvg-id="TRTHaber.tr" tvg-logo="http://assets.tvcdn.net/ecbd3154-e8e7-44d7-bcbd-a9bcac9df4de.png" group-title="Haber",TRT HABER
-https://tv-trthaber.medya.trt.com.tr/master.m3u8
-#EXTINF:-1 tvg-id="TGRTHaber.tr" tvg-logo="https://i.imgur.com/PrxwKDw.png" group-title="Haber",TGRT HABER
-https://canli.tgrthaber.com/tgrt.m3u8
-#EXTINF:-1 tvg-id="AHaber.tr" tvg-logo="http://assets.tvcdn.net/06e7abd9-0fbb-441f-af63-b895513d3aaa.png" group-title="Haber",A HABER
-https://raw.githubusercontent.com/UzunMuhalefet/yt-streams/refs/heads/main/TR/dizi/ahaber.m3u8`;
+        // M3U verisi - Yeni kanallar
+        const m3uData = `#EXTINF:-1 tvg-id="NOTICIA" tvg-name="===(( TR ULUSAL HD ))===" tvg-logo="https://www.turkishsocks.com/wp-content/uploads/2019/01/cropped-turkish-download-turkey-flag-png-clipart-4.png" group-title="TR ULUSAL",===(( TR ULUSAL HD ))===
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/112009
+#EXTINF:-1 tvg-id="KABLO.INFO.tr" tvg-name="TRT 1 HD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/TRT_1_logo_%282021-%29.svg/512px-TRT_1_logo_%282021-%29.svg.png" group-title="TR ULUSAL",TRT 1 HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229495
+#EXTINF:-1 tvg-id="KABLO.INFO.tr" tvg-name="TRT 1 UHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/TRT_1_logo_%282021-%29.svg/512px-TRT_1_logo_%282021-%29.svg.png" group-title="TR ULUSAL",TRT 1 UHD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229496
+#EXTINF:-1 tvg-id="KABLO.INFO.tr" tvg-name="TRT 1 HD WEP" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/TRT_1_logo_%282021-%29.svg/512px-TRT_1_logo_%282021-%29.svg.png" group-title="TR ULUSAL",TRT 1 HD WEP
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229498
+#EXTINF:-1 tvg-id="ShowTV.tr" tvg-name="SHOWTV HD" tvg-logo="https://i.imgur.com/1l7SCCu.png" group-title="TR ULUSAL",SHOWTV HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229508
+#EXTINF:-1 tvg-id="ShowTV.tr" tvg-name="SHOWTV UHD" tvg-logo="https://i.imgur.com/1l7SCCu.png" group-title="TR ULUSAL",SHOWTV UHD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229509
+#EXTINF:-1 tvg-id="KABLO.INFO.tr" tvg-name="ATV HD" tvg-logo="https://i.imgur.com/HyVUwFC.png" group-title="TR ULUSAL",ATV HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229499
+#EXTINF:-1 tvg-id="KABLO.INFO.tr" tvg-name="ATV UHD" tvg-logo="https://i.imgur.com/HyVUwFC.png" group-title="TR ULUSAL",ATV UHD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229500
+#EXTINF:-1 tvg-id="Kanal D TR" tvg-name="KANAL D HD" tvg-logo="https://i.imgur.com/9o1atM6.png" group-title="TR ULUSAL",KANAL D HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229505
+#EXTINF:-1 tvg-id="KABLO.INFO.tr" tvg-name="KANAL D UHD" tvg-logo="https://i.imgur.com/9o1atM6.png" group-title="TR ULUSAL",KANAL D UHD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229506
+#EXTINF:-1 tvg-id="KABLO.INFO.tr" tvg-name="STAR HD" tvg-logo="https://i.imgur.com/9O3DHRB.png" group-title="TR ULUSAL",STAR HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229502
+#EXTINF:-1 tvg-id="Star TV HD TR" tvg-name="STAR UHD" tvg-logo="https://i.imgur.com/9O3DHRB.png" group-title="TR ULUSAL",STAR UHD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229503
+#EXTINF:-1 tvg-id="" tvg-name="NOW TV HD" tvg-logo="https://i.imgur.com/5EYjWK7.png" group-title="TR ULUSAL",NOW TV HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229520
+#EXTINF:-1 tvg-id="" tvg-name="NOW TV UHD" tvg-logo="https://i.imgur.com/5EYjWK7.png" group-title="TR ULUSAL",NOW TV UHD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229521
+#EXTINF:-1 tvg-id="KABLO.INFO.tr" tvg-name="TV8 HD" tvg-logo="https://i.imgur.com/DKNwiDm.png" group-title="TR ULUSAL",TV8 HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229515
+#EXTINF:-1 tvg-id="TV8.tr" tvg-name="TV8 UHD" tvg-logo="https://i.imgur.com/DKNwiDm.png" group-title="TR ULUSAL",TV8 UHD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229516
+#EXTINF:-1 tvg-id="" tvg-name="TV8.5 HD" tvg-logo="https://i.imgur.com/QuelSsc.png" group-title="TR ULUSAL",TV8.5 HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/234786
+#EXTINF:-1 tvg-id="" tvg-name="TV8.5 UHD" tvg-logo="https://i.imgur.com/QuelSsc.png" group-title="TR ULUSAL",TV8.5 UHD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/234787
+#EXTINF:-1 tvg-id="Kanal7.tr" tvg-name="KANAL7 HD" tvg-logo="https://i.imgur.com/pxpLpnH.png" group-title="TR ULUSAL",KANAL7 HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229513
+#EXTINF:-1 tvg-id="Kanal7.tr" tvg-name="KANAL7 UHD" tvg-logo="https://i.imgur.com/pxpLpnH.png" group-title="TR ULUSAL",KANAL7 UHD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229512
+#EXTINF:-1 tvg-id="" tvg-name="BEYAZTV HD" tvg-logo="https://i.imgur.com/uykIdML.png" group-title="TR ULUSAL",BEYAZTV HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229522
+#EXTINF:-1 tvg-id="" tvg-name="BEYAZTV UHD" tvg-logo="https://i.imgur.com/uykIdML.png" group-title="TR ULUSAL",BEYAZTV UHD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229523
+#EXTINF:-1 tvg-id="" tvg-name="A2 HD" tvg-logo="https://iatv.tmgrup.com.tr/site/v2/a2tv/i/a2tv-logo.png" group-title="TR ULUSAL",A2 HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229528
+#EXTINF:-1 tvg-id="" tvg-name="A2 UHD" tvg-logo="https://iatv.tmgrup.com.tr/site/v2/a2tv/i/a2tv-logo.png" group-title="TR ULUSAL",A2 UHD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229529
+#EXTINF:-1 tvg-id="" tvg-name="TEVE2 HD" tvg-logo="https://i.imgur.com/rsoSLih.png" group-title="TR ULUSAL",TEVE2 HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229526
+#EXTINF:-1 tvg-id="" tvg-name="TEVE2 UHD" tvg-logo="https://i.imgur.com/rsoSLih.png" group-title="TR ULUSAL",TEVE2 UHD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229527
+#EXTINF:-1 tvg-id="" tvg-name="360 HD" tvg-logo="https://i.imgur.com/agn47sQ.png" group-title="TR ULUSAL",360 HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229524
+#EXTINF:-1 tvg-id="" tvg-name="360 UHD" tvg-logo="https://i.imgur.com/agn47sQ.png" group-title="TR ULUSAL",360 UHD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229525
+#EXTINF:-1 tvg-id="" tvg-name="TV 4 UHD" tvg-logo="https://i.imgur.com/UpsQsbd.png" group-title="TR ULUSAL",TV 4 UHD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229530
+#EXTINF:-1 tvg-id="AVRPTU" tvg-name="ATV EU HD" tvg-logo="http://fanc.tmsimg.com/assets/s96483_ll_h3_ab.png" group-title="TR ULUSAL",ATV EU HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229501
+#EXTINF:-1 tvg-id="" tvg-name="EURO D HD" tvg-logo="" group-title="TR ULUSAL",EURO D HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229507
+#EXTINF:-1 tvg-id="Star TV HD TR" tvg-name="STAR EU HD" tvg-logo="" group-title="TR ULUSAL",STAR EU HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229504
+#EXTINF:-1 tvg-id="TV8int.tr" tvg-name="TV8 INT HD" tvg-logo="" group-title="TR ULUSAL",TV8 INT HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229517
+#EXTINF:-1 tvg-id="" tvg-name="KANAL 7 EU HD" tvg-logo="" group-title="TR ULUSAL",KANAL 7 EU HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229514
+#EXTINF:-1 tvg-id="" tvg-name="SHOW TURK HD" tvg-logo="" group-title="TR ULUSAL",SHOW TURK HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229510
+#EXTINF:-1 tvg-id="" tvg-name="SHOW MAX UHD" tvg-logo="" group-title="TR ULUSAL",SHOW MAX UHD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/229511
+#EXTINF:-1 tvg-id="" tvg-name="TV 4 HD" tvg-logo="https://i.imgur.com/UpsQsbd.png" group-title="TR ULUSAL",TV 4 HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/258967
+#EXTINF:-1 tvg-id="" tvg-name="TRT 2 HD" tvg-logo="" group-title="TR ULUSAL",TRT 2 HD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/280951
+#EXTINF:-1 tvg-id="" tvg-name="TRT 2 UHD" tvg-logo="" group-title="TR ULUSAL",TRT 2 UHD
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/280952
+#EXTINF:-1 tvg-id="" tvg-name="TRT TURK" tvg-logo="" group-title="TR ULUSAL",TRT TURK
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/280953
+#EXTINF:-1 tvg-id="" tvg-name="TRT AVAZ" tvg-logo="" group-title="TR ULUSAL",TRT AVAZ
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/280954
+#EXTINF:-1 tvg-id="" tvg-name="TRT 1 4K" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/TRT_1_logo_%282021-%29.svg/512px-TRT_1_logo_%282021-%29.svg.png" group-title="TR ULUSAL 4K RAW",TRT 1 4K
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273908
+#EXTINF:-1 tvg-id="" tvg-name="SHOW TV 4K" tvg-logo="https://i.imgur.com/1l7SCCu.png" group-title="TR ULUSAL 4K RAW",SHOW TV 4K
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273909
+#EXTINF:-1 tvg-id="" tvg-name="ATV 4K" tvg-logo="https://i.imgur.com/qRPuSFv.png" group-title="TR ULUSAL 4K RAW",ATV 4K
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273910
+#EXTINF:-1 tvg-id="" tvg-name="KANAL D 4K" tvg-logo="https://i.imgur.com/9o1atM6.png" group-title="TR ULUSAL 4K RAW",KANAL D 4K
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273911
+#EXTINF:-1 tvg-id="" tvg-name="STAR TV 4K" tvg-logo="https://i.imgur.com/9O3DHRB.png" group-title="TR ULUSAL 4K RAW",STAR TV 4K
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273912
+#EXTINF:-1 tvg-id="" tvg-name="NOW 4K" tvg-logo="https://i.imgur.com/5EYjWK7.png" group-title="TR ULUSAL 4K RAW",NOW 4K
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273913
+#EXTINF:-1 tvg-id="" tvg-name="TV 8 4K" tvg-logo="https://i.imgur.com/Nk43HuV.png" group-title="TR ULUSAL 4K RAW",TV 8 4K
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273914
+#EXTINF:-1 tvg-id="" tvg-name="TV 8.5 4K" tvg-logo="https://i.imgur.com/QuelSsc.png" group-title="TR ULUSAL 4K RAW",TV 8.5 4K
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273918
+#EXTINF:-1 tvg-id="" tvg-name="360 4K" tvg-logo="https://i.imgur.com/agn47sQ.png" group-title="TR ULUSAL 4K RAW",360 4K
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273917
+#EXTINF:-1 tvg-id="" tvg-name="KANAL 7 4K" tvg-logo="https://i.imgur.com/0gq9xOm.png" group-title="TR ULUSAL 4K RAW",KANAL 7 4K
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273916
+#EXTINF:-1 tvg-id="" tvg-name="BEYAZTV 4K" tvg-logo="https://i.imgur.com/uykIdML.png" group-title="TR ULUSAL 4K RAW",BEYAZTV 4K
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273915
+#EXTINF:-1 tvg-id="" tvg-name="TRT SPOR 4K" tvg-logo="https://i.imgur.com/6tv0zxh.png" group-title="TR ULUSAL 4K RAW",TRT SPOR 4K
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273919
+#EXTINF:-1 tvg-id="" tvg-name="HT SPOR 4K" tvg-logo="" group-title="TR ULUSAL 4K RAW",HT SPOR 4K
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273921
+#EXTINF:-1 tvg-id="" tvg-name="A SPOR 4K" tvg-logo="https://www.lyngsat.com/logo/tv/aa/a_spor_tr.png" group-title="TR ULUSAL 4K RAW",A SPOR 4K
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273920
+#EXTINF:-1 tvg-id="" tvg-name="TRT 1 RAW" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/TRT_1_logo_%282021-%29.svg/512px-TRT_1_logo_%282021-%29.svg.png" group-title="TR ULUSAL 4K RAW",TRT 1 RAW
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273922
+#EXTINF:-1 tvg-id="" tvg-name="ATV RAW" tvg-logo="https://i.imgur.com/qRPuSFv.png" group-title="TR ULUSAL 4K RAW",ATV RAW
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273924
+#EXTINF:-1 tvg-id="" tvg-name="SHOW TV RAW" tvg-logo="https://i.imgur.com/1l7SCCu.png" group-title="TR ULUSAL 4K RAW",SHOW TV RAW
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273923
+#EXTINF:-1 tvg-id="" tvg-name="KANAL D RAW" tvg-logo="https://i.imgur.com/9o1atM6.png" group-title="TR ULUSAL 4K RAW",KANAL D RAW
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273925
+#EXTINF:-1 tvg-id="" tvg-name="STAR TV RAW" tvg-logo="https://i.imgur.com/9O3DHRB.png" group-title="TR ULUSAL 4K RAW",STAR TV RAW
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273926
+#EXTINF:-1 tvg-id="" tvg-name="NOW RAW" tvg-logo="https://i.imgur.com/5EYjWK7.png" group-title="TR ULUSAL 4K RAW",NOW RAW
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273927
+#EXTINF:-1 tvg-id="" tvg-name="TV 8 RAW" tvg-logo="https://i.imgur.com/Nk43HuV.png" group-title="TR ULUSAL 4K RAW",TV 8 RAW
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273928
+#EXTINF:-1 tvg-id="" tvg-name="TV 8.5 RAW" tvg-logo="https://i.imgur.com/QuelSsc.png" group-title="TR ULUSAL 4K RAW",TV 8.5 RAW
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273932
+#EXTINF:-1 tvg-id="" tvg-name="360 RAW" tvg-logo="https://i.imgur.com/agn47sQ.png" group-title="TR ULUSAL 4K RAW",360 RAW
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273931
+#EXTINF:-1 tvg-id="" tvg-name="KANAL 7 RAW" tvg-logo="https://i.imgur.com/0gq9xOm.png" group-title="TR ULUSAL 4K RAW",KANAL 7 RAW
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273929
+#EXTINF:-1 tvg-id="" tvg-name="BEYAZTV RAW" tvg-logo="https://i.imgur.com/uykIdML.png" group-title="TR ULUSAL 4K RAW",BEYAZTV RAW
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273930
+#EXTINF:-1 tvg-id="" tvg-name="TRT SPOR RAW" tvg-logo="https://i.imgur.com/6tv0zxh.png" group-title="TR ULUSAL 4K RAW",TRT SPOR RAW
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273933
+#EXTINF:-1 tvg-id="" tvg-name="HT SPOR RAW" tvg-logo="" group-title="TR ULUSAL 4K RAW",HT SPOR RAW
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273935
+#EXTINF:-1 tvg-id="" tvg-name="A SPOR RAW" tvg-logo="https://www.lyngsat.com/logo/tv/aa/a_spor_tr.png" group-title="TR ULUSAL 4K RAW",A SPOR RAW
+http://vipxx77.xyz:80/meh0648XCM/trx120922kas/273934`;
 
         // DOM Elementleri
         const channelList = document.getElementById('channel-list');
-        const currentChannelLogo = document.getElementById('current-channel-logo');
-        const currentChannelName = document.getElementById('current-channel-name');
+        const videoPlayer = document.getElementById('video-player');
         const loadingIndicator = document.getElementById('loading');
         const channelCount = document.getElementById('channel-count');
-        const videoPlayer = document.getElementById('video-player');
-        const playPauseBtn = document.getElementById('play-pause-btn');
-        const volumeUpBtn = document.getElementById('volume-up-btn');
-        const volumeDownBtn = document.getElementById('volume-down-btn');
-        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const channelNotification = document.getElementById('channel-notification');
+        const notifChannelLogo = document.getElementById('notif-channel-logo');
+        const notifChannelName = document.getElementById('notif-channel-name');
 
         // Değişkenler
         let channels = [];
         let currentChannel = null;
         let selectedChannelIndex = 0;
-        let player = null;
-        let ui = null;
+        let hls = null;
         let isFullscreen = false;
         let lastClickTime = 0;
         let lastClickChannel = null;
-        let numberInputBuffer = '';
-        let numberInputTimeout = null;
+        let notificationTimeout = null;
 
         // M3U verisini parse et
         function parseM3U(data) {
@@ -567,48 +596,51 @@ https://raw.githubusercontent.com/UzunMuhalefet/yt-streams/refs/heads/main/TR/di
             return channels;
         }
 
-        // Kanalları render et
+        // Kanalları render et - Daha akışkan için requestAnimationFrame kullan
         function renderChannels() {
             channelList.innerHTML = '';
             
-            channels.forEach((channel, index) => {
-                const channelItem = document.createElement('li');
-                channelItem.className = 'channel-item';
-                channelItem.tabIndex = 0;
-                channelItem.dataset.index = index;
-                channelItem.dataset.number = channel.number;
-                
-                const logoUrl = channel.logo || 'https://via.placeholder.com/50x50/111/fff?text=TV';
-                const displayNumber = channel.number <= 10 ? channel.number : '';
-                
-                channelItem.innerHTML = `
-                    ${displayNumber ? `<span class="channel-number">${displayNumber}</span>` : ''}
-                    <img class="channel-logo" src="${logoUrl}" alt="${channel.name}" 
-                         onerror="this.onerror=null; this.src='https://via.placeholder.com/50x50/111/fff?text=TV'">
-                    <div class="channel-info">
-                        <div class="channel-name">${channel.name}</div>
-                        <div class="channel-group">${channel.group}</div>
-                    </div>
-                `;
-                
-                // Tek tıklama: Kanalı aç
-                channelItem.addEventListener('click', handleChannelClick);
-                
-                // Çift tıklama: Tam ekran yap
-                channelItem.addEventListener('dblclick', handleChannelDoubleClick);
-                
-                // Klavye navigasyonu
-                channelItem.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        playChannel(channel);
-                    }
+            // requestAnimationFrame ile smooth render
+            requestAnimationFrame(() => {
+                channels.forEach((channel, index) => {
+                    const channelItem = document.createElement('li');
+                    channelItem.className = 'channel-item';
+                    channelItem.tabIndex = 0;
+                    channelItem.dataset.index = index;
+                    channelItem.dataset.number = channel.number;
+                    
+                    const logoUrl = channel.logo || 'https://via.placeholder.com/45x45/111/fff?text=TV';
+                    const displayNumber = channel.number <= 10 ? channel.number : '';
+                    
+                    channelItem.innerHTML = `
+                        ${displayNumber ? `<span class="channel-number">${displayNumber}</span>` : ''}
+                        <img class="channel-logo" src="${logoUrl}" alt="${channel.name}" 
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/45x45/111/fff?text=TV'">
+                        <div class="channel-info">
+                            <div class="channel-name">${channel.name}</div>
+                            <div class="channel-group">${channel.group}</div>
+                        </div>
+                    `;
+                    
+                    // Tek tıklama: Kanalı aç
+                    channelItem.addEventListener('click', handleChannelClick);
+                    
+                    // Çift tıklama: Tam ekran yap
+                    channelItem.addEventListener('dblclick', handleChannelDoubleClick);
+                    
+                    // Klavye navigasyonu
+                    channelItem.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            playChannel(channel);
+                        }
+                    });
+                    
+                    channelList.appendChild(channelItem);
                 });
                 
-                channelList.appendChild(channelItem);
+                // Kanal sayısını güncelle
+                channelCount.textContent = channels.length;
             });
-            
-            // Kanal sayısını güncelle
-            channelCount.textContent = channels.length;
         }
 
         // Kanal tıklama işleyici
@@ -655,62 +687,137 @@ https://raw.githubusercontent.com/UzunMuhalefet/yt-streams/refs/heads/main/TR/di
             currentChannel = channel;
             selectedChannelIndex = channels.findIndex(c => c.name === channel.name);
             
-            try {
-                // Shaka Player ile kanalı yükle
-                await player.load(channel.url);
-                
-                // Görsel bilgileri güncelle
-                const logoUrl = channel.logo || 'https://via.placeholder.com/40x40/111/fff?text=TV';
-                currentChannelLogo.src = logoUrl;
-                currentChannelLogo.onerror = function() {
-                    this.src = 'https://via.placeholder.com/40x40/111/fff?text=TV';
-                };
-                
-                currentChannelName.textContent = channel.name;
-                
-                // Aktif kanalı işaretle
-                document.querySelectorAll('.channel-item').forEach(item => {
-                    item.classList.remove('active');
+            // Önceki HLS instance'ını temizle
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
+            
+            // Video elementini sıfırla
+            videoPlayer.pause();
+            videoPlayer.removeAttribute('src');
+            videoPlayer.load();
+            
+            // HLS.js kontrolü
+            if (Hls.isSupported()) {
+                hls = new Hls({
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    backBufferLength: 90
                 });
                 
-                const activeItem = document.querySelector(`.channel-item[data-index="${selectedChannelIndex}"]`);
-                if (activeItem) {
-                    activeItem.classList.add('active');
-                    activeItem.focus();
-                    
-                    // Aktif öğeyi görünür yap (smooth)
-                    activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
+                hls.loadSource(channel.url);
+                hls.attachMedia(videoPlayer);
                 
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    videoPlayer.play().then(() => {
+                        hideLoading();
+                        showChannelNotification(channel);
+                    }).catch(e => {
+                        console.log("Otomatik oynatma engellendi:", e);
+                        hideLoading();
+                        showChannelNotification(channel);
+                    });
+                });
+                
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    if (data.fatal) {
+                        switch(data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                console.error('Network error, trying to recover...');
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                console.error('Media error, trying to recover...');
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                console.error('Fatal HLS error, cannot recover');
+                                hls.destroy();
+                                hideLoading();
+                                break;
+                        }
+                    }
+                });
+            } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+                // Safari için native HLS desteği
+                videoPlayer.src = channel.url;
+                videoPlayer.addEventListener('loadedmetadata', () => {
+                    videoPlayer.play().then(() => {
+                        hideLoading();
+                        showChannelNotification(channel);
+                    }).catch(e => {
+                        console.log("Otomatik oynatma engellendi:", e);
+                        hideLoading();
+                        showChannelNotification(channel);
+                    });
+                });
+            } else {
+                console.error("HLS desteklenmiyor");
                 hideLoading();
-            } catch (error) {
-                console.error('Kanal yükleme hatası:', error);
-                hideLoading();
-                currentChannelName.textContent = `${channel.name} (Hata)`;
             }
+            
+            // Aktif kanalı işaretle
+            document.querySelectorAll('.channel-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const activeItem = document.querySelector(`.channel-item[data-index="${selectedChannelIndex}"]`);
+            if (activeItem) {
+                activeItem.classList.add('active');
+                activeItem.focus();
+                
+                // Aktif öğeyi görünür yap (smooth)
+                setTimeout(() => {
+                    activeItem.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center',
+                        inline: 'nearest' 
+                    });
+                }, 100);
+            }
+        }
+
+        // Kanal bildirimini göster (3 saniye sonra kaybolur)
+        function showChannelNotification(channel) {
+            // Önceki timeout'u temizle
+            if (notificationTimeout) {
+                clearTimeout(notificationTimeout);
+            }
+            
+            const logoUrl = channel.logo || 'https://via.placeholder.com/40x40/111/fff?text=TV';
+            notifChannelLogo.src = logoUrl;
+            notifChannelLogo.onerror = function() {
+                this.src = 'https://via.placeholder.com/40x40/111/fff?text=TV';
+            };
+            
+            notifChannelName.textContent = channel.name;
+            
+            // Bildirimi göster
+            channelNotification.classList.add('show');
+            
+            // 3 saniye sonra gizle
+            notificationTimeout = setTimeout(() => {
+                channelNotification.classList.remove('show');
+            }, 3000);
         }
 
         // Tam ekran moduna gir
         function enterFullscreen() {
-            document.body.classList.add('fullscreen-mode');
-            isFullscreen = true;
-            
-            // Video elementine odaklan
-            videoPlayer.focus();
-            
-            // Çift tıklama bilgisini göster
-            setTimeout(() => {
-                document.querySelector('.double-click-info').style.display = 'block';
-            }, 1000);
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Tam ekran hatası: ${err.message}`);
+                });
+                isFullscreen = true;
+            }
         }
 
         // Tam ekran modundan çık
         function exitFullscreen() {
-            document.body.classList.remove('fullscreen-mode');
-            isFullscreen = false;
-            
-            // Çift tıklama bilgisini gizle
-            document.querySelector('.double-click-info').style.display = 'none';
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+                isFullscreen = false;
+            }
         }
 
         // Yükleme göster
@@ -758,33 +865,9 @@ https://raw.githubusercontent.com/UzunMuhalefet/yt-streams/refs/heads/main/TR/di
             }
         }
 
-        // Çok haneli numara girişi için
-        function handleNumberInput(number) {
-            clearTimeout(numberInputTimeout);
-            
-            numberInputBuffer += number.toString();
-            
-            // 2 saniye içinde başka tuşa basılmazsa işle
-            numberInputTimeout = setTimeout(() => {
-                if (numberInputBuffer.length > 0) {
-                    const channelNumber = parseInt(numberInputBuffer);
-                    
-                    // Kanal numarasına göre kanalı bul
-                    let channelIndex = channels.findIndex(ch => ch.number === channelNumber);
-                    
-                    if (channelIndex !== -1) {
-                        selectedChannelIndex = channelIndex;
-                        playChannel(channels[channelIndex]);
-                    }
-                    
-                    numberInputBuffer = '';
-                }
-            }, 2000);
-        }
-
         // TV Box Klavye Kontrolleri
         document.addEventListener('keydown', (e) => {
-            // ESC tuşu: Tam ekrandan çık veya normal moda dön
+            // ESC tuşu: Tam ekrandan çık
             if (e.key === 'Escape' || e.key === 'Backspace') {
                 if (isFullscreen) {
                     exitFullscreen();
@@ -805,24 +888,14 @@ https://raw.githubusercontent.com/UzunMuhalefet/yt-streams/refs/heads/main/TR/di
             // Rakam tuşları ile kanal seç
             if (e.key >= '0' && e.key <= '9') {
                 const number = parseInt(e.key);
-                if (isFullscreen) {
-                    // Tam ekranda direkt kanal seç
-                    selectChannelByNumber(number);
-                } else {
-                    // Normal modda çok haneli numara girişi
-                    handleNumberInput(number);
-                }
+                selectChannelByNumber(number);
                 e.preventDefault();
             }
             
             // Numpad rakamları
             if (e.key >= 'NumPad0' && e.key <= 'NumPad9') {
                 const number = parseInt(e.key.replace('NumPad', ''));
-                if (isFullscreen) {
-                    selectChannelByNumber(number);
-                } else {
-                    handleNumberInput(number);
-                }
+                selectChannelByNumber(number);
                 e.preventDefault();
             }
             
@@ -840,10 +913,8 @@ https://raw.githubusercontent.com/UzunMuhalefet/yt-streams/refs/heads/main/TR/di
             if (e.key === ' ' || e.key === 'p' || e.key === 'P') {
                 if (videoPlayer.paused) {
                     videoPlayer.play();
-                    playPauseBtn.innerHTML = '⏸️';
                 } else {
                     videoPlayer.pause();
-                    playPauseBtn.innerHTML = '▶️';
                 }
                 e.preventDefault();
             }
@@ -872,63 +943,26 @@ https://raw.githubusercontent.com/UzunMuhalefet/yt-streams/refs/heads/main/TR/di
             }
         });
 
+        // Tam ekran değişikliklerini dinle
+        document.addEventListener('fullscreenchange', () => {
+            isFullscreen = !!document.fullscreenElement;
+        });
+
         // Başlangıç işlemleri
-        async function init() {
-            // Shaka Player'ı başlat
-            shaka.polyfill.installAll();
-            
-            if (shaka.Player.isBrowserSupported()) {
-                player = new shaka.Player(videoPlayer);
-                
-                // Hata işleyici
-                player.addEventListener('error', (error) => {
-                    console.error('Shaka Player hatası:', error);
-                    hideLoading();
-                });
-                
-                // Yükleme olayları
-                videoPlayer.addEventListener('waiting', showLoading);
-                videoPlayer.addEventListener('playing', hideLoading);
-                videoPlayer.addEventListener('error', hideLoading);
-            } else {
-                console.error('Tarayıcı Shaka Player\'ı desteklemiyor');
-            }
-            
+        function init() {
             // M3U verisini parse et
             channels = parseM3U(m3uData);
             
             // Kanalları render et
             renderChannels();
             
-            // Event listener'ları ekle
-            playPauseBtn.addEventListener('click', () => {
-                if (videoPlayer.paused) {
-                    videoPlayer.play();
-                    playPauseBtn.innerHTML = '⏸️';
-                } else {
-                    videoPlayer.pause();
-                    playPauseBtn.innerHTML = '▶️';
-                }
-            });
+            // Hata işleyici
+            videoPlayer.addEventListener('error', hideLoading);
+            videoPlayer.addEventListener('waiting', showLoading);
+            videoPlayer.addEventListener('playing', hideLoading);
             
-            volumeUpBtn.addEventListener('click', () => {
-                videoPlayer.volume = Math.min(videoPlayer.volume + 0.1, 1);
-            });
-            
-            volumeDownBtn.addEventListener('click', () => {
-                videoPlayer.volume = Math.max(videoPlayer.volume - 0.1, 0);
-            });
-            
-            fullscreenBtn.addEventListener('click', () => {
-                if (isFullscreen) {
-                    exitFullscreen();
-                } else {
-                    enterFullscreen();
-                }
-            });
-            
-            // Varsayılan kanal olarak FURKAN & SÜMEYYE'yi aç
-            const defaultChannel = channels.find(ch => ch.name.includes('FURKAN'));
+            // Varsayılan kanal olarak "===(( TR ULUSAL HD ))===" aç
+            const defaultChannel = channels.find(ch => ch.name.includes("==="));
             if (defaultChannel) {
                 setTimeout(() => playChannel(defaultChannel), 1000);
             } else if (channels.length > 0) {
