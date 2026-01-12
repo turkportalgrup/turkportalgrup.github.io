@@ -17,114 +17,107 @@
             color: #fff;
             height: 100vh;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
         }
         
         .container {
             display: flex;
             height: 100vh;
             width: 100vw;
-            transition: all 0.3s;
         }
         
         .channel-list {
-            width: 35%; /* Daha dar kanal listesi */
+            width: 35%;
             background-color: #222;
             overflow-y: auto;
             padding: 10px;
-            transition: all 0.3s;
         }
         
         .player-container {
-            width: 65%; /* Daha geniş player */
+            width: 65%;
             background-color: #000;
             display: flex;
             flex-direction: column;
-            transition: all 0.3s;
         }
         
-        .fullscreen-mode .channel-list {
-            display: none; /* Tam ekranda kanal listesini gizle */
-        }
-        
-        .fullscreen-mode .player-container {
-            width: 100vw !important; /* Tam ekranda tüm ekranı kapla */
+        /* Tam ekran modu için sınıf */
+        .fullscreen {
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 1000;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9999;
+            background: black;
         }
         
-        .fullscreen-mode {
+        .fullscreen .channel-list {
+            display: none;
+        }
+        
+        .fullscreen .player-container {
+            width: 100vw !important;
+            height: 100vh !important;
+        }
+        
+        .fullscreen #video-player {
+            width: 100vw;
             height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
         
-        .hidden {
+        .fullscreen .player-info {
             display: none !important;
         }
         
         .channel-item {
-            padding: 10px;
-            margin-bottom: 3px;
+            padding: 12px;
+            margin-bottom: 4px;
             background-color: #333;
             border-radius: 5px;
             cursor: pointer;
-            transition: all 0.2s;
             display: flex;
             align-items: center;
         }
         
         .channel-item:hover, .channel-item.active {
             background-color: #444;
-            transform: scale(1.01);
         }
         
         .channel-number {
             display: inline-block;
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             background-color: #555;
             border-radius: 50%;
             text-align: center;
-            line-height: 32px;
-            margin-right: 10px;
+            line-height: 36px;
+            margin-right: 12px;
             font-weight: bold;
-            font-size: 13px;
-            flex-shrink: 0;
+            font-size: 14px;
         }
         
         .channel-name {
-            font-size: 14px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 16px;
         }
         
         #video-player {
             width: 100%;
-            height: calc(100vh - 60px); /* Header yüksekliğini çıkar */
+            height: calc(100vh - 80px);
             background-color: #000;
         }
         
-        .fullscreen-mode #video-player {
-            height: 100vh; /* Tam ekranda tüm yükseklik */
-        }
-        
         .player-info {
-            padding: 8px;
+            padding: 15px;
             background-color: rgba(0, 0, 0, 0.8);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
-        .fullscreen-mode .player-info {
-            display: none; /* Tam ekranda bilgileri gizle */
-        }
-        
         .channel-info {
-            font-size: 16px;
+            font-size: 20px;
         }
         
         .status {
@@ -133,9 +126,9 @@
             left: 50%;
             transform: translateX(-50%);
             background-color: rgba(0, 0, 0, 0.9);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 16px;
             z-index: 100;
             display: none;
         }
@@ -145,7 +138,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 20px;
+            font-size: 22px;
             color: #fff;
             z-index: 100;
             text-align: center;
@@ -153,49 +146,42 @@
         
         .header {
             background-color: #222;
-            padding: 10px;
+            padding: 12px;
             text-align: center;
-            font-size: 18px;
+            font-size: 22px;
             border-bottom: 2px solid #444;
-            height: 60px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
         
-        /* TV Box optimizasyonları */
-        *:focus {
-            outline: 2px solid #007bff;
-        }
-        
-        /* Kanal numarası girişi göstergesi */
         .channel-input-display {
             position: fixed;
             top: 20px;
             right: 20px;
             background-color: rgba(0, 0, 0, 0.9);
-            padding: 10px 20px;
+            padding: 15px 25px;
             border-radius: 10px;
-            font-size: 24px;
+            font-size: 28px;
             z-index: 1001;
             display: none;
             border: 2px solid #007bff;
         }
         
-        /* Ok tuşu animasyonu */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        .loader {
+            border: 4px solid #333;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
         }
         
-        .pulse {
-            animation: pulse 0.3s ease-in-out;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
-        /* Kaydırma çubuğu stil */
         .channel-list::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
         }
         
         .channel-list::-webkit-scrollbar-track {
@@ -204,57 +190,14 @@
         
         .channel-list::-webkit-scrollbar-thumb {
             background: #555;
-            border-radius: 3px;
-        }
-        
-        .channel-list::-webkit-scrollbar-thumb:hover {
-            background: #666;
-        }
-        
-        /* Yükleniyor animasyonu */
-        .loader {
-            border: 3px solid #333;
-            border-top: 3px solid #007bff;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Tam ekran kontrol butonu */
-        .fullscreen-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 1001;
-            display: none;
-        }
-        
-        .fullscreen-mode .fullscreen-btn {
-            display: block;
-        }
-        
-        .fullscreen-btn:hover {
-            background-color: rgba(0, 0, 0, 0.9);
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <div>TV Box Kanal Player</div>
-        <div style="font-size: 12px; margin-top: 3px; color: #aaa;">Exit: Çıkış • OK: Oynat • Çift OK: Tam ekran</div>
+        TV Box Kanal Player
+        <div style="font-size: 14px; margin-top: 5px; color: #aaa;">Exit: Çıkış • OK: Oynat • Çift OK: Tam ekran</div>
     </div>
     
     <div class="container" id="container">
@@ -271,8 +214,6 @@
             <video id="video-player" controls></video>
         </div>
     </div>
-    
-    <button class="fullscreen-btn" id="fullscreen-exit-btn">Tam Ekrandan Çık</button>
     
     <div class="status" id="status"></div>
     <div class="channel-input-display" id="channel-input-display"></div>
@@ -305,7 +246,6 @@
         const statusDisplay = document.getElementById('status');
         const loadingDisplay = document.getElementById('loading');
         const channelInputDisplay = document.getElementById('channel-input-display');
-        const fullscreenExitBtn = document.getElementById('fullscreen-exit-btn');
 
         // Tuş kodu sabitleri
         const KEY_ENTER = 13;
@@ -336,15 +276,26 @@
             
             // Yükleme göstergesini gizle
             loadingDisplay.style.display = 'none';
+            
+            showStatus(`${state.channels.length} kanal yüklendi`, 'success');
         }
 
-        // Kanal listesini yükle
+        // Kanal listesini yükle (Dropbox linkinden)
         async function loadChannels() {
             try {
                 loadingDisplay.innerHTML = '<div class="loader"></div><div>Kanal listesi yükleniyor...</div>';
                 
                 // Dropbox linkinden kanal listesini al
-                const response = await fetch('https://www.dropbox.com/scl/fi/vkdkuge489z1grdxjw459/yasin.txt?rlkey=kac7bu9xsg1ecdywyil2t0bms&st=5bndyxax&dl=1');
+                // Not: Dropbox linki doğrudan indirme için dl=1 parametresi ile
+                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+                const targetUrl = 'https://www.dropbox.com/scl/fi/vkdkuge489z1grdxjw459/yasin.txt?rlkey=kac7bu9xsg1ecdywyil2t0bms&st=5bndyxax&dl=1';
+                
+                const response = await fetch(targetUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const text = await response.text();
                 
                 // Metni satırlara ayır ve kanalları işle
@@ -353,51 +304,105 @@
                 
                 lines.forEach(line => {
                     line = line.trim();
-                    if (line && line.includes('|')) {
-                        const parts = line.split('|');
-                        if (parts.length >= 2) {
-                            const name = parts[0].trim();
-                            const url = parts[1].trim();
+                    
+                    // Kanal adı ve URL'sini ayır (| işareti ile ayrılmış)
+                    if (line && (line.includes('|') || line.includes('http'))) {
+                        let name, url;
+                        
+                        if (line.includes('|')) {
+                            const parts = line.split('|');
+                            name = parts[0].trim();
+                            url = parts[1].trim();
+                        } else {
+                            // Eğer | yoksa, sadece URL varsa
+                            name = `Kanal ${channelNumber}`;
+                            url = line;
+                        }
+                        
+                        // URL'nin geçerli olup olmadığını kontrol et
+                        if (url && (url.startsWith('http://') || url.startsWith('https://') || 
+                            url.startsWith('rtmp://') || url.startsWith('rtsp://') || 
+                            url.includes('.m3u8') || url.includes('.mp4') || 
+                            url.includes('.mkv') || url.includes('.ts'))) {
                             
-                            // URL'nin geçerli olup olmadığını kontrol et
-                            if (url && (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('rtmp://') || url.startsWith('rtsp://') || url.includes('m3u8'))) {
-                                state.channels.push({
-                                    number: channelNumber,
-                                    name: name,
-                                    url: url
-                                });
-                                
-                                channelNumber++;
-                            }
+                            state.channels.push({
+                                number: channelNumber,
+                                name: name,
+                                url: url
+                            });
+                            
+                            channelNumber++;
                         }
                     }
                 });
                 
+                // Eğer hiç kanal yüklenemediyse, örnek kanalları yükle
+                if (state.channels.length === 0) {
+                    throw new Error('Hiç kanal yüklenemedi');
+                }
+                
                 // Kanal listesini görüntüle
                 renderChannelList();
                 
-                showStatus(`${state.channels.length} kanal başarıyla yüklendi`, 'success');
-                
             } catch (error) {
                 console.error('Kanal listesi yüklenirken hata:', error);
-                showStatus('Kanal listesi yüklenemedi! Örnek kanallar kullanılıyor.', 'error');
+                showStatus('Dropbox kanalları yüklenemedi! Örnek kanallar kullanılıyor.', 'error');
                 
-                // Örnek kanallar (yüklenemediğinde kullanılacak)
+                // Örnek kanalları yükle
                 loadSampleChannels();
             }
         }
         
-        // Örnek kanalları yükle
+        // Örnek kanalları yükle (çok sayıda kanal)
         function loadSampleChannels() {
-            // Test için daha fazla kanal ekleyelim
             state.channels = [];
-            for (let i = 1; i <= 100; i++) {
+            
+            // Türk kanalları
+            const turkishChannels = [
+                "TRT 1", "Show TV", "Kanal D", "Star TV", "FOX", "ATV", "TV8", 
+                "CNN Türk", "Habertürk", "NTV", "TLC", "Discovery", "Nat Geo", 
+                "BBC", "Euro Sport", "Cartoon Network", "Minika Çocuk", "TRT Çocuk",
+                "Beyaz TV", "360 TV", "Kanal 7", "TVNET", "Ülke TV", "Flash TV",
+                "Kral TV", "Number 1 TV", "Dream TV", "Dream Türk", "Power TV",
+                "Power Türk", "TRT Haber", "TRT Spor", "TRT Belgesel", "TRT Müzik",
+                "TRT Arabi", "TRT Türk", "TRT Kurdî", "TRT Avaz", "TRT World",
+                "TRT EBA TV İlkokul", "TRT EBA TV Ortaokul", "TRT EBA TV Lise",
+                "A Haber", "A News", "A Para", "A Spor", "A2", "Bursaspor TV",
+                "Fenerbahçe TV", "Galatasaray TV", "Bein Sports 1", "Bein Sports 2",
+                "Bein Sports 3", "Bein Sports 4", "Bein Sports Haber", "Bein Sports Max 1",
+                "Bein Sports Max 2", "S Sport", "S Sport 2", "Smart Spor", "Vavac TV"
+            ];
+            
+            // Test video URL'leri (gerçek test stream'leri)
+            const testUrls = [
+                "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+                "https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8",
+                "https://test-streams.mux.dev/x36xhzz/url_1/193039199_mp4_h264_aac_hq_7.m3u8",
+                "https://bitdash-a.akamaihd.net/s/content/media/Manifest.m3u8",
+                "https://mnmedias.api.telequebec.tv/m3u8/29880.m3u8",
+                "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8",
+                "https://content.jwplatform.com/manifests/vM7nH0Kl.m3u8",
+                "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8"
+            ];
+            
+            // Çok sayıda kanal oluştur
+            for (let i = 1; i <= 200; i++) {
+                let channelName;
+                let channelUrl;
+                
+                if (i <= turkishChannels.length) {
+                    channelName = turkishChannels[i-1];
+                } else {
+                    channelName = `Kanal ${i}`;
+                }
+                
+                // URL'leri döngüsel olarak kullan
+                channelUrl = testUrls[(i-1) % testUrls.length];
+                
                 state.channels.push({
                     number: i,
-                    name: `Test Kanal ${i}`,
-                    url: i % 3 === 0 ? "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" : 
-                          i % 3 === 1 ? "https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8" :
-                          "https://test-streams.mux.dev/x36xhzz/url_1/193039199_mp4_h264_aac_hq_7.m3u8"
+                    name: channelName,
+                    url: channelUrl
                 });
             }
             
@@ -465,6 +470,20 @@
                 videoPlayer.src = state.currentChannel.url;
                 videoPlayer.load();
                 
+                // HLS formatı için HLS.js kontrolü
+                if (state.currentChannel.url.includes('.m3u8')) {
+                    // HLS formatında video
+                    videoPlayer.play().catch(e => {
+                        showStatus("Video oynatılamadı. HLS formatı desteklenmiyor olabilir.", "error");
+                    });
+                } else {
+                    // Diğer formatlar
+                    videoPlayer.play().catch(e => {
+                        console.log("Otomatik oynatma engellendi:", e);
+                        showStatus("Oynatma için OK tuşuna basın", "info");
+                    });
+                }
+                
                 showStatus(`${state.currentChannel.number}. ${state.currentChannel.name} yükleniyor...`, 'info');
                 
             } catch (error) {
@@ -477,16 +496,16 @@
         function toggleFullscreen() {
             if (!state.isFullscreen) {
                 // Tam ekrana geç
-                container.classList.add('fullscreen-mode');
+                container.classList.add('fullscreen');
                 state.isFullscreen = true;
                 
                 // Video kontrollerini gizle (tam ekranda)
                 videoPlayer.controls = false;
                 
-                showStatus('Tam Ekran Modu', 'info');
+                showStatus('Tam Ekran Modu - Çıkış için Exit', 'info');
             } else {
                 // Tam ekrandan çık
-                container.classList.remove('fullscreen-mode');
+                container.classList.remove('fullscreen');
                 state.isFullscreen = false;
                 videoPlayer.controls = true;
                 showStatus('Normal Ekran', 'info');
@@ -539,9 +558,6 @@
                 console.error('Video oynatma hatası:', e);
                 showStatus('Video oynatılamadı! Farklı bir kanal deneyin.', 'error');
             });
-            
-            // Tam ekrandan çık butonu
-            fullscreenExitBtn.addEventListener('click', toggleFullscreen);
             
             // Video tıklama olayı (çift tıklama ile tam ekran)
             let lastClickTime = 0;
