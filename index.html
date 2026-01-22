@@ -1,63 +1,468 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
-<title>☾☆ TÜRK PORTALGRUP ☾☆</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
-<style>
-body {
-  background-color: black;
-  text-align: center;
-  color: white;
-}
-</style>
-
- 
-</head>
-
-<body>
-
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>                        
-      </button>
-      <a class="navbar-brand" href="#">☾☆ TÜRK PORTALGRUP ☾☆</a>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="https://turkportalgrup.github.io">☾☆ ANASAYFA ☾☆</a></li>
-        </li>
-        <li><a href="https://turkportalgrup.github.io/dupelist.html">dupekill 1</a></li>
-        <li><a href="https://turkportalgrup.github.io/lokasyon.html">Lokasyon 1</a></li>
-        <li><a href="https://turkportalgrup.github.io/lokasyon2.html">Lokasyon 2</a></li>
-        <li><a href="https://turkportalgrup.github.io">turkportalgrup  4</a></li>
-        <li><a href="https://turkportalgrup.github.io">turkportalgrup  5</a></li>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TURKPORTAL GRUP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gray: #2c3e50;
+            --secondary-gray: #34495e;
+            --light-gray: #7f8c8d;
+            --dark-gray: #1a2530;
+            --primary-orange: #e67e22;
+            --secondary-orange: #d35400;
+            --light-orange: #f39c12;
+            --white: #ecf0f1;
+            --shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+            --inset-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
         
-      </ul>
-      
-    </div>
-  </div>
-</nav>
-  
-<title>☾☆ TÜRK PORTALGRUP ☾☆</title>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--primary-gray);
+            color: var(--white);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 30px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Başlık Stili */
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(to right, var(--dark-gray), var(--secondary-gray));
+            margin-bottom: 40px;
+            border-bottom: 5px solid var(--primary-orange);
+            box-shadow: var(--shadow);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            color: var(--light-orange);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--white);
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+        
+        /* Menüler Grid Yapısı */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        /* Kategori Kartları */
+        .category-card {
+            background: linear-gradient(to bottom right, var(--secondary-gray), var(--dark-gray));
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary-orange), var(--light-orange));
+        }
+        
+        .category-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: var(--light-orange);
+            font-size: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+        
+        .category-icon {
+            margin-right: 12px;
+            font-size: 1.4rem;
+        }
+        
+        /* Link Listesi */
+        .link-list {
+            list-style: none;
+        }
+        
+        .link-item {
+            margin-bottom: 12px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .link-item:hover {
+            background-color: rgba(230, 126, 34, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .link-item a {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .link-item a:hover {
+            color: var(--light-orange);
+        }
+        
+        .link-icon {
+            margin-right: 12px;
+            color: var(--primary-orange);
+            font-size: 1.1rem;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-gray);
+            font-size: 0.9rem;
+        }
+        
+        .url-display {
+            display: inline-block;
+            background-color: var(--dark-gray);
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-family: monospace;
+            color: var(--light-orange);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Responsive Tasarım */
+        @media (max-width: 768px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .category-card {
+                padding: 20px;
+            }
+        }
+        
+        /* Animasyonlar */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .category-card {
+            animation: fadeIn 0.6s ease forwards;
+        }
+        
+        /* Sıralı animasyon gecikmeleri */
+        .category-card:nth-child(1) { animation-delay: 0.1s; }
+        .category-card:nth-child(2) { animation-delay: 0.2s; }
+        .category-card:nth-child(3) { animation-delay: 0.3s; }
+        .category-card:nth-child(4) { animation-delay: 0.4s; }
+        .category-card:nth-child(5) { animation-delay: 0.5s; }
+        .category-card:nth-child(6) { animation-delay: 0.6s; }
+        .category-card:nth-child(7) { animation-delay: 0.7s; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-cube"></i> TURKPORTAL GRUP</h1>
+            <p class="subtitle">Kategorilere göre düzenlenmiş faydalı bağlantılar koleksiyonu</p>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="menu-grid">
+            <!-- Ana Menü -->
+            <div class="category-card">
+                <div class="category-title">
+                    <i class="fas fa-home category-icon"></i>
+                    <h2>Ana Menü</h2>
+                </div>
+                <ul class="link-list">
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/html1" target="_blank">
+                            <i class="fas fa-file-code link-icon"></i>
+                            <span>HTML1 - Ana Sayfa</span>
+                        </a>
+                    </li>
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/html2" target="_blank">
+                            <i class="fas fa-file-alt link-icon"></i>
+                            <span>HTML2 - Dokümantasyon</span>
+                        </a>
+                    </li>
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/html3" target="_blank">
+                            <i class="fas fa-file-contract link-icon"></i>
+                            <span>HTML3 - Sözleşmeler</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Uygulamalar -->
+            <div class="category-card">
+                <div class="category-title">
+                    <i class="fas fa-mobile-alt category-icon"></i>
+                    <h2>Uygulamalar</h2>
+                </div>
+                <ul class="link-list">
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/uygulama1" target="_blank">
+                            <i class="fas fa-gamepad link-icon"></i>
+                            <span>Uygulama 1 - Oyunlar</span>
+                        </a>
+                    </li>
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/uygulama2" target="_blank">
+                            <i class="fas fa-calendar-check link-icon"></i>
+                            <span>Uygulama 2 - Planlayıcı</span>
+                        </a>
+                    </li>
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/uygulama3" target="_blank">
+                            <i class="fas fa-chart-line link-icon"></i>
+                            <span>Uygulama 3 - Analiz</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Programlar -->
+            <div class="category-card">
+                <div class="category-title">
+                    <i class="fas fa-laptop-code category-icon"></i>
+                    <h2>Programlar</h2>
+                </div>
+                <ul class="link-list">
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/program1" target="_blank">
+                            <i class="fas fa-code link-icon"></i>
+                            <span>Program 1 - Editör</span>
+                        </a>
+                    </li>
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/program2" target="_blank">
+                            <i class="fas fa-database link-icon"></i>
+                            <span>Program 2 - Veritabanı</span>
+                        </a>
+                    </li>
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/program3" target="_blank">
+                            <i class="fas fa-paint-brush link-icon"></i>
+                            <span>Program 3 - Tasarım</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Araçlar -->
+            <div class="category-card">
+                <div class="category-title">
+                    <i class="fas fa-tools category-icon"></i>
+                    <h2>Araçlar</h2>
+                </div>
+                <ul class="link-list">
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/arac1" target="_blank">
+                            <i class="fas fa-calculator link-icon"></i>
+                            <span>Araç 1 - Hesaplayıcı</span>
+                        </a>
+                    </li>
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/arac2" target="_blank">
+                            <i class="fas fa-compress-arrows-alt link-icon"></i>
+                            <span>Araç 2 - Optimizasyon</span>
+                        </a>
+                    </li>
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/arac3" target="_blank">
+                            <i class="fas fa-shield-alt link-icon"></i>
+                            <span>Araç 3 - Güvenlik</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Faydalı Linkler -->
+            <div class="category-card">
+                <div class="category-title">
+                    <i class="fas fa-link category-icon"></i>
+                    <h2>Faydalı Linkler</h2>
+                </div>
+                <ul class="link-list">
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/link1" target="_blank">
+                            <i class="fas fa-book link-icon"></i>
+                            <span>Link 1 - Eğitim Kaynakları</span>
+                        </a>
+                    </li>
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/link2" target="_blank">
+                            <i class="fas fa-newspaper link-icon"></i>
+                            <span>Link 2 - Haberler</span>
+                        </a>
+                    </li>
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/link3" target="_blank">
+                            <i class="fas fa-video link-icon"></i>
+                            <span>Link 3 - Video Kütüphanesi</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- GitHub -->
+            <div class="category-card">
+                <div class="category-title">
+                    <i class="fab fa-github category-icon"></i>
+                    <h2>GitHub</h2>
+                </div>
+                <ul class="link-list">
+                    <li class="link-item">
+                        <a href="https://github.com/turkportalgrup" target="_blank">
+                            <i class="fab fa-github link-icon"></i>
+                            <span>GitHub - Ana Sayfa</span>
+                        </a>
+                    </li>
+                    <li class="link-item">
+                        <a href="https://github.com/turkportalgrup/projeler" target="_blank">
+                            <i class="fas fa-project-diagram link-icon"></i>
+                            <span>GitHub - Projeler</span>
+                        </a>
+                    </li>
+                    <li class="link-item">
+                        <a href="https://github.com/turkportalgrup/dokumanlar" target="_blank">
+                            <i class="fas fa-book-open link-icon"></i>
+                            <span>GitHub - Dokümantasyon</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Hakkında -->
+            <div class="category-card">
+                <div class="category-title">
+                    <i class="fas fa-info-circle category-icon"></i>
+                    <h2>Hakkında</h2>
+                </div>
+                <ul class="link-list">
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/hakkimizda" target="_blank">
+                            <i class="fas fa-users link-icon"></i>
+                            <span>Hakkımızda</span>
+                        </a>
+                    </li>
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/iletisim" target="_blank">
+                            <i class="fas fa-envelope link-icon"></i>
+                            <span>İletişim</span>
+                        </a>
+                    </li>
+                    <li class="link-item">
+                        <a href="https://turkportalgrup.github.io/gizlilik" target="_blank">
+                            <i class="fas fa-user-shield link-icon"></i>
+                            <span>Gizlilik Politikası</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>Tüm bağlantılar <strong>turkportalgrup.github.io</strong> adresine yönlendirilmektedir.</p>
+            <div class="url-display">https://turkportalgrup.github.io</div>
+            <p style="margin-top: 20px;">© 2023 TURKPORTAL GRUP - Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
 
-<h3><font color="grey"> ✰✰ ᴍᴀᴠɪʙᴏʀᴀɴ ✰✰</font></h3>
-
-<img src="https://dl.dropbox.com/s/gi5slxojp8brr1s/img_20210830_004831.jpg" alt="Avatar" style="width:200px">
-
-<h2><font color="grey"> HOŞ GELDİNİZ</h2>
-<h3><font color="white"> YAKINDA BURADAYIZ</h3>
-
-<h4><font color="red"> ☾☆ TÜRK<font color="white"> PORTALGRUP ☾☆</font></h4>
-
+    <script>
+        // Basit bir JavaScript kodu - etkileşim için
+        document.addEventListener('DOMContentLoaded', function() {
+            // Linklere tıklama animasyonu ekle
+            const linkItems = document.querySelectorAll('.link-item');
+            
+            linkItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // Eğer link yeni sekmede açılacaksa animasyon ekle
+                    if (this.querySelector('a').target === '_blank') {
+                        this.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 200);
+                    }
+                });
+            });
+            
+            // Kategori kartlarına hover efekti için ek class
+            const categoryCards = document.querySelectorAll('.category-card');
+            
+            categoryCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.zIndex = '10';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.zIndex = '';
+                });
+            });
+            
+            // Sayfa başlığına tıklayınca yenileme
+            document.querySelector('h1').addEventListener('click', function() {
+                this.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 300);
+            });
+        });
+    </script>
 </body>
 </html>
