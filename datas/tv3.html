@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Box Kanal Player</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #111;
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+        
+        .channel-list {
+            width: 35%;
+            background-color: #222;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .player-container {
+            width: 65%;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Tam ekran modu için sınıf */
+        .fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9999;
+            background: black;
+        }
+        
+        .fullscreen .channel-list {
+            display: none;
+        }
+        
+        .fullscreen .player-container {
+            width: 100vw !important;
+            height: 100vh !important;
+        }
+        
+        .fullscreen #video-player {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        .fullscreen .player-info {
+            display: none !important;
+        }
+        
+        .channel-item {
+            padding: 12px;
+            margin-bottom: 4px;
+            background-color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .channel-item:hover, .channel-item.active {
+            background-color: #444;
+        }
+        
+        .channel-number {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            background-color: #555;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            margin-right: 12px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .channel-name {
+            font-size: 16px;
+        }
+        
+        #video-player {
+            width: 100%;
+            height: calc(100vh - 80px);
+            background-color: #000;
+        }
+        
+        .player-info {
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .channel-info {
+            font-size: 20px;
+        }
+        
+        .status {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            z-index: 100;
+            display: none;
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 22px;
+            color: #fff;
+            z-index: 100;
+            text-align: center;
+        }
+        
+        .header {
+            background-color: #222;
+            padding: 12px;
+            text-align: center;
+            font-size: 22px;
+            border-bottom: 2px solid #444;
+        }
+        
+        .channel-input-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 28px;
+            z-index: 1001;
+            display: none;
+            border: 2px solid #007bff;
+        }
+        
+        .loader {
+            border: 4px solid #333;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .channel-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .channel-list::-webkit-scrollbar-track {
+            background: #333;
+        }
+        
+        .channel-list::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        TV Box Kanal Player
+        <div style="font-size: 14px; margin-top: 5px; color: #aaa;">Exit: Çıkış • OK: Oynat • Çift OK: Tam ekran</div>
+    </div>
+    
+    <div class="container" id="container">
+        <div class="channel-list" id="channel-list">
+            <div id="channels-container">
+                <!-- Kanal listesi buraya yüklenecek -->
+            </div>
+        </div>
+        
+        <div class="player-container" id="player-container">
+            <div class="player-info" id="player-info">
+                <div class="channel-info" id="current-channel">Kanal Seçilmedi</div>
+            </div>
+            <video id="video-player" controls></video>
+        </div>
+    </div>
+    
+    <div class="status" id="status"></div>
+    <div class="channel-input-display" id="channel-input-display"></div>
+    <div class="loading" id="loading">
+        <div class="loader"></div>
+        <div>Kanal listesi yükleniyor...</div>
+    </div>
+
+    <script>
+        // Uygulama durumu
+        const state = {
+            channels: [],
+            currentChannel: null,
+            currentChannelIndex: -1,
+            isFullscreen: false,
+            channelInput: '',
+            inputTimeout: null,
+            lastKeyPress: 0,
+            okPressCount: 0,
+            okPressTimeout: null
+        };
+
+        // DOM elementleri
+        const container = document.getElementById('container');
+        const channelList = document.getElementById('channel-list');
+        const playerContainer = document.getElementById('player-container');
+        const videoPlayer = document.getElementById('video-player');
+        const channelsContainer = document.getElementById('channels-container');
+        const currentChannelDisplay = document.getElementById('current-channel');
+        const statusDisplay = document.getElementById('status');
+        const loadingDisplay = document.getElementById('loading');
+        const channelInputDisplay = document.getElementById('channel-input-display');
+
+        // Tuş kodu sabitleri
+        const KEY_ENTER = 13;
+        const KEY_ESCAPE = 27;
+        const KEY_UP = 38;
+        const KEY_DOWN = 40;
+        const KEY_LEFT = 37;
+        const KEY_RIGHT = 39;
+        const KEY_0 = 48;
+        const KEY_9 = 57;
+        const KEY_NUMPAD_0 = 96;
+        const KEY_NUMPAD_9 = 105;
+
+        // Uygulama başlatma
+        document.addEventListener('DOMContentLoaded', initApp);
+
+        async function initApp() {
+            // Kanal listesini yükle
+            await loadChannels();
+            
+            // Olay dinleyicilerini ekle
+            setupEventListeners();
+            
+            // İlk kanalı seç
+            if (state.channels.length > 0) {
+                selectChannel(0);
+            }
+            
+            // Yükleme göstergesini gizle
+            loadingDisplay.style.display = 'none';
+            
+            showStatus(`${state.channels.length} kanal yüklendi`, 'success');
+        }
+
+        // Kanal listesini yükle (Dropbox linkinden)
+        async function loadChannels() {
+            try {
+                loadingDisplay.innerHTML = '<div class="loader"></div><div>Kanal listesi yükleniyor...</div>';
+                
+                // Dropbox linkinden kanal listesini al
+                // Not: Dropbox linki doğrudan indirme için dl=1 parametresi ile
+                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+                const targetUrl = 'https://www.dropbox.com/scl/fi/vkdkuge489z1grdxjw459/yasin.txt?rlkey=kac7bu9xsg1ecdywyil2t0bms&st=5bndyxax&dl=1';
+                
+                const response = await fetch(targetUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const text = await response.text();
+                
+                // Metni satırlara ayır ve kanalları işle
+                const lines = text.split('\n');
+                let channelNumber = 1;
+                
+                lines.forEach(line => {
+                    line = line.trim();
+                    
+                    // Kanal adı ve URL'sini ayır (| işareti ile ayrılmış)
+                    if (line && (line.includes('|') || line.includes('http'))) {
+                        let name, url;
+                        
+                        if (line.includes('|')) {
+                            const parts = line.split('|');
+                            name = parts[0].trim();
+                            url = parts[1].trim();
+                        } else {
+                            // Eğer | yoksa, sadece URL varsa
+                            name = `Kanal ${channelNumber}`;
+                            url = line;
+                        }
+                        
+                        // URL'nin geçerli olup olmadığını kontrol et
+                        if (url && (url.startsWith('http://') || url.startsWith('https://') || 
+                            url.startsWith('rtmp://') || url.startsWith('rtsp://') || 
+                            url.includes('.m3u8') || url.includes('.mp4') || 
+                            url.includes('.mkv') || url.includes('.ts'))) {
+                            
+                            state.channels.push({
+                                number: channelNumber,
+                                name: name,
+                                url: url
+                            });
+                            
+                            channelNumber++;
+                        }
+                    }
+                });
+                
+                // Eğer hiç kanal yüklenemediyse, örnek kanalları yükle
+                if (state.channels.length === 0) {
+                    throw new Error('Hiç kanal yüklenemedi');
+                }
+                
+                // Kanal listesini görüntüle
+                renderChannelList();
+                
+            } catch (error) {
+                console.error('Kanal listesi yüklenirken hata:', error);
+                showStatus('Dropbox kanalları yüklenemedi! Örnek kanallar kullanılıyor.', 'error');
+                
+                // Örnek kanalları yükle
+                loadSampleChannels();
+            }
+        }
+        
+        // Örnek kanalları yükle (çok sayıda kanal)
+        function loadSampleChannels() {
+            state.channels = [];
+            
+            // Türk kanalları
+            const turkishChannels = [
+                "TRT 1", "Show TV", "Kanal D", "Star TV", "FOX", "ATV", "TV8", 
+                "CNN Türk", "Habertürk", "NTV", "TLC", "Discovery", "Nat Geo", 
+                "BBC", "Euro Sport", "Cartoon Network", "Minika Çocuk", "TRT Çocuk",
+                "Beyaz TV", "360 TV", "Kanal 7", "TVNET", "Ülke TV", "Flash TV",
+                "Kral TV", "Number 1 TV", "Dream TV", "Dream Türk", "Power TV",
+                "Power Türk", "TRT Haber", "TRT Spor", "TRT Belgesel", "TRT Müzik",
+                "TRT Arabi", "TRT Türk", "TRT Kurdî", "TRT Avaz", "TRT World",
+                "TRT EBA TV İlkokul", "TRT EBA TV Ortaokul", "TRT EBA TV Lise",
+                "A Haber", "A News", "A Para", "A Spor", "A2", "Bursaspor TV",
+                "Fenerbahçe TV", "Galatasaray TV", "Bein Sports 1", "Bein Sports 2",
+                "Bein Sports 3", "Bein Sports 4", "Bein Sports Haber", "Bein Sports Max 1",
+                "Bein Sports Max 2", "S Sport", "S Sport 2", "Smart Spor", "Vavac TV"
+            ];
+            
+            // Test video URL'leri (gerçek test stream'leri)
+            const testUrls = [
+                "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+                "https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8",
+                "https://test-streams.mux.dev/x36xhzz/url_1/193039199_mp4_h264_aac_hq_7.m3u8",
+                "https://bitdash-a.akamaihd.net/s/content/media/Manifest.m3u8",
+                "https://mnmedias.api.telequebec.tv/m3u8/29880.m3u8",
+                "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8",
+                "https://content.jwplatform.com/manifests/vM7nH0Kl.m3u8",
+                "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8"
+            ];
+            
+            // Çok sayıda kanal oluştur
+            for (let i = 1; i <= 200; i++) {
+                let channelName;
+                let channelUrl;
+                
+                if (i <= turkishChannels.length) {
+                    channelName = turkishChannels[i-1];
+                } else {
+                    channelName = `Kanal ${i}`;
+                }
+                
+                // URL'leri döngüsel olarak kullan
+                channelUrl = testUrls[(i-1) % testUrls.length];
+                
+                state.channels.push({
+                    number: i,
+                    name: channelName,
+                    url: channelUrl
+                });
+            }
+            
+            renderChannelList();
+        }
+
+        // Kanal listesini görüntüle
+        function renderChannelList() {
+            channelsContainer.innerHTML = '';
+            
+            state.channels.forEach((channel, index) => {
+                const channelElement = document.createElement('div');
+                channelElement.className = 'channel-item';
+                channelElement.dataset.index = index;
+                
+                if (index === state.currentChannelIndex) {
+                    channelElement.classList.add('active');
+                }
+                
+                channelElement.innerHTML = `
+                    <div class="channel-number">${channel.number}</div>
+                    <div class="channel-name">${channel.name}</div>
+                `;
+                
+                channelElement.addEventListener('click', () => {
+                    selectChannel(index);
+                    playChannel();
+                });
+                
+                channelsContainer.appendChild(channelElement);
+            });
+        }
+
+        // Kanal seç
+        function selectChannel(index) {
+            if (index >= 0 && index < state.channels.length) {
+                // Önceki aktif kanalı temizle
+                const prevActive = document.querySelector('.channel-item.active');
+                if (prevActive) {
+                    prevActive.classList.remove('active');
+                }
+                
+                // Yeni kanalı aktif yap
+                state.currentChannelIndex = index;
+                state.currentChannel = state.channels[index];
+                
+                const newActive = document.querySelector(`.channel-item[data-index="${index}"]`);
+                if (newActive) {
+                    newActive.classList.add('active');
+                    // Aktif kanalı görünür alana getir
+                    newActive.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                
+                // Kanal bilgisini güncelle
+                currentChannelDisplay.textContent = `${state.currentChannel.number}. ${state.currentChannel.name}`;
+            }
+        }
+
+        // Kanalı oynat
+        function playChannel() {
+            if (!state.currentChannel) return;
+            
+            try {
+                // Video kaynağını değiştir
+                videoPlayer.src = state.currentChannel.url;
+                videoPlayer.load();
+                
+                // HLS formatı için HLS.js kontrolü
+                if (state.currentChannel.url.includes('.m3u8')) {
+                    // HLS formatında video
+                    videoPlayer.play().catch(e => {
+                        showStatus("Video oynatılamadı. HLS formatı desteklenmiyor olabilir.", "error");
+                    });
+                } else {
+                    // Diğer formatlar
+                    videoPlayer.play().catch(e => {
+                        console.log("Otomatik oynatma engellendi:", e);
+                        showStatus("Oynatma için OK tuşuna basın", "info");
+                    });
+                }
+                
+                showStatus(`${state.currentChannel.number}. ${state.currentChannel.name} yükleniyor...`, 'info');
+                
+            } catch (error) {
+                console.error('Video yükleme hatası:', error);
+                showStatus('Kanal yüklenirken hata oluştu!', 'error');
+            }
+        }
+
+        // Tam ekran yap
+        function toggleFullscreen() {
+            if (!state.isFullscreen) {
+                // Tam ekrana geç
+                container.classList.add('fullscreen');
+                state.isFullscreen = true;
+                
+                // Video kontrollerini gizle (tam ekranda)
+                videoPlayer.controls = false;
+                
+                showStatus('Tam Ekran Modu - Çıkış için Exit', 'info');
+            } else {
+                // Tam ekrandan çık
+                container.classList.remove('fullscreen');
+                state.isFullscreen = false;
+                videoPlayer.controls = true;
+                showStatus('Normal Ekran', 'info');
+            }
+        }
+
+        // Durum mesajı göster
+        function showStatus(message, type = 'info') {
+            statusDisplay.textContent = message;
+            statusDisplay.style.display = 'block';
+            
+            // Renkleri tipe göre ayarla
+            if (type === 'error') {
+                statusDisplay.style.backgroundColor = 'rgba(220, 53, 69, 0.9)';
+            } else if (type === 'success') {
+                statusDisplay.style.backgroundColor = 'rgba(40, 167, 69, 0.9)';
+            } else {
+                statusDisplay.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+            }
+            
+            // 2.5 saniye sonra gizle
+            clearTimeout(state.statusTimeout);
+            state.statusTimeout = setTimeout(() => {
+                statusDisplay.style.display = 'none';
+            }, 2500);
+        }
+
+        // Kanal numarası girişini göster
+        function showChannelInput() {
+            channelInputDisplay.textContent = state.channelInput;
+            channelInputDisplay.style.display = 'block';
+            
+            clearTimeout(state.inputDisplayTimeout);
+            state.inputDisplayTimeout = setTimeout(() => {
+                channelInputDisplay.style.display = 'none';
+            }, 1500);
+        }
+
+        // Olay dinleyicilerini kur
+        function setupEventListeners() {
+            // Klavye olayları
+            document.addEventListener('keydown', handleKeyDown);
+            
+            // Video oynatma olayları
+            videoPlayer.addEventListener('playing', () => {
+                showStatus(`${state.currentChannel.number}. ${state.currentChannel.name} oynatılıyor`, 'success');
+            });
+            
+            videoPlayer.addEventListener('error', (e) => {
+                console.error('Video oynatma hatası:', e);
+                showStatus('Video oynatılamadı! Farklı bir kanal deneyin.', 'error');
+            });
+            
+            // Video tıklama olayı (çift tıklama ile tam ekran)
+            let lastClickTime = 0;
+            videoPlayer.addEventListener('click', (e) => {
+                const currentTime = new Date().getTime();
+                const timeSinceLastClick = currentTime - lastClickTime;
+                
+                if (timeSinceLastClick < 300) { // 300ms içinde çift tıklama
+                    toggleFullscreen();
+                    e.preventDefault();
+                }
+                
+                lastClickTime = currentTime;
+            });
+        }
+
+        // Klavye olaylarını işle
+        function handleKeyDown(e) {
+            const key = e.keyCode;
+            
+            // Exit tuşu (ESC) - Direkt çıkış
+            if (key === KEY_ESCAPE) {
+                if (state.isFullscreen) {
+                    toggleFullscreen();
+                } else {
+                    // Uygulamadan çık
+                    if (confirm('Uygulamadan çıkmak istediğinize emin misiniz?')) {
+                        window.close();
+                    }
+                }
+                e.preventDefault();
+                return;
+            }
+            
+            // OK tuşu (Enter) - Oynatma/Tam ekran
+            if (key === KEY_ENTER) {
+                state.okPressCount++;
+                
+                clearTimeout(state.okPressTimeout);
+                state.okPressTimeout = setTimeout(() => {
+                    if (state.okPressCount === 1) {
+                        // Tek tıklama: Kanalı oynat
+                        if (state.currentChannel) {
+                            playChannel();
+                        }
+                    } else if (state.okPressCount >= 2) {
+                        // Çift veya daha fazla tıklama: Tam ekran
+                        toggleFullscreen();
+                    }
+                    
+                    state.okPressCount = 0;
+                }, 300);
+                
+                e.preventDefault();
+                return;
+            }
+            
+            // Yukarı ok tuşu - Önceki kanal
+            if (key === KEY_UP) {
+                if (state.currentChannelIndex > 0) {
+                    const newIndex = state.currentChannelIndex - 1;
+                    selectChannel(newIndex);
+                    
+                    // Tam ekranda ise otomatik oynat
+                    if (state.isFullscreen) {
+                        playChannel();
+                    }
+                }
+                e.preventDefault();
+                return;
+            }
+            
+            // Aşağı ok tuşu - Sonraki kanal
+            if (key === KEY_DOWN) {
+                if (state.currentChannelIndex < state.channels.length - 1) {
+                    const newIndex = state.currentChannelIndex + 1;
+                    selectChannel(newIndex);
+                    
+                    // Tam ekranda ise otomatik oynat
+                    if (state.isFullscreen) {
+                        playChannel();
+                    }
+                }
+                e.preventDefault();
+                return;
+            }
+            
+            // Sol ok tuşu - 10 kanal geri
+            if (key === KEY_LEFT) {
+                const newIndex = Math.max(0, state.currentChannelIndex - 10);
+                selectChannel(newIndex);
+                e.preventDefault();
+                return;
+            }
+            
+            // Sağ ok tuşu - 10 kanal ileri
+            if (key === KEY_RIGHT) {
+                const newIndex = Math.min(state.channels.length - 1, state.currentChannelIndex + 10);
+                selectChannel(newIndex);
+                e.preventDefault();
+                return;
+            }
+            
+            // Sayı tuşları (0-9) - Doğrudan kanal seçme
+            let channelNum = -1;
+            
+            // Normal sayı tuşları
+            if (key >= KEY_0 && key <= KEY_9) {
+                channelNum = key - KEY_0;
+            }
+            
+            // Numpad sayı tuşları
+            if (key >= KEY_NUMPAD_0 && key <= KEY_NUMPAD_9) {
+                channelNum = key - KEY_NUMPAD_0;
+            }
+            
+            if (channelNum !== -1) {
+                // Mevcut kanal girişine ekle
+                state.channelInput += channelNum.toString();
+                showChannelInput();
+                
+                // 1.5 saniye sonra kanalı seç ve oynat
+                clearTimeout(state.inputTimeout);
+                state.inputTimeout = setTimeout(() => {
+                    const inputNum = parseInt(state.channelInput);
+                    const channelIndex = state.channels.findIndex(c => c.number === inputNum);
+                    
+                    if (channelIndex !== -1) {
+                        selectChannel(channelIndex);
+                        playChannel();
+                    } else {
+                        showStatus(`Kanal ${inputNum} bulunamadı!`, 'error');
+                    }
+                    
+                    state.channelInput = '';
+                }, 1500);
+                
+                e.preventDefault();
+            }
+        }
+    </script>
+</body>
+</html>
