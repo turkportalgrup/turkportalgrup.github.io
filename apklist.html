@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TÜRK PORTAL GRUP - APK Dosyaları</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 5px;
+        }
+        
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(0, 173, 181, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            background: linear-gradient(90deg, #00adb5, #00fff7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 173, 181, 0.3);
+        }
+        
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .app-card {
+            background: rgba(30, 30, 46, 0.85);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            position: relative;
+            height: 280px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 8px;
+        }
+        
+        .app-card:focus {
+            transform: translateY(-5px) scale(1.02);
+            border-color: #00adb5;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            outline: none;
+        }
+        
+        .app-image-container {
+            height: 100px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 5px;
+            margin-bottom: 8px;
+        }
+        
+        .app-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 6px;
+            transition: transform 0.3s ease;
+        }
+        
+        .app-card:hover .app-image {
+            transform: scale(1.05);
+        }
+        
+        .app-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+        }
+        
+        .app-title {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: #fff;
+            font-weight: 600;
+            height: 35px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        
+        .app-description {
+            color: #b0b0b0;
+            font-size: 0.8rem;
+            line-height: 1.3;
+            margin-bottom: 10px;
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+        
+        .app-download-btn {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            background: linear-gradient(90deg, #00adb5, #007a80);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            margin-top: auto;
+        }
+        
+        .app-download-btn:hover, .app-download-btn:focus {
+            background: linear-gradient(90deg, #009199, #006167);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 173, 181, 0.4);
+            outline: none;
+        }
+        
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        
+        .category-btn {
+            padding: 12px 20px;
+            background: rgba(0, 173, 181, 0.2);
+            border: 2px solid rgba(0, 173, 181, 0.4);
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+            font-weight: bold;
+            min-width: 120px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .category-btn:hover, .category-btn.active, .category-btn:focus {
+            background: #00adb5;
+            border-color: #00fff7;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 173, 181, 0.4);
+            outline: none;
+        }
+        
+        .tv-instructions {
+            margin-top: 30px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+        
+        .tv-instructions h2 {
+            color: #00adb5;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 10px;
+            color: #777;
+            font-size: 0.8rem;
+        }
+        
+        /* TV odaklanma stilleri */
+        .app-card:focus-within {
+            transform: translateY(-5px) scale(1.02);
+            border-color: #00fff7;
+            box-shadow: 0 10px 20px rgba(0, 173, 181, 0.4);
+        }
+        
+        /* Responsive düzen */
+        @media (max-width: 1200px) {
+            .apps-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+            
+            .category-btn {
+                padding: 10px 16px;
+                min-width: 110px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .apps-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 12px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .app-card {
+                height: 260px;
+            }
+            
+            .app-image-container {
+                height: 90px;
+            }
+            
+            .category-btn {
+                padding: 8px 12px;
+                min-width: 90px;
+                font-size: 0.85rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .apps-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .container {
+                padding: 5px;
+            }
+            
+            .app-card {
+                height: 240px;
+            }
+            
+            .category-filter {
+                gap: 8px;
+            }
+            
+            .category-btn {
+                padding: 6px 10px;
+                min-width: 80px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Scrollbar düzenlemesi */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1a1a2e;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #00adb5, #007a80);
+            border-radius: 5px;
+        }
+        
+        /* Animasyonlar */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .app-card {
+            animation: fadeIn 0.4s ease forwards;
+            opacity: 0;
+        }
+        
+        /* Her kart için gecikme */
+        .app-card:nth-child(1) { animation-delay: 0.05s; }
+        .app-card:nth-child(2) { animation-delay: 0.1s; }
+        .app-card:nth-child(3) { animation-delay: 0.15s; }
+        .app-card:nth-child(4) { animation-delay: 0.2s; }
+        .app-card:nth-child(5) { animation-delay: 0.25s; }
+        .app-card:nth-child(6) { animation-delay: 0.3s; }
+        .app-card:nth-child(7) { animation-delay: 0.35s; }
+        .app-card:nth-child(8) { animation-delay: 0.4s; }
+        .app-card:nth-child(9) { animation-delay: 0.45s; }
+        .app-card:nth-child(10) { animation-delay: 0.5s; }
+        .app-card:nth-child(11) { animation-delay: 0.55s; }
+        .app-card:nth-child(12) { animation-delay: 0.6s; }
+        .app-card:nth-child(13) { animation-delay: 0.65s; }
+        .app-card:nth-child(14) { animation-delay: 0.7s; }
+        .app-card:nth-child(15) { animation-delay: 0.75s; }
+        .app-card:nth-child(16) { animation-delay: 0.8s; }
+        .app-card:nth-child(17) { animation-delay: 0.85s; }
+        .app-card:nth-child(18) { animation-delay: 0.9s; }
+        .app-card:nth-child(19) { animation-delay: 0.95s; }
+        .app-card:nth-child(20) { animation-delay: 1.0s; }
+        .app-card:nth-child(21) { animation-delay: 1.05s; }
+        .app-card:nth-child(22) { animation-delay: 1.1s; }
+        .app-card:nth-child(23) { animation-delay: 1.15s; }
+        .app-card:nth-child(24) { animation-delay: 1.2s; }
+        .app-card:nth-child(25) { animation-delay: 1.25s; }
+        .app-card:nth-child(26) { animation-delay: 1.3s; }
+        .app-card:nth-child(27) { animation-delay: 1.35s; }
+        .app-card:nth-child(28) { animation-delay: 1.4s; }
+        .app-card:nth-child(29) { animation-delay: 1.45s; }
+        .app-card:nth-child(30) { animation-delay: 1.5s; }
+        .app-card:nth-child(31) { animation-delay: 1.55s; }
+        .app-card:nth-child(32) { animation-delay: 1.6s; }
+        .app-card:nth-child(33) { animation-delay: 1.65s; }
+        .app-card:nth-child(34) { animation-delay: 1.7s; }
+        .app-card:nth-child(35) { animation-delay: 1.75s; }
+        .app-card:nth-child(36) { animation-delay: 1.8s; }
+        .app-card:nth-child(37) { animation-delay: 1.85s; }
+        .app-card:nth-child(38) { animation-delay: 1.9s; }
+        .app-card:nth-child(39) { animation-delay: 1.95s; }
+        .app-card:nth-child(40) { animation-delay: 2.0s; }
+        .app-card:nth-child(41) { animation-delay: 2.05s; }
+        .app-card:nth-child(42) { animation-delay: 2.1s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TÜRK PORTAL GRUP APK dosyalari</h1>
+        </header>
+        
+        <div class="category-filter" id="category-filter">
+            <button class="category-btn active" data-category="all">Tüm Uygulamalar</button>
+            <button class="category-btn" data-category="media">Medya Oynatıcılar</button>
+            <button class="category-btn" data-category="streaming">Film & Dizi</button>
+            <button class="category-btn" data-category="utility">TV Araçları</button>
+            <button class="category-btn" data-category="entertainment">Eğlence</button>
+            <button class="category-btn" data-category="game">TV Oyunları</button>
+            <button class="category-btn" data-category="social">Sosyal Medya</button>
+            <button class="category-btn" data-category="tools">Programlar</button>
+        </div>
+        
+        <div id="apps-container" class="apps-grid">
+            <!-- Uygulamalar buraya JavaScript ile eklenecek -->
+        </div>
+        
+        <div class="tv-instructions">
+            <h2>TV Kullanım Kılavuzu</h2>
+            <p>• Kategori seçmek için yön tuşları ile gezinin ve ENTER tuşuna basın</p>
+            <p>• Uygulama seçmek için yön tuşları ile uygulamalar arasında gezinin</p>
+            <p>• İndirmek için uygulama seçiliyken OK tuşuna basın ve ENTER ile onaylayın</p>
+        </div>
+        
+        <footer>
+            <p>© 2023 TÜRK PORTAL GRUP - Tüm hakları saklıdır.</p>
+        </footer>
+    </div>
+
+    <script>
+        // 42 APK uygulama verisi (32 + 10 yeni)
+        const apkApps = [
+            // MEDYA UYGULAMALARI
+            {
+                id: 1,
+                name: "VLC Media Player",
+                description: "TV'nizde tüm video formatlarını oynatın. Güçlü medya oynatıcı.",
+                imageUrl: "https://images.unsplash.com/photo-1611605698323-b1e99cfd37ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_VLC_LINK",
+                category: "media"
+            },
+            {
+                id: 2,
+                name: "MX Player Pro",
+                description: "Donanım hızlandırmalı video oynatıcı. Tüm formatları destekler.",
+                imageUrl: "https://images.unsplash.com/photo-1536240478700-b869070f9279?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_MXPLAYER_LINK",
+                category: "media"
+            },
+            {
+                id: 3,
+                name: "Kodi TV 19.4",
+                description: "Açık kaynaklı medya merkezi. Eklentilerle genişletilebilir.",
+                imageUrl: "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_KODI_LINK",
+                category: "media"
+            },
+            {
+                id: 4,
+                name: "Plex TV",
+                description: "Kişisel medya sunucunuzu TV'nizde kullanın.",
+                imageUrl: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_PLEX_LINK",
+                category: "media"
+            },
+            {
+                id: 5,
+                name: "Spotify TV",
+                description: "Milyonlarca şarkı ve podcast. TV'nizden müzik dinleyin.",
+                imageUrl: "https://images.unsplash.com/photo-1611605698323-b1e99cfd37ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_SPOTIFY_LINK",
+                category: "media"
+            },
+            {
+                id: 6,
+                name: "TV Music Player",
+                description: "TV için özel müzik çalar. Yerel müziklerinizi dinleyin.",
+                imageUrl: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_MUSIC_LINK",
+                category: "media"
+            },
+            
+            // STREAMING UYGULAMALARI
+            {
+                id: 7,
+                name: "Smart YouTube TV",
+                description: "TV'ler için optimize edilmiş YouTube deneyimi.",
+                imageUrl: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_YOUTUBE_LINK",
+                category: "streaming"
+            },
+            {
+                id: 8,
+                name: "Netflix TV",
+                description: "Dünyanın en popüler streaming hizmetinin TV uygulaması.",
+                imageUrl: "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_NETFLIX_LINK",
+                category: "streaming"
+            },
+            {
+                id: 9,
+                name: "Amazon Prime TV",
+                description: "Amazon Prime Video'nun TV uygulaması.",
+                imageUrl: "https://images.unsplash.com/photo-1542204165-65bf26472b9b?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_PRIME_LINK",
+                category: "streaming"
+            },
+            {
+                id: 10,
+                name: "Disney+ TV",
+                description: "Disney, Pixar, Marvel, Star Wars içerikleri.",
+                imageUrl: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_DISNEY_LINK",
+                category: "streaming"
+            },
+            {
+                id: 11,
+                name: "Smart IPTV",
+                description: "TV'nizde IPTV keyfi. M3U listelerinizi yükleyin.",
+                imageUrl: "https://images.unsplash.com/photo-1523755231516-e43fd2e8dca5?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_IPTV_LINK",
+                category: "streaming"
+            },
+            {
+                id: 12,
+                name: "Cinema TV APK",
+                description: "Popüler film ve dizi platformunun TV uyarlaması.",
+                imageUrl: "https://images.unsplash.com/photo-1489599809516-9827b6d1cf13?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_CINEMA_LINK",
+                category: "streaming"
+            },
+            
+            // ARAÇLAR
+            {
+                id: 13,
+                name: "TV File Commander",
+                description: "TV'nizde dosya yönetimi yapın. APK yükleme kolaylığı.",
+                imageUrl: "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_FILE_COMMANDER_LINK",
+                category: "utility"
+            },
+            {
+                id: 14,
+                name: "TV Browser",
+                description: "TV'niz için optimize edilmiş web tarayıcısı.",
+                imageUrl: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_BROWSER_LINK",
+                category: "utility"
+            },
+            {
+                id: 15,
+                name: "TV App Store",
+                description: "TV uygulamaları için özel mağaza.",
+                imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_APPSTORE_LINK",
+                category: "utility"
+            },
+            {
+                id: 16,
+                name: "TV Launcher Pro",
+                description: "TV ana ekranınızı özelleştirin.",
+                imageUrl: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_LAUNCHER_LINK",
+                category: "utility"
+            },
+            {
+                id: 17,
+                name: "TV Remote Control",
+                description: "Telefonunuzu TV kumandasına dönüştürün.",
+                imageUrl: "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_REMOTE_LINK",
+                category: "utility"
+            },
+            {
+                id: 18,
+                name: "TV Cleaner",
+                description: "TV'nizi temizleyin, hızlandırın.",
+                imageUrl: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_CLEANER_LINK",
+                category: "utility"
+            },
+            
+            // EĞLENCE
+            {
+                id: 19,
+                name: "TV Radio",
+                description: "Binlerce radyo kanalını dinleyin.",
+                imageUrl: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_RADIO_LINK",
+                category: "entertainment"
+            },
+            {
+                id: 20,
+                name: "TV Karaoke",
+                description: "TV'nizde karaoke yapın. Şarkı söyleyin eğlenin.",
+                imageUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_KARAOKE_LINK",
+                category: "entertainment"
+            },
+            {
+                id: 21,
+                name: "TV Magazine",
+                description: "TV'de dergi okuyun. Haberler, magazin.",
+                imageUrl: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_MAGAZINE_LINK",
+                category: "entertainment"
+            },
+            
+            // OYUNLAR
+            {
+                id: 22,
+                name: "TV Games Hub",
+                description: "TV'niz için yüzlerce oyun.",
+                imageUrl: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_GAMES_LINK",
+                category: "game"
+            },
+            {
+                id: 23,
+                name: "Chess TV",
+                description: "TV'de satranç oynayın. Zekanızı geliştirin.",
+                imageUrl: "https://images.unsplash.com/photo-1586165368505-84c5c8d5d6ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_CHESS_LINK",
+                category: "game"
+            },
+            {
+                id: 24,
+                name: "Puzzle TV",
+                description: "TV'de bulmaca çözün. Zaman geçirin.",
+                imageUrl: "https://images.unsplash.com/photo-1591872203537-6c6c1d1de0e4?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_PUZZLE_LINK",
+                category: "game"
+            },
+            
+            // SOSYAL
+            {
+                id: 25,
+                name: "TV WhatsApp",
+                description: "TV'nizden WhatsApp kullanın.",
+                imageUrl: "https://images.unsplash.com/photo-1611605698323-b1e99cfd37ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_WHATSAPP_LINK",
+                category: "social"
+            },
+            {
+                id: 26,
+                name: "TV Facebook",
+                description: "TV'de Facebook deneyimi.",
+                imageUrl: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_FACEBOOK_LINK",
+                category: "social"
+            },
+            {
+                id: 27,
+                name: "TV Instagram",
+                description: "TV'de Instagram fotoğraflarını görüntüleyin.",
+                imageUrl: "https://images.unsplash.com/photo-1611162616475-46b635cb6868?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_INSTAGRAM_LINK",
+                category: "social"
+            },
+            
+            // PROGRAMLAR
+            {
+                id: 28,
+                name: "TV Calculator",
+                description: "TV için hesap makinesi.",
+                imageUrl: "https://images.unsplash.com/photo-1587145820266-a5951ee6f620?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_CALCULATOR_LINK",
+                category: "tools"
+            },
+            {
+                id: 29,
+                name: "TV Notes",
+                description: "TV'de not alın, hatırlatıcı oluşturun.",
+                imageUrl: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_NOTES_LINK",
+                category: "tools"
+            },
+            {
+                id: 30,
+                name: "TV Calendar",
+                description: "TV takvim uygulaması.",
+                imageUrl: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_CALENDAR_LINK",
+                category: "tools"
+            },
+            {
+                id: 31,
+                name: "TV Weather",
+                description: "TV için hava durumu uygulaması.",
+                imageUrl: "https://images.unsplash.com/photo-1592210454359-9043f067919b?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_WEATHER_LINK",
+                category: "tools"
+            },
+            {
+                id: 32,
+                name: "TV Clock",
+                description: "TV için saat ve alarm uygulaması.",
+                imageUrl: "https://images.unsplash.com/photo-1493612276216-ee3925520721?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_CLOCK_LINK",
+                category: "tools"
+            },
+            // YENİ EKLENEN 10 UYGULAMA
+            {
+                id: 33,
+                name: "TV Video Editor",
+                description: "TV'nizde videoları düzenleyin, kırpın, birleştirin.",
+                imageUrl: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_VIDEOEDITOR_LINK",
+                category: "tools"
+            },
+            {
+                id: 34,
+                name: "TV Podcast",
+                description: "TV'de podcast dinleyin. Binlerce podcast kanalı.",
+                imageUrl: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_PODCAST_LINK",
+                category: "entertainment"
+            },
+            {
+                id: 35,
+                name: "TV News",
+                description: "TV'de haberleri takip edin. Güncel haberler.",
+                imageUrl: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_NEWS_LINK",
+                category: "entertainment"
+            },
+            {
+                id: 36,
+                name: "TV Screensaver",
+                description: "TV ekran koruyucu. Fotoğraf slayt gösterisi.",
+                imageUrl: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_SCREENSAVER_LINK",
+                category: "utility"
+            },
+            {
+                id: 37,
+                name: "TV Speed Test",
+                description: "TV'nizin internet hızını test edin.",
+                imageUrl: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_SPEEDTEST_LINK",
+                category: "utility"
+            },
+            {
+                id: 38,
+                name: "TV Gallery",
+                description: "TV'de fotoğraflarınızı görüntüleyin. Slayt gösterisi.",
+                imageUrl: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_GALLERY_LINK",
+                category: "media"
+            },
+            {
+                id: 39,
+                name: "TV Torrent",
+                description: "TV'de torrent indirin. Dosya paylaşımı.",
+                imageUrl: "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_TORRENT_LINK",
+                category: "utility"
+            },
+            {
+                id: 40,
+                name: "TV VPN",
+                description: "TV'nizde VPN kullanın. Güvenli bağlantı.",
+                imageUrl: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_VPN_LINK",
+                category: "utility"
+            },
+            {
+                id: 41,
+                name: "TV Antivirus",
+                description: "TV'nizi virüslerden koruyun. Güvenlik yazılımı.",
+                imageUrl: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_ANTIVIRUS_LINK",
+                category: "utility"
+            },
+            {
+                id: 42,
+                name: "TV Recorder",
+                description: "TV yayınlarını kaydedin. Program kaydedici.",
+                imageUrl: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+                downloadUrl: "BURAYA_EKLENECEK_RECORDER_LINK",
+                category: "media"
+            }
+        ];
+
+        // Değişkenler
+        let currentFocusIndex = 0;
+        let currentCategory = 'all';
+        let focusableElements = [];
+        let inDownloadMode = false;
+
+        // DOM yüklendiğinde uygulamaları oluştur
+        document.addEventListener('DOMContentLoaded', function() {
+            renderApps(apkApps);
+            setupTVNavigation();
+            
+            // Kategori filtreleme
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Aktif butonu güncelle
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    currentCategory = this.getAttribute('data-category');
+                    
+                    // Uygulamaları filtrele
+                    if (currentCategory === 'all') {
+                        renderApps(apkApps);
+                    } else {
+                        const filteredApps = apkApps.filter(app => app.category === currentCategory);
+                        renderApps(filteredApps);
+                    }
+                    
+                    // Filtreleme sonrası odaklanmayı güncelle
+                    updateFocusableElements();
+                    currentFocusIndex = 0;
+                    if (focusableElements.length > 0) {
+                        focusableElements[currentFocusIndex].focus();
+                    }
+                    inDownloadMode = false;
+                });
+                
+                // Kategori butonlarına Enter tuşu desteği
+                btn.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        this.click();
+                    }
+                });
+            });
+        });
+        
+        // Uygulamaları ekrana render et
+        function renderApps(apps) {
+            const appsContainer = document.getElementById('apps-container');
+            appsContainer.innerHTML = '';
+            
+            apps.forEach(app => {
+                const appCard = document.createElement('div');
+                appCard.className = 'app-card';
+                appCard.tabIndex = 0;
+                appCard.setAttribute('data-category', app.category);
+                appCard.setAttribute('data-app-id', app.id);
+                
+                // Uygulama kartı içeriği
+                appCard.innerHTML = `
+                    <div class="app-image-container">
+                        <img src="${app.imageUrl}" alt="${app.name}" class="app-image" onerror="this.src='https://images.unsplash.com/photo-1611605698323-b1e99cfd37ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80'">
+                    </div>
+                    <div class="app-content">
+                        <h3 class="app-title">${app.name}</h3>
+                        <p class="app-description">${app.description}</p>
+                        <a href="${app.downloadUrl}" class="app-download-btn" tabindex="-1" data-app-id="${app.id}">APK İndir</a>
+                    </div>
+                `;
+                
+                // Uygulama kartına tıklama olayı - direk indirme
+                appCard.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    startDownload(this.getAttribute('data-app-id'));
+                });
+                
+                // Uygulama kartına Enter tuşu desteği
+                appCard.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        startDownload(this.getAttribute('data-app-id'));
+                    }
+                });
+                
+                // İndirme butonuna tıklama olayı
+                const downloadBtn = appCard.querySelector('.app-download-btn');
+                downloadBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    startDownload(this.getAttribute('data-app-id'));
+                });
+                
+                appsContainer.appendChild(appCard);
+            });
+            
+            // Odaklanma elementlerini güncelle
+            updateFocusableElements();
+        }
+        
+        // İndirme işlemini başlat
+        function startDownload(appId) {
+            const app = apkApps.find(a => a.id == appId);
+            
+            if (app) {
+                if (app.downloadUrl.includes('BURAYA_EKLENECEK')) {
+                    alert(`${app.name} - İndirme linki henüz ayarlanmamış. Lütfen HTML kodunda downloadUrl alanını güncelleyin.`);
+                } else {
+                    // Onay mesajı göster
+                    if (confirm(`${app.name} uygulamasını indirmek istiyor musunuz?`)) {
+                        alert(`${app.name} indiriliyor...`);
+                        // Gerçek indirme işlemi için:
+                        // window.location.href = app.downloadUrl;
+                    }
+                }
+            }
+        }
+        
+        // Odaklanabilir elementleri güncelle
+        function updateFocusableElements() {
+            // Sadece kategori butonları ve uygulama kartları
+            focusableElements = document.querySelectorAll('.category-btn, .app-card');
+        }
+        
+        // TV navigasyonu için tuş dinleyicisi
+        function setupTVNavigation() {
+            // Klavye tuşlarını dinle (TV uzaktan kumandası için)
+            document.addEventListener('keydown', function(e) {
+                updateFocusableElements();
+                
+                switch(e.key) {
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        moveFocus(1);
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        moveFocus(-1);
+                        break;
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        moveFocusByRow(1);
+                        break;
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        moveFocusByRow(-1);
+                        break;
+                }
+            });
+            
+            // Bir sonraki/önceki elemana odaklan
+            function moveFocus(direction) {
+                currentFocusIndex += direction;
+                
+                // Sınırları kontrol et
+                if (currentFocusIndex < 0) {
+                    currentFocusIndex = focusableElements.length - 1;
+                } else if (currentFocusIndex >= focusableElements.length) {
+                    currentFocusIndex = 0;
+                }
+                
+                focusableElements[currentFocusIndex].focus();
+            }
+            
+            // Satır bazında odaklanma (grid yapısı için)
+            function moveFocusByRow(direction) {
+                const width = window.innerWidth;
+                let columns;
+                
+                if (width > 1200) columns = 8;
+                else if (width > 768) columns = 6;
+                else if (width > 480) columns = 4;
+                else columns = 2;
+                
+                currentFocusIndex += direction * columns;
+                
+                // Sınırları kontrol et
+                if (currentFocusIndex < 0) {
+                    currentFocusIndex = focusableElements.length - 1;
+                } else if (currentFocusIndex >= focusableElements.length) {
+                    currentFocusIndex = 0;
+                }
+                
+                focusableElements[currentFocusIndex].focus();
+            }
+        }
+        
+        // Resim yükleme hatalarını yönet
+        document.addEventListener('error', function(e) {
+            if (e.target.tagName === 'IMG' && e.target.classList.contains('app-image')) {
+                e.target.src = 'https://images.unsplash.com/photo-1611605698323-b1e99cfd37ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80';
+            }
+        }, true);
+    </script>
+</body>
+</html>

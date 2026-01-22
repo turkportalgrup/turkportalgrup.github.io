@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+<title>☾☆ TÜRK PORTALGRUP ☾☆</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+textarea { width: 300px; height: 180px; background-color: lightgrey; font-size: 1em; font-weight: bold; font-family: Verdana, Arial, Helvetica, sans-serif; border: 1px solid black; } 
+    
+body {
+  background-color: black;
+  text-align: center;
+  color: grey;
+}
+h1{ 
+
+font-size:20px;
+
+font-style:bold;
+
+font-family: 'Open Sans', sans-serif;
+
+color:yellow;
+
+}
+
+ 
+
+h2{ 
+
+font-size:16px;
+
+font-style:bold;
+
+font-family: 'Open Sans', sans-serif;
+
+color:#000;
+
+}
+
+
+
+h3{ 
+
+font-size:14px;
+
+font-style:normal;
+
+font-family: 'Open Sans', sans-serif;
+
+color:#000;
+
+}
+
+input[type=button], input[type=submit] { background-color: #62529c; border: none; color: #fff; padding: 10px 30px; text-decoration: none; margin: 4px 2px; cursor: pointer; }
+
+
+</style>
+
+ 
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">☾☆ TÜRK PORTALGRUP ☾☆</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">☾☆ ANASAYFA ☾☆</a></li>
+
+        </li>
+        <li><a href="https://turkportalgrup.github.io">ᴛᴜʀᴋᴘᴏʀᴛᴀʟɢʀᴜᴘ  1</a></li>
+        <li><a href="https://turkportalgrup.github.io">ᴛᴜʀᴋᴘᴏʀᴛᴀʟɢʀᴜᴘ  2</a></li>
+        <li><a href="https://turkportalgrup.github.io">ᴛᴜʀᴋᴘᴏʀᴛᴀʟɢʀᴜᴘ  3</a></li>
+        <li><a href="https://turkportalgrup.github.io">ᴛᴜʀᴋᴘᴏʀᴛᴀʟɢʀᴜᴘ  4</a></li>
+        <li><a href="https://turkportalgrup.github.io">ᴛᴜʀᴋᴘᴏʀᴛᴀʟɢʀᴜᴘ  5</a></li>
+        
+      </ul>
+      
+    </div>
+  </div>
+</nav>
+  
+<script type="text/javascript">
+function doit() {
+var txt = document.getElementById('masterlist').value
+txt = txt.replace(new RegExp( ">", "g" ), "&gt;");
+txt = txt.replace(new RegExp( "<", "g" ), "&lt;");
+var masterarray = txt.split('\n');
+var itemsInArray = masterarray.length;
+var dedupe = new Array();
+i = 0;
+var editedArray = new Array();
+while (i < itemsInArray) {
+masterarray[i]=masterarray[i].replace(/\s+$/, '');
+masterarray[i]=masterarray[i].replace(new RegExp( "\t", "g" ), '    ') 
+if (!(document.getElementById('kpblanks').checked)) {
+masterarray[i]=masterarray[i].replace(/^\s+/, '');
+}
+else {
+if (masterarray[i].match(/^ +/)) {
+var spc = masterarray[i].match(/^ +/);
+spc[0] = spc[0].replace(/ /g, ' ');   
+masterarray[i]=masterarray[i].replace(/^\s+/, spc[0]);
+}
+}
+
+if (document.getElementById('caps').checked) {
+var ulc = masterarray[i].toLowerCase();
+}
+else {
+var ulc = masterarray[i];
+}
+editedArray[ulc] = ulc;
+dedupe[ulc]="0";
+i++;
+}
+i = 0;
+var uniques = new Array();
+for (key in dedupe) {
+if (editedArray[key] != '') {
+uniques.push(editedArray[key]);
+}
+dedupe[key]="dontprint";
+i++;
+}
+if (document.getElementById('sort').checked) {
+uniques.sort(function(x,y){
+var a = String(x).toUpperCase(); 
+var b = String(y).toUpperCase(); 
+if (a > b) 
+return 1 
+if (a < b) 
+return -1 
+return 0; 
+});
+}
+var ulen = uniques.length;
+var thelist = uniques.join("\n");
+var rmvd = itemsInArray - ulen;
+document.getElementById('removed').innerHTML=itemsInArray + ' toplam, ' + rmvd  + ' silinen, ' + ulen + ' kalan.';  
+document.getElementById('output').value=thelist;
+document.getElementById('output').style.display="block";
+window.location = "#startresults";
+}
+
+function onoff(x) {
+if (x == 'on') {
+document.getElementById('onoffon').style.display="none";
+document.getElementById('onoffoff').style.display="block";
+document.getElementById('example').style.display="block";
+}
+else if (x == 'off') {
+document.getElementById('onoffoff').style.display="none";
+document.getElementById('onoffon').style.display="block";
+document.getElementById('example').style.display="none";
+}
+}
+</script>
+</head>
+<body><div id="container">
+<div style="margin-bottom:20px;margin-top:20px">
+<h1>ᴛᴜʀᴋ ᴘᴏʀᴛᴀʟɢʀᴜᴘ</h1><hr>
+<h5>MÜKERRER SİLME İŞLEMİ</h5>
+<textarea name="masterlist" id="masterlist" autofocus autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"cols="60" rows="5"></textarea><br />
+<p><label><input type="checkbox" name="caps" id="caps" value="">KÜÇÜK HARFE CEVİR</label><br /><label><input type="checkbox" name="kpblanks" id="kpblanks" value="">SATIR BOSLUK BIRAK</label><br /><label><input type="checkbox" name="sort" id="sort" value="">MÜKERRER OLANI SİL</label></p>
+<input type="submit" class="button" alt="Submit" title="kaydet" value="KAYDET" onclick="doit()" />
+
+<div id="disclaim">ᴛᴜʀᴋ ᴘᴏʀᴛᴀʟ ɢʀᴜᴘ</div>
+<a name="startresults"></a>
+<div><b><p name="removed" id="removed"></p></b></div><center>
+<textarea name="output" id="output" style="display:none" onclick="this.focus();this.select()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"cols="60" rows="5">
+</textarea></center>
+</div>
+
+<script type="text/javascript">new Image().src = "//counter.yadro.ru/hit?t52.6;r"+escape(document.referrer)+((typeof(screen)=="undefined")?"":";s"+screen.width+"*"+screen.height+"*"+(screen.colorDepth?screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+";h"+escape(document.title.substring(0,150))+";"+Math.random();</script></body>
+
+</body>
+</html>
