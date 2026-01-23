@@ -80,10 +80,11 @@
         
         .logo-img {
             height: 60px;
-            width: auto;
-            border-radius: 8px;
+            width: 60px;
+            border-radius: 50%;
             margin-right: 15px;
-            border: 2px solid var(--primary-orange);
+            border: 3px solid var(--primary-orange);
+            object-fit: cover;
         }
         
         .logo-text {
@@ -159,6 +160,13 @@
         .menu-category {
             padding: 20px;
             border-bottom: 1px solid var(--light-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-category:hover {
+            background-color: var(--medium-gray);
+            padding-left: 25px;
         }
         
         .menu-category:last-child {
@@ -166,9 +174,8 @@
         }
         
         .category-title {
-            color: var(--primary-orange);
+            color: var(--text-light);
             font-size: 1.3rem;
-            margin-bottom: 15px;
             display: flex;
             align-items: center;
             text-transform: uppercase;
@@ -178,35 +185,6 @@
         .category-title i {
             margin-right: 12px;
             font-size: 1.5rem;
-        }
-        
-        .category-links {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .category-link {
-            display: flex;
-            align-items: center;
-            color: var(--text-dark);
-            text-decoration: none;
-            padding: 12px 15px;
-            margin-bottom: 8px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            background-color: var(--medium-gray);
-        }
-        
-        .category-link:hover {
-            background-color: var(--primary-orange);
-            color: var(--text-light);
-            transform: translateX(5px);
-            padding-left: 20px;
-        }
-        
-        .category-link i {
-            margin-right: 10px;
-            font-size: 1.2rem;
         }
         
         /* İÇERİK BÖLÜMLERİ */
@@ -366,6 +344,7 @@
             
             .logo-img {
                 height: 50px;
+                width: 50px;
             }
             
             .side-menu {
@@ -412,6 +391,10 @@
             .side-menu {
                 width: 100%;
                 right: -100%;
+            }
+            
+            .menu-category {
+                padding: 15px;
             }
         }
         
@@ -504,53 +487,71 @@
             border-color: var(--primary-orange);
         }
         
+        #home .category-title i {
+            color: var(--primary-orange);
+        }
+        
         #ana-menu .section-title,
-        #ana-menu .category-description,
-        .menu-category:nth-child(1) .category-title {
-            color: var(--accent-blue);
+        #ana-menu .category-description {
             border-color: var(--accent-blue);
         }
         
+        #ana-menu .category-title i {
+            color: var(--accent-blue);
+        }
+        
         #uygulamalar .section-title,
-        #uygulamalar .category-description,
-        .menu-category:nth-child(2) .category-title {
-            color: var(--accent-green);
+        #uygulamalar .category-description {
             border-color: var(--accent-green);
         }
         
+        #uygulamalar .category-title i {
+            color: var(--accent-green);
+        }
+        
         #programlar .section-title,
-        #programlar .category-description,
-        .menu-category:nth-child(3) .category-title {
-            color: var(--accent-purple);
+        #programlar .category-description {
             border-color: var(--accent-purple);
         }
         
+        #programlar .category-title i {
+            color: var(--accent-purple);
+        }
+        
         #araclar .section-title,
-        #araclar .category-description,
-        .menu-category:nth-child(4) .category-title {
-            color: var(--accent-yellow);
+        #araclar .category-description {
             border-color: var(--accent-yellow);
         }
         
+        #araclar .category-title i {
+            color: var(--accent-yellow);
+        }
+        
         #linkler .section-title,
-        #linkler .category-description,
-        .menu-category:nth-child(5) .category-title {
-            color: var(--accent-pink);
+        #linkler .category-description {
             border-color: var(--accent-pink);
         }
         
+        #linkler .category-title i {
+            color: var(--accent-pink);
+        }
+        
         #github .section-title,
-        #github .category-description,
-        .menu-category:nth-child(6) .category-title {
-            color: var(--text-light);
+        #github .category-description {
             border-color: var(--text-light);
         }
         
+        #github .category-title i {
+            color: var(--text-light);
+        }
+        
         #hakkimda .section-title,
-        #hakkimda .category-description,
-        .menu-category:nth-child(7) .category-title {
-            color: var(--accent-cyan);
+        #hakkimda .category-description {
             border-color: var(--accent-cyan);
+        }
+        
+        #hakkimda .category-title i {
+            color: var(--accent-cyan);
         }
         
         /* KART RENKLERİ */
@@ -581,6 +582,15 @@
         #hakkimda .link-card:nth-child(1) { border-top-color: var(--accent-cyan); }
         #hakkimda .link-card:nth-child(2) { border-top-color: var(--accent-blue); }
         #hakkimda .link-card:nth-child(3) { border-top-color: var(--accent-green); }
+        
+        /* MENÜ KATEGORİ RENKLERİ */
+        .menu-category:nth-child(1) .category-title i { color: var(--accent-blue); }
+        .menu-category:nth-child(2) .category-title i { color: var(--accent-green); }
+        .menu-category:nth-child(3) .category-title i { color: var(--accent-purple); }
+        .menu-category:nth-child(4) .category-title i { color: var(--accent-yellow); }
+        .menu-category:nth-child(5) .category-title i { color: var(--accent-pink); }
+        .menu-category:nth-child(6) .category-title i { color: var(--text-light); }
+        .menu-category:nth-child(7) .category-title i { color: var(--accent-cyan); }
     </style>
 </head>
 <body>
@@ -605,118 +615,36 @@
     
     <!-- YAN AÇILIR MENÜ -->
     <div class="side-menu" id="sideMenu">
-        <div class="menu-category">
+        <div class="menu-category" data-target="home">
             <h3 class="category-title"><i class="fas fa-home"></i> Ana Sayfa</h3>
-            <div class="category-links">
-                <a href="#home" class="category-link" data-target="home">
-                    <i class="fas fa-rocket"></i> Hoş Geldiniz
-                </a>
-            </div>
         </div>
         
-        <div class="menu-category">
+        <div class="menu-category" data-target="ana-menu">
             <h3 class="category-title"><i class="fas fa-bars"></i> Ana Menü</h3>
-            <div class="category-links">
-                <a href="#ana-menu" class="category-link" data-target="ana-menu">
-                    <i class="fab fa-html5"></i> HTML Projeler
-                </a>
-                <a href="#ana-menu" class="category-link" data-target="ana-menu">
-                    <i class="fab fa-css3-alt"></i> CSS Projeler
-                </a>
-                <a href="#ana-menu" class="category-link" data-target="ana-menu">
-                    <i class="fab fa-js-square"></i> JavaScript Projeler
-                </a>
-            </div>
         </div>
         
-        <div class="menu-category">
+        <div class="menu-category" data-target="uygulamalar">
             <h3 class="category-title"><i class="fas fa-mobile-alt"></i> Uygulamalar</h3>
-            <div class="category-links">
-                <a href="#uygulamalar" class="category-link" data-target="uygulamalar">
-                    <i class="fas fa-calculator"></i> Hesap Makinesi
-                </a>
-                <a href="#uygulamalar" class="category-link" data-target="uygulamalar">
-                    <i class="fas fa-cloud-sun"></i> Hava Durumu
-                </a>
-                <a href="#uygulamalar" class="category-link" data-target="uygulamalar">
-                    <i class="fas fa-tasks"></i> Görev Yöneticisi
-                </a>
-            </div>
         </div>
         
-        <div class="menu-category">
+        <div class="menu-category" data-target="programlar">
             <h3 class="category-title"><i class="fas fa-laptop-code"></i> Programlar</h3>
-            <div class="category-links">
-                <a href="#programlar" class="category-link" data-target="programlar">
-                    <i class="fas fa-file-code"></i> HTML Editör
-                </a>
-                <a href="#programlar" class="category-link" data-target="programlar">
-                    <i class="fas fa-chart-bar"></i> Veri Analiz
-                </a>
-                <a href="#programlar" class="category-link" data-target="programlar">
-                    <i class="fas fa-palette"></i> Görsel Editör
-                </a>
-            </div>
         </div>
         
-        <div class="menu-category">
+        <div class="menu-category" data-target="araclar">
             <h3 class="category-title"><i class="fas fa-tools"></i> Araçlar</h3>
-            <div class="category-links">
-                <a href="#araclar" class="category-link" data-target="araclar">
-                    <i class="fas fa-ruler-combined"></i> Birim Dönüştürücü
-                </a>
-                <a href="#araclar" class="category-link" data-target="araclar">
-                    <i class="fas fa-key"></i> Şifre Üretici
-                </a>
-                <a href="#araclar" class="category-link" data-target="araclar">
-                    <i class="fas fa-code"></i> JSON Formatlayıcı
-                </a>
-            </div>
         </div>
         
-        <div class="menu-category">
+        <div class="menu-category" data-target="linkler">
             <h3 class="category-title"><i class="fas fa-link"></i> Linkler</h3>
-            <div class="category-links">
-                <a href="#linkler" class="category-link" data-target="linkler">
-                    <i class="fab fa-stack-overflow"></i> Stack Overflow
-                </a>
-                <a href="#linkler" class="category-link" data-target="linkler">
-                    <i class="fab fa-codepen"></i> CodePen
-                </a>
-                <a href="#linkler" class="category-link" data-target="linkler">
-                    <i class="fas fa-book"></i> MDN Web Docs
-                </a>
-            </div>
         </div>
         
-        <div class="menu-category">
+        <div class="menu-category" data-target="github">
             <h3 class="category-title"><i class="fab fa-github"></i> GitHub</h3>
-            <div class="category-links">
-                <a href="#github" class="category-link" data-target="github">
-                    <i class="fab fa-github"></i> Ana Profil
-                </a>
-                <a href="#github" class="category-link" data-target="github">
-                    <i class="fas fa-code-branch"></i> GitHub Pages
-                </a>
-                <a href="#github" class="category-link" data-target="github">
-                    <i class="fas fa-star"></i> Popüler Projeler
-                </a>
-            </div>
         </div>
         
-        <div class="menu-category">
+        <div class="menu-category" data-target="hakkimda">
             <h3 class="category-title"><i class="fas fa-info-circle"></i> Hakkında</h3>
-            <div class="category-links">
-                <a href="#hakkimda" class="category-link" data-target="hakkimda">
-                    <i class="fas fa-history"></i> Tarihçe
-                </a>
-                <a href="#hakkimda" class="category-link" data-target="hakkimda">
-                    <i class="fas fa-users"></i> Ekibimiz
-                </a>
-                <a href="#hakkimda" class="category-link" data-target="hakkimda">
-                    <i class="fas fa-envelope-open-text"></i> İletişim
-                </a>
-            </div>
         </div>
     </div>
     
@@ -779,20 +707,20 @@
             <div class="link-grid">
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fab fa-html5"></i> HTML Proje 1</h3>
-                    <p class="link-card-description">Modern HTML5 kullanılarak geliştirilmiş, semantik yapıya sahip örnek web sayfası projesi.</p>
-                    <a href="turkportalgrup.github.io/ana-menu-html1" class="link-button" target="_blank">Projeyi Görüntüle</a>
+                    <p class="link-card-description">Modern HTML5 kullanılarak geliştirilmiş, semantik yapıya sahip örnek web sayfası projesi. Responsive tasarım ile tüm cihazlarda mükemmel görüntülenir.</p>
+                    <a href="https://turkportalgrup.github.io/ana-menu-html1" class="link-button" target="_blank">Projeyi Görüntüle</a>
                 </div>
                 
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fab fa-css3-alt"></i> CSS Proje 2</h3>
-                    <p class="link-card-description">CSS Grid, Flexbox ve modern CSS özellikleri ile oluşturulmuş responsive tasarım örneği.</p>
-                    <a href="turkportalgrup.github.io/ana-menu-html2" class="link-button" target="_blank">Projeyi Görüntüle</a>
+                    <p class="link-card-description">CSS Grid, Flexbox ve modern CSS özellikleri ile oluşturulmuş responsive tasarım örneği. Animasyonlar ve geçiş efektleri içerir.</p>
+                    <a href="https://turkportalgrup.github.io/ana-menu-html2" class="link-button" target="_blank">Projeyi Görüntüle</a>
                 </div>
                 
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fab fa-js-square"></i> JavaScript Proje 3</h3>
-                    <p class="link-card-description">ES6+ özellikleri kullanılarak geliştirilmiş, interaktif JavaScript uygulaması örneği.</p>
-                    <a href="turkportalgrup.github.io/ana-menu-html3" class="link-button" target="_blank">Projeyi Görüntüle</a>
+                    <p class="link-card-description">ES6+ özellikleri kullanılarak geliştirilmiş, interaktif JavaScript uygulaması örneği. Dinamik içerik yükleme ve API entegrasyonu içerir.</p>
+                    <a href="https://turkportalgrup.github.io/ana-menu-html3" class="link-button" target="_blank">Projeyi Görüntüle</a>
                 </div>
             </div>
         </section>
@@ -807,20 +735,20 @@
             <div class="link-grid">
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fas fa-calculator"></i> Hesap Makinesi</h3>
-                    <p class="link-card-description">Gelişmiş matematik işlemleri yapabilen, bilimsel ve programcı modları içeren hesap makinesi uygulaması.</p>
-                    <a href="turkportalgrup.github.io/uygulama-html1" class="link-button" target="_blank">Uygulamayı Aç</a>
+                    <p class="link-card-description">Gelişmiş matematik işlemleri yapabilen, bilimsel ve programcı modları içeren hesap makinesi uygulaması. Tarihçe kaydı ve tema desteği sunar.</p>
+                    <a href="https://turkportalgrup.github.io/uygulama-html1" class="link-button" target="_blank">Uygulamayı Aç</a>
                 </div>
                 
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fas fa-cloud-sun"></i> Hava Durumu</h3>
-                    <p class="link-card-description">Dünya genelinde şehirler için anlık hava durumu ve 7 günlük tahminler sunan uygulama.</p>
-                    <a href="turkportalgrup.github.io/uygulama-html2" class="link-button" target="_blank">Uygulamayı Aç</a>
+                    <p class="link-card-description">Dünya genelinde şehirler için anlık hava durumu ve 7 günlük tahminler sunan uygulama. Konum tabanlı hava durumu bilgisi sağlar.</p>
+                    <a href="https://turkportalgrup.github.io/uygulama-html2" class="link-button" target="_blank">Uygulamayı Aç</a>
                 </div>
                 
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fas fa-tasks"></i> Görev Yöneticisi</h3>
-                    <p class="link-card-description">Günlük görevlerinizi düzenlemenize, takip etmenize ve tamamlamanıza yardımcı olan uygulama.</p>
-                    <a href="turkportalgrup.github.io/uygulama-html3" class="link-button" target="_blank">Uygulamayı Aç</a>
+                    <p class="link-card-description">Günlük görevlerinizi düzenlemenize, takip etmenize ve tamamlamanıza yardımcı olan uygulama. Bildirimler ve hatırlatıcılar içerir.</p>
+                    <a href="https://turkportalgrup.github.io/uygulama-html3" class="link-button" target="_blank">Uygulamayı Aç</a>
                 </div>
             </div>
         </section>
@@ -835,20 +763,20 @@
             <div class="link-grid">
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fas fa-file-code"></i> HTML Editör</h3>
-                    <p class="link-card-description">HTML, CSS ve JavaScript kodlarınızı düzenleyebileceğiniz, canlı önizleme özellikli gelişmiş editör.</p>
-                    <a href="turkportalgrup.github.io/program-html1" class="link-button" target="_blank">Programı Aç</a>
+                    <p class="link-card-description">HTML, CSS ve JavaScript kodlarınızı düzenleyebileceğiniz, canlı önizleme özellikli gelişmiş editör. Kod tamamlama ve hata denetimi sunar.</p>
+                    <a href="https://turkportalgrup.github.io/program-html1" class="link-button" target="_blank">Programı Aç</a>
                 </div>
                 
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fas fa-chart-bar"></i> Veri Analiz</h3>
-                    <p class="link-card-description">Veri setlerinizi yükleyip analiz edebileceğiniz, grafikler oluşturabileceğiniz program.</p>
-                    <a href="turkportalgrup.github.io/program-html2" class="link-button" target="_blank">Programı Aç</a>
+                    <p class="link-card-description">Veri setlerinizi yükleyip analiz edebileceğiniz, grafikler oluşturabileceğiniz program. İstatistiksel analiz ve veri görselleştirme araçları içerir.</p>
+                    <a href="https://turkportalgrup.github.io/program-html2" class="link-button" target="_blank">Programı Aç</a>
                 </div>
                 
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fas fa-palette"></i> Görsel Editör</h3>
-                    <p class="link-card-description">Temel fotoğraf düzenleme işlemlerini yapabileceğiniz, filtreler uygulayabileceğiniz program.</p>
-                    <a href="turkportalgrup.github.io/program-html3" class="link-button" target="_blank">Programı Aç</a>
+                    <p class="link-card-description">Temel fotoğraf düzenleme işlemlerini yapabileceğiniz, filtreler uygulayabileceğiniz program. Kırpma, döndürme ve renk düzenleme araçları sunar.</p>
+                    <a href="https://turkportalgrup.github.io/program-html3" class="link-button" target="_blank">Programı Aç</a>
                 </div>
             </div>
         </section>
@@ -863,20 +791,20 @@
             <div class="link-grid">
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fas fa-ruler-combined"></i> Birim Dönüştürücü</h3>
-                    <p class="link-card-description">Uzunluk, ağırlık, sıcaklık, hız gibi farklı birimleri birbirine dönüştürebileceğiniz araç.</p>
-                    <a href="turkportalgrup.github.io/arac-html1" class="link-button" target="_blank">Aracı Aç</a>
+                    <p class="link-card-description">Uzunluk, ağırlık, sıcaklık, hız gibi farklı birimleri birbirine dönüştürebileceğiniz araç. 50'den fazla birim kategorisi ve gerçek zamanlı dönüşüm.</p>
+                    <a href="https://turkportalgrup.github.io/arac-html1" class="link-button" target="_blank">Aracı Aç</a>
                 </div>
                 
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fas fa-key"></i> Şifre Üretici</h3>
-                    <p class="link-card-description">Güvenli ve rastgele şifreler oluşturabileceğiniz, şifre gücünüzü test edebileceğiniz araç.</p>
-                    <a href="turkportalgrup.github.io/arac-html2" class="link-button" target="_blank">Aracı Aç</a>
+                    <p class="link-card-description">Güvenli ve rastgele şifreler oluşturabileceğiniz, şifre gücünüzü test edebileceğiniz araç. Özelleştirilebilir şifre uzunluğu ve karakter seti.</p>
+                    <a href="https://turkportalgrup.github.io/arac-html2" class="link-button" target="_blank">Aracı Aç</a>
                 </div>
                 
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fas fa-code"></i> JSON Formatlayıcı</h3>
-                    <p class="link-card-description">JSON verilerinizi düzenleyip formatlayabileceğiniz, geçerliliğini kontrol edebileceğiniz araç.</p>
-                    <a href="turkportalgrup.github.io/arac-html3" class="link-button" target="_blank">Aracı Aç</a>
+                    <p class="link-card-description">JSON verilerinizi düzenleyip formatlayabileceğiniz, geçerliliğini kontrol edebileceğiniz araç. Syntax highlighting ve hata tespiti sunar.</p>
+                    <a href="https://turkportalgrup.github.io/arac-html3" class="link-button" target="_blank">Aracı Aç</a>
                 </div>
             </div>
         </section>
@@ -891,19 +819,19 @@
             <div class="link-grid">
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fab fa-stack-overflow"></i> Stack Overflow</h3>
-                    <p class="link-card-description">Programlama sorularınız için dünyanın en büyük geliştirici topluluğu.</p>
+                    <p class="link-card-description">Programlama sorularınız için dünyanın en büyük geliştirici topluluğu. 18 milyondan fazla soru ve cevap ile yazılım geliştiriciler için en önemli kaynak.</p>
                     <a href="https://stackoverflow.com" class="link-button" target="_blank">Siteye Git</a>
                 </div>
                 
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fab fa-codepen"></i> CodePen</h3>
-                    <p class="link-card-description">HTML, CSS ve JavaScript kod snippet'lerinizi test edip paylaşabileceğiniz platform.</p>
+                    <p class="link-card-description">HTML, CSS ve JavaScript kod snippet'lerinizi test edip paylaşabileceğiniz platform. Front-end geliştiriciler için sosyal geliştirme ortamı.</p>
                     <a href="https://codepen.io" class="link-button" target="_blank">Siteye Git</a>
                 </div>
                 
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fas fa-book"></i> MDN Web Docs</h3>
-                    <p class="link-card-description">Web teknolojileri hakkında kapsamlı dokümantasyon ve öğreticiler.</p>
+                    <p class="link-card-description">Web teknolojileri hakkında kapsamlı dokümantasyon ve öğreticiler. HTML, CSS, JavaScript ve Web API'leri için resmi Mozilla dokümantasyonu.</p>
                     <a href="https://developer.mozilla.org" class="link-button" target="_blank">Siteye Git</a>
                 </div>
             </div>
@@ -919,20 +847,20 @@
             <div class="link-grid">
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fab fa-github"></i> Ana Profil</h3>
-                    <p class="link-card-description">TurkPortal Grup'un GitHub ana sayfası. Tüm organizasyon projelerini görüntüleyin.</p>
+                    <p class="link-card-description">TurkPortal Grup'un GitHub ana sayfası. Tüm organizasyon projelerini görüntüleyin, katkıda bulunun veya projelerimizi takip edin.</p>
                     <a href="https://github.com/turkportalgrup" class="link-button" target="_blank">Profile Git</a>
                 </div>
                 
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fas fa-code-branch"></i> GitHub Pages</h3>
-                    <p class="link-card-description">Bu sitenin kaynak kodu ve diğer GitHub Pages projelerimiz.</p>
+                    <p class="link-card-description">Bu sitenin kaynak kodu ve diğer GitHub Pages projelerimiz. Statik web siteleri oluşturmak için GitHub Pages kullanım örnekleri.</p>
                     <a href="https://github.com/turkportalgrup/turkportalgrup.github.io" class="link-button" target="_blank">Depoya Git</a>
                 </div>
                 
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fas fa-star"></i> Popüler Projeler</h3>
-                    <p class="link-card-description">En çok yıldız alan ve en aktif projelerimizin listesi.</p>
-                    <a href="https://github.com/turkportalgrup?tab=repositories" class="link-button" target="_blank">Projelere Git</a>
+                    <p class="link-card-description">En çok yıldız alan ve en aktif projelerimizin listesi. Topluluk tarafından en beğenilen TurkPortal Grup projelerini keşfedin.</p>
+                    <a href="https://github.com/turkportalgrup?tab=repositories&q=&type=&language=&sort=stargazers" class="link-button" target="_blank">Projelere Git</a>
                 </div>
             </div>
         </section>
@@ -947,20 +875,20 @@
             <div class="link-grid">
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fas fa-history"></i> Tarihçe</h3>
-                    <p class="link-card-description">TurkPortal Grup'un kuruluş hikayesi, geçmiş projeler ve gelişim süreci hakkında bilgiler.</p>
-                    <a href="turkportalgrup.github.io/hakkimda-html1" class="link-button" target="_blank">Tarihçeyi Gör</a>
+                    <p class="link-card-description">TurkPortal Grup'un kuruluş hikayesi, geçmiş projeler ve gelişim süreci hakkında bilgiler. 2018'den bugüne yolculuğumuz.</p>
+                    <a href="https://turkportalgrup.github.io/hakkimda-html1" class="link-button" target="_blank">Tarihçeyi Gör</a>
                 </div>
                 
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fas fa-users"></i> Ekibimiz</h3>
-                    <p class="link-card-description">TurkPortal Grup'u oluşturan geliştiriciler, tasarımcılar ve içerik üreticileri.</p>
-                    <a href="turkportalgrup.github.io/hakkimda-html2" class="link-button" target="_blank">Ekibi Gör</a>
+                    <p class="link-card-description">TurkPortal Grup'u oluşturan geliştiriciler, tasarımcılar ve içerik üreticileri. Ekibimiz hakkında bilgi ve iletişim detayları.</p>
+                    <a href="https://turkportalgrup.github.io/hakkimda-html2" class="link-button" target="_blank">Ekibi Gör</a>
                 </div>
                 
                 <div class="link-card">
                     <h3 class="link-card-title"><i class="fas fa-envelope-open-text"></i> İletişim</h3>
-                    <p class="link-card-description">Sorularınız, önerileriniz veya iş birlikleri için bizimle iletişime geçebileceğiniz kanallar.</p>
-                    <a href="turkportalgrup.github.io/hakkimda-html3" class="link-button" target="_blank">İletişim Sayfası</a>
+                    <p class="link-card-description">Sorularınız, önerileriniz veya iş birlikleri için bizimle iletişime geçebileceğiniz kanallar. Form ile doğrudan mesaj gönderin.</p>
+                    <a href="https://turkportalgrup.github.io/hakkimda-html3" class="link-button" target="_blank">İletişim Sayfası</a>
                 </div>
             </div>
         </section>
@@ -979,7 +907,7 @@
                     <a href="#home" data-target="home">Ana Sayfa</a>
                     <a href="#github" data-target="github">GitHub</a>
                     <a href="#hakkimda" data-target="hakkimda">Hakkında</a>
-                    <a href="turkportalgrup.github.io/privacy" target="_blank">Gizlilik</a>
+                    <a href="https://turkportalgrup.github.io/privacy" target="_blank">Gizlilik</a>
                 </div>
             </div>
             
@@ -1015,11 +943,9 @@
             hamburgerIcon.className = 'fas fa-bars hamburger-icon';
         });
         
-        // Menü bağlantılarına tıklama işleyicisi
-        document.querySelectorAll('.category-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
+        // Menü kategorilerine tıklama işleyicisi
+        document.querySelectorAll('.menu-category').forEach(category => {
+            category.addEventListener('click', function() {
                 // Menüyü kapat
                 sideMenu.classList.remove('open');
                 menuOverlay.classList.remove('active');
@@ -1090,13 +1016,9 @@
             // Link butonlarına tıklama animasyonu ekle
             document.querySelectorAll('.link-button').forEach(button => {
                 button.addEventListener('click', function(e) {
-                    if (this.getAttribute('href') && this.getAttribute('href').includes('turkportalgrup.github.io')) {
-                        // Gerçek bir sayfaya yönlendiriyorsa, burada bir yönlendirme simülasyonu yapabiliriz
-                        // Ancak gerçekte bu bağlantılar çalışmayacağı için sadece bir uyarı gösterelim
-                        if (!this.getAttribute('href').startsWith('http')) {
-                            e.preventDefault();
-                            alert('Bu örnek sitedir. Gerçek bağlantılar turkportalgrup.github.io üzerinde mevcut değildir.');
-                        }
+                    if (!this.getAttribute('href').startsWith('http')) {
+                        e.preventDefault();
+                        alert('Bu örnek sitedir. Gerçek bağlantılar turkportalgrup.github.io üzerinde mevcut değildir.');
                     }
                 });
             });
