@@ -3,173 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Link Düzenleyici</title>
+<title>Link Temizleyici Panel</title>
 
 <style>
-:root{
- --orange:#ff8c00;
- --blue:#1e88e5;
- --gray:#2f2f2f;
- --dark:#181818;
- --border:#3d3d3d;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f1f1f1;
+    color: #333;
 }
 
-body{
- background:var(--dark);
- color:#eee;
- font-family:system-ui,Arial;
- padding:14px;
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 15px;
 }
 
-h1{
- text-align:center;
- color:var(--orange);
- font-size:20px;
- margin-bottom:8px;
+h1 {
+    text-align: center;
+    color: #ff7a00;
+    margin-bottom: 8px;
 }
 
-textarea{
- width:100%;
- background:var(--gray);
- color:#fff;
- border:1px solid var(--border);
- border-radius:8px;
- padding:10px;
- font-size:14px;
- box-sizing:border-box;
+.area {
+    width: 100%;
+    min-height: 140px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #bbb;
+    resize: vertical;
+    font-size: 14px;
 }
 
-#input{min-height:190px;}
-#output{min-height:170px;margin-top:8px;}
-
-.toolbar{
- display:flex;
- gap:10px;
- margin:10px 0;
- flex-wrap:wrap;
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 12px 0;
 }
 
-.btn{
- flex:1;
- padding:10px;
- border-radius:6px;
- font-size:14px;
- text-align:center;
- cursor:pointer;
- border:1px solid transparent;
+button {
+    flex: 1;
+    min-width: 150px;
+    padding: 12px;
+    border: none;
+    border-radius: 30px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
 }
 
-.btn-blue{
- background:rgba(30,136,229,.15);
- border-color:var(--blue);
- color:var(--blue);
+.btn-blue { background: #1e88e5; color: #fff; }
+.btn-orange { background: #ff7a00; color: #fff; }
+.btn-gray { background: #607d8b; color: #fff; }
+.btn-green { background: #43a047; color: #fff; }
+.btn-red { background: #e53935; color: #fff; }
+
+button:hover { opacity: 0.85; }
+
+input[type="file"], input[type="text"] {
+    margin: 8px 0;
+    width: 100%;
 }
 
-.btn-orange{
- background:rgba(255,140,0,.15);
- border-color:var(--orange);
- color:var(--orange);
+.info {
+    font-size: 13px;
+    color: #555;
+    margin-top: 6px;
 }
 
-.btn-gray{
- background:rgba(255,255,255,.06);
- border-color:#666;
- color:#ddd;
+footer {
+    text-align: center;
+    font-size: 12px;
+    color: #777;
+    margin-top: 10px;
 }
-
-.stats{
- display:flex;
- justify-content:space-between;
- font-size:13px;
- color:#ccc;
- margin-top:6px;
-}
-
-input[type=file]{display:none;}
 </style>
 </head>
 
 <body>
+<div class="container">
 
-<h1>🔗 Link Düzenleyici</h1>
+<h1>Link Temizleyici Web Panel</h1>
 
-<textarea id="input" placeholder="Metni yaz veya yapıştır (otomatik işlenir)..."></textarea>
-
-<div class="toolbar">
-<div class="btn btn-gray" onclick="clearAll()">temizle</div>
-<div class="btn btn-blue" onclick="downloadTxt()">txt indir</div>
-<div class="btn btn-orange" onclick="fileInput.click()">dosyadan yükle</div>
-</div>
-
-<div class="stats">
-<div>Toplam Satır: <span id="total">0</span></div>
-<div>Link: <span id="links">0</span></div>
-<div>Temiz: <span id="unique">0</span></div>
-</div>
-
-<textarea id="output" placeholder="Temizlenmiş linkler burada..."></textarea>
+<textarea id="input" class="area" placeholder="Metni veya linkleri buraya yapıştır..."></textarea>
 
 <input type="file" id="fileInput" accept=".txt">
+
+<input type="text" id="extFilter" placeholder="Uzantı filtrele (örnek: .m3u veya .mp4)">
+
+<div class="buttons">
+    <button class="btn-blue" onclick="kucukHarf()">Küçük Harfe Çevir</button>
+    <button class="btn-orange" onclick="linkleriTopla()">Linkleri Topla</button>
+    <button class="btn-gray" onclick="mukerrerSil()">Mükerrer Temizle</button>
+    <button class="btn-green" onclick="uzantiFiltre()">Uzantıya Göre Filtrele</button>
+    <button class="btn-blue" onclick="txtIndir()">TXT İndir</button>
+    <button class="btn-red" onclick="temizle()">Temizle</button>
+</div>
+
+<textarea id="output" class="area" placeholder="Çıktı burada görünecek..."></textarea>
+
+<div class="info" id="bilgi"></div>
+
+<footer>
+    Turuncu · Mavi · Gri | Mobil Uyumlu
+</footer>
+
+</div>
 
 <script>
 const input = document.getElementById("input");
 const output = document.getElementById("output");
-const totalEl = document.getElementById("total");
-const linksEl = document.getElementById("links");
-const uniqueEl = document.getElementById("unique");
+const fileInput = document.getElementById("fileInput");
+const bilgi = document.getElementById("bilgi");
 
-const getLines = t =>
- t.split("\n").map(l=>l.trim()).filter(l=>l);
-
-const unique = arr => [...new Set(arr)];
-
-function process(text){
- const lines = getLines(text);
- totalEl.textContent = lines.length;
-
- const links = lines
-  .map(l=>l.toLowerCase())
-  .filter(l=>/^https?:\/\//i.test(l));
-
- linksEl.textContent = links.length;
-
- const cleanLinks = unique(links);
- uniqueEl.textContent = cleanLinks.length;
-
- output.value = cleanLinks.join("\n");
-}
-
-/* otomatik */
-input.addEventListener("input", ()=>process(input.value));
-
-/* dosyadan yükle */
-fileInput.addEventListener("change", e=>{
- const file = e.target.files[0];
- if(!file) return;
- const reader = new FileReader();
- reader.onload = () => {
-  input.value = reader.result;
-  process(reader.result);
- };
- reader.readAsText(file);
+fileInput.addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => input.value = e.target.result;
+    reader.readAsText(file);
 });
 
-/* txt indir */
-function downloadTxt(){
- const blob = new Blob([output.value],{type:"text/plain"});
- const a = document.createElement("a");
- a.href = URL.createObjectURL(blob);
- a.download = "linkler.txt";
- a.click();
+function guncelleBilgi(text) {
+    const satir = text.split("\n").filter(Boolean).length;
+    bilgi.innerText = `Toplam satır: ${satir}`;
 }
 
-/* temizle */
-function clearAll(){
- input.value="";
- output.value="";
- totalEl.textContent="0";
- linksEl.textContent="0";
- uniqueEl.textContent="0";
+function kucukHarf() {
+    output.value = input.value.toLowerCase();
+    guncelleBilgi(output.value);
+}
+
+function linkleriTopla() {
+    const links = input.value.match(/https?:\/\/[^\s]+/gi) || [];
+    const temiz = [...new Set(links.map(l => l.toLowerCase()))];
+    output.value = temiz.join("\n");
+    guncelleBilgi(output.value);
+}
+
+function mukerrerSil() {
+    const satirlar = input.value.split("\n")
+        .map(s => s.trim())
+        .filter(Boolean);
+    const temiz = [...new Set(satirlar)];
+    output.value = temiz.join("\n");
+    guncelleBilgi(output.value);
+}
+
+function uzantiFiltre() {
+    const ext = document.getElementById("extFilter").value.trim();
+    if (!ext) return;
+    const satirlar = input.value.split("\n").filter(s => s.includes(ext));
+    output.value = satirlar.join("\n");
+    guncelleBilgi(output.value);
+}
+
+function txtIndir() {
+    const blob = new Blob([output.value], { type: "text/plain" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "cikti.txt";
+    a.click();
+}
+
+function temizle() {
+    input.value = "";
+    output.value = "";
+    bilgi.innerText = "";
+    fileInput.value = "";
 }
 </script>
 
