@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Link Düzenleyici</title>
+
+<style>
+:root{
+ --orange:#ff8c00;
+ --blue:#1e88e5;
+ --gray:#2f2f2f;
+ --dark:#181818;
+ --border:#3d3d3d;
+}
+
+body{
+ background:var(--dark);
+ color:#eee;
+ font-family:system-ui,Arial;
+ padding:14px;
+}
+
+h1{
+ text-align:center;
+ color:var(--orange);
+ font-size:20px;
+ margin-bottom:8px;
+}
+
+textarea{
+ width:100%;
+ background:var(--gray);
+ color:#fff;
+ border:1px solid var(--border);
+ border-radius:8px;
+ padding:10px;
+ font-size:14px;
+ box-sizing:border-box;
+}
+
+#input{min-height:190px;}
+#output{min-height:170px;margin-top:8px;}
+
+.toolbar{
+ display:flex;
+ gap:10px;
+ margin:10px 0;
+ flex-wrap:wrap;
+}
+
+.btn{
+ flex:1;
+ padding:10px;
+ border-radius:6px;
+ font-size:14px;
+ text-align:center;
+ cursor:pointer;
+ border:1px solid transparent;
+}
+
+.btn-blue{
+ background:rgba(30,136,229,.15);
+ border-color:var(--blue);
+ color:var(--blue);
+}
+
+.btn-orange{
+ background:rgba(255,140,0,.15);
+ border-color:var(--orange);
+ color:var(--orange);
+}
+
+.btn-gray{
+ background:rgba(255,255,255,.06);
+ border-color:#666;
+ color:#ddd;
+}
+
+.stats{
+ display:flex;
+ justify-content:space-between;
+ font-size:13px;
+ color:#ccc;
+ margin-top:6px;
+}
+
+input[type=file]{display:none;}
+</style>
+</head>
+
+<body>
+
+<h1>🔗 Link Düzenleyici</h1>
+
+<textarea id="input" placeholder="Metni yaz veya yapıştır (otomatik işlenir)..."></textarea>
+
+<div class="toolbar">
+<div class="btn btn-gray" onclick="clearAll()">temizle</div>
+<div class="btn btn-blue" onclick="downloadTxt()">txt indir</div>
+<div class="btn btn-orange" onclick="fileInput.click()">dosyadan yükle</div>
+</div>
+
+<div class="stats">
+<div>Toplam Satır: <span id="total">0</span></div>
+<div>Link: <span id="links">0</span></div>
+<div>Temiz: <span id="unique">0</span></div>
+</div>
+
+<textarea id="output" placeholder="Temizlenmiş linkler burada..."></textarea>
+
+<input type="file" id="fileInput" accept=".txt">
+
+<script>
+const input = document.getElementById("input");
+const output = document.getElementById("output");
+const totalEl = document.getElementById("total");
+const linksEl = document.getElementById("links");
+const uniqueEl = document.getElementById("unique");
+
+const getLines = t =>
+ t.split("\n").map(l=>l.trim()).filter(l=>l);
+
+const unique = arr => [...new Set(arr)];
+
+function process(text){
+ const lines = getLines(text);
+ totalEl.textContent = lines.length;
+
+ const links = lines
+  .map(l=>l.toLowerCase())
+  .filter(l=>/^https?:\/\//i.test(l));
+
+ linksEl.textContent = links.length;
+
+ const cleanLinks = unique(links);
+ uniqueEl.textContent = cleanLinks.length;
+
+ output.value = cleanLinks.join("\n");
+}
+
+/* otomatik */
+input.addEventListener("input", ()=>process(input.value));
+
+/* dosyadan yükle */
+fileInput.addEventListener("change", e=>{
+ const file = e.target.files[0];
+ if(!file) return;
+ const reader = new FileReader();
+ reader.onload = () => {
+  input.value = reader.result;
+  process(reader.result);
+ };
+ reader.readAsText(file);
+});
+
+/* txt indir */
+function downloadTxt(){
+ const blob = new Blob([output.value],{type:"text/plain"});
+ const a = document.createElement("a");
+ a.href = URL.createObjectURL(blob);
+ a.download = "linkler.txt";
+ a.click();
+}
+
+/* temizle */
+function clearAll(){
+ input.value="";
+ output.value="";
+ totalEl.textContent="0";
+ linksEl.textContent="0";
+ uniqueEl.textContent="0";
+}
+</script>
+
+</body>
+</html>
