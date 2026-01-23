@@ -26,6 +26,9 @@
             --accent-blue: #3388ff;
             --accent-green: #33cc33;
             --accent-purple: #aa66ff;
+            --accent-yellow: #ffcc00;
+            --accent-pink: #ff6699;
+            --accent-cyan: #33ccff;
             --text-light: #f0f0f0;
             --text-dark: #cccccc;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
@@ -43,7 +46,6 @@
             background-color: var(--primary-dark);
             color: var(--text-light);
             line-height: 1.6;
-            padding-top: 140px;
             min-height: 100vh;
         }
         
@@ -53,7 +55,7 @@
             padding: 0 20px;
         }
         
-        /* BAŞLIK STİLLERİ */
+        /* BAŞLIK VE HAMBURGER MENÜ */
         header {
             background: linear-gradient(to right, var(--primary-dark), var(--primary-gray));
             color: var(--text-light);
@@ -102,100 +104,117 @@
             margin-top: 5px;
         }
         
-        /* MENÜ STİLLERİ */
-        nav {
+        /* HAMBURGER MENÜ BUTONU */
+        .hamburger-menu {
             margin-right: 20px;
-        }
-        
-        .menu {
-            display: flex;
-            list-style-type: none;
-            flex-wrap: wrap;
-        }
-        
-        .menu-item {
-            position: relative;
-        }
-        
-        .menu-link {
-            display: flex;
-            align-items: center;
-            color: var(--text-light);
-            text-decoration: none;
-            padding: 12px 20px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            border-radius: 5px;
-            margin: 0 5px;
-            background-color: var(--medium-gray);
-        }
-        
-        .menu-link:hover {
-            background-color: var(--primary-orange);
-            color: var(--text-light);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-        
-        .menu-link i {
-            margin-right: 8px;
-            font-size: 1.1rem;
-        }
-        
-        /* AÇILIR MENÜ STİLLERİ */
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: var(--dark-gray);
-            min-width: 220px;
-            box-shadow: var(--shadow);
-            border-radius: 0 0 8px 8px;
+            cursor: pointer;
             z-index: 1001;
-            border-top: 3px solid var(--primary-orange);
-            overflow: hidden;
         }
         
-        .menu-item:hover .dropdown-menu {
-            display: block;
-            animation: fadeInDown 0.3s ease;
-        }
-        
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .dropdown-menu a {
-            display: block;
-            padding: 12px 20px;
-            color: var(--text-dark);
-            text-decoration: none;
+        .hamburger-icon {
+            font-size: 2rem;
+            color: var(--primary-orange);
             transition: all 0.3s ease;
-            border-bottom: 1px solid var(--light-gray);
-            text-transform: none;
-            font-weight: 500;
         }
         
-        .dropdown-menu a:last-child {
+        .hamburger-icon:hover {
+            color: var(--secondary-orange);
+            transform: scale(1.1);
+        }
+        
+        /* YAN AÇILIR MENÜ */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100%;
+            background-color: var(--dark-gray);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+            z-index: 1002;
+            transition: right 0.4s ease;
+            overflow-y: auto;
+            padding-top: 80px;
+        }
+        
+        .side-menu.open {
+            right: 0;
+        }
+        
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1001;
+            display: none;
+        }
+        
+        .menu-overlay.active {
+            display: block;
+        }
+        
+        .menu-category {
+            padding: 20px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .menu-category:last-child {
             border-bottom: none;
         }
         
-        .dropdown-menu a:hover {
-            background-color: var(--medium-gray);
-            color: var(--text-light);
-            padding-left: 25px;
+        .category-title {
+            color: var(--primary-orange);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
-        .dropdown-menu a i {
+        .category-title i {
+            margin-right: 12px;
+            font-size: 1.5rem;
+        }
+        
+        .category-links {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .category-link {
+            display: flex;
+            align-items: center;
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            background-color: var(--medium-gray);
+        }
+        
+        .category-link:hover {
+            background-color: var(--primary-orange);
+            color: var(--text-light);
+            transform: translateX(5px);
+            padding-left: 20px;
+        }
+        
+        .category-link i {
             margin-right: 10px;
-            color: var(--primary-orange);
+            font-size: 1.2rem;
         }
         
         /* İÇERİK BÖLÜMLERİ */
+        main {
+            padding-top: 110px;
+            padding-bottom: 40px;
+        }
+        
         .content-section {
             display: none;
             padding: 30px;
@@ -221,14 +240,13 @@
             font-size: 2rem;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 3px solid var(--primary-orange);
+            border-bottom: 3px solid;
             display: flex;
             align-items: center;
         }
         
         .section-title i {
             margin-right: 15px;
-            color: var(--primary-orange);
         }
         
         /* KATEGORİ KUTULARI */
@@ -239,7 +257,7 @@
             line-height: 1.8;
             padding: 15px;
             background-color: var(--dark-gray);
-            border-left: 4px solid var(--primary-orange);
+            border-left: 4px solid;
             border-radius: 0 5px 5px 0;
         }
         
@@ -264,18 +282,6 @@
         .link-card:hover {
             transform: translateY(-8px);
             box-shadow: var(--shadow);
-        }
-        
-        .link-card:nth-child(1) {
-            border-top-color: var(--primary-orange);
-        }
-        
-        .link-card:nth-child(2) {
-            border-top-color: var(--accent-blue);
-        }
-        
-        .link-card:nth-child(3) {
-            border-top-color: var(--accent-green);
         }
         
         .link-card-title {
@@ -325,7 +331,6 @@
             color: var(--text-light);
             text-align: center;
             padding: 25px 0;
-            margin-top: 40px;
             border-top: 4px solid var(--primary-orange);
         }
         
@@ -355,31 +360,16 @@
         
         /* RESPONSIVE TASARIM */
         @media (max-width: 992px) {
-            .menu {
-                justify-content: flex-start;
-                overflow-x: auto;
-            }
-            
-            .menu-link {
-                padding: 10px 15px;
-                white-space: nowrap;
-                font-size: 0.9rem;
-            }
-            
             h1 {
                 font-size: 1.8rem;
-            }
-            
-            body {
-                padding-top: 130px;
             }
             
             .logo-img {
                 height: 50px;
             }
             
-            .dropdown-menu {
-                min-width: 200px;
+            .side-menu {
+                width: 250px;
             }
         }
         
@@ -401,54 +391,27 @@
                 font-size: 1.5rem;
             }
             
-            header {
-                flex-direction: column;
-                padding: 10px 0;
-            }
-            
             .logo-container {
-                margin-left: 0;
-                margin-bottom: 10px;
+                margin-left: 10px;
             }
             
-            nav {
-                margin-right: 0;
-                width: 100%;
-                overflow-x: auto;
-            }
-            
-            .menu {
-                justify-content: flex-start;
-                padding: 0 10px;
+            .hamburger-menu {
+                margin-right: 10px;
             }
         }
         
         @media (max-width: 576px) {
-            .menu-link {
-                padding: 8px 12px;
-                font-size: 0.8rem;
-            }
-            
             .section-title {
                 font-size: 1.6rem;
             }
             
-            body {
-                padding-top: 150px;
+            .content-section {
+                padding: 20px;
             }
             
-            .dropdown-menu {
-                position: static;
-                display: none;
+            .side-menu {
                 width: 100%;
-                box-shadow: none;
-                border-radius: 0;
-            }
-            
-            .menu-item:hover .dropdown-menu {
-                display: block;
-                position: static;
-                animation: none;
+                right: -100%;
             }
         }
         
@@ -535,19 +498,93 @@
             margin-bottom: 8px;
         }
         
-        /* RENKLİ İKONLAR */
-        .fa-home { color: var(--primary-orange); }
-        .fa-bars { color: var(--accent-blue); }
-        .fa-mobile-alt { color: var(--accent-green); }
-        .fa-laptop-code { color: var(--accent-purple); }
-        .fa-tools { color: #ffcc00; }
-        .fa-link { color: #ff6699; }
-        .fa-github { color: #f0f0f0; }
-        .fa-info-circle { color: #33ccff; }
+        /* RENKLİ BAŞLIKLAR VE KATEGORİLER */
+        #home .section-title,
+        #home .category-description {
+            border-color: var(--primary-orange);
+        }
+        
+        #ana-menu .section-title,
+        #ana-menu .category-description,
+        .menu-category:nth-child(1) .category-title {
+            color: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+        
+        #uygulamalar .section-title,
+        #uygulamalar .category-description,
+        .menu-category:nth-child(2) .category-title {
+            color: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+        
+        #programlar .section-title,
+        #programlar .category-description,
+        .menu-category:nth-child(3) .category-title {
+            color: var(--accent-purple);
+            border-color: var(--accent-purple);
+        }
+        
+        #araclar .section-title,
+        #araclar .category-description,
+        .menu-category:nth-child(4) .category-title {
+            color: var(--accent-yellow);
+            border-color: var(--accent-yellow);
+        }
+        
+        #linkler .section-title,
+        #linkler .category-description,
+        .menu-category:nth-child(5) .category-title {
+            color: var(--accent-pink);
+            border-color: var(--accent-pink);
+        }
+        
+        #github .section-title,
+        #github .category-description,
+        .menu-category:nth-child(6) .category-title {
+            color: var(--text-light);
+            border-color: var(--text-light);
+        }
+        
+        #hakkimda .section-title,
+        #hakkimda .category-description,
+        .menu-category:nth-child(7) .category-title {
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+        
+        /* KART RENKLERİ */
+        #ana-menu .link-card:nth-child(1) { border-top-color: var(--accent-blue); }
+        #ana-menu .link-card:nth-child(2) { border-top-color: var(--accent-green); }
+        #ana-menu .link-card:nth-child(3) { border-top-color: var(--accent-purple); }
+        
+        #uygulamalar .link-card:nth-child(1) { border-top-color: var(--accent-green); }
+        #uygulamalar .link-card:nth-child(2) { border-top-color: var(--accent-purple); }
+        #uygulamalar .link-card:nth-child(3) { border-top-color: var(--accent-yellow); }
+        
+        #programlar .link-card:nth-child(1) { border-top-color: var(--accent-purple); }
+        #programlar .link-card:nth-child(2) { border-top-color: var(--accent-yellow); }
+        #programlar .link-card:nth-child(3) { border-top-color: var(--accent-pink); }
+        
+        #araclar .link-card:nth-child(1) { border-top-color: var(--accent-yellow); }
+        #araclar .link-card:nth-child(2) { border-top-color: var(--accent-pink); }
+        #araclar .link-card:nth-child(3) { border-top-color: var(--accent-cyan); }
+        
+        #linkler .link-card:nth-child(1) { border-top-color: var(--accent-pink); }
+        #linkler .link-card:nth-child(2) { border-top-color: var(--accent-cyan); }
+        #linkler .link-card:nth-child(3) { border-top-color: var(--accent-blue); }
+        
+        #github .link-card:nth-child(1) { border-top-color: var(--text-light); }
+        #github .link-card:nth-child(2) { border-top-color: var(--accent-blue); }
+        #github .link-card:nth-child(3) { border-top-color: var(--accent-green); }
+        
+        #hakkimda .link-card:nth-child(1) { border-top-color: var(--accent-cyan); }
+        #hakkimda .link-card:nth-child(2) { border-top-color: var(--accent-blue); }
+        #hakkimda .link-card:nth-child(3) { border-top-color: var(--accent-green); }
     </style>
 </head>
 <body>
-    <!-- BAŞLIK VE LOGO -->
+    <!-- BAŞLIK VE HAMBURGER MENÜ BUTONU -->
     <header>
         <div class="logo-container">
             <img src="https://turkportalgrup.github.io/boran.jpg" alt="TurkPortal Grup Logo" class="logo-img">
@@ -557,87 +594,131 @@
             </div>
         </div>
         
-        <!-- MENÜ -->
-        <nav>
-            <ul class="menu">
-                <li class="menu-item">
-                    <a href="#home" class="menu-link" data-target="home">
-                        <i class="fas fa-home"></i> Ana Sayfa
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="#ana-menu" class="menu-link">
-                        <i class="fas fa-bars"></i> Ana Menü
-                    </a>
-                    <div class="dropdown-menu">
-                        <a href="turkportalgrup.github.io/ana-menu-html1" target="_blank"><i class="fab fa-html5"></i> HTML Proje 1</a>
-                        <a href="turkportalgrup.github.io/ana-menu-html2" target="_blank"><i class="fab fa-css3-alt"></i> CSS Proje 2</a>
-                        <a href="turkportalgrup.github.io/ana-menu-html3" target="_blank"><i class="fab fa-js-square"></i> JavaScript Proje 3</a>
-                    </div>
-                </li>
-                <li class="menu-item">
-                    <a href="#uygulamalar" class="menu-link">
-                        <i class="fas fa-mobile-alt"></i> Uygulamalar
-                    </a>
-                    <div class="dropdown-menu">
-                        <a href="turkportalgrup.github.io/uygulama-html1" target="_blank"><i class="fas fa-calculator"></i> Hesap Makinesi</a>
-                        <a href="turkportalgrup.github.io/uygulama-html2" target="_blank"><i class="fas fa-cloud-sun"></i> Hava Durumu</a>
-                        <a href="turkportalgrup.github.io/uygulama-html3" target="_blank"><i class="fas fa-tasks"></i> Görev Yöneticisi</a>
-                    </div>
-                </li>
-                <li class="menu-item">
-                    <a href="#programlar" class="menu-link">
-                        <i class="fas fa-laptop-code"></i> Programlar
-                    </a>
-                    <div class="dropdown-menu">
-                        <a href="turkportalgrup.github.io/program-html1" target="_blank"><i class="fas fa-file-code"></i> HTML Editör</a>
-                        <a href="turkportalgrup.github.io/program-html2" target="_blank"><i class="fas fa-chart-bar"></i> Veri Analiz</a>
-                        <a href="turkportalgrup.github.io/program-html3" target="_blank"><i class="fas fa-palette"></i> Görsel Editör</a>
-                    </div>
-                </li>
-                <li class="menu-item">
-                    <a href="#araclar" class="menu-link">
-                        <i class="fas fa-tools"></i> Araçlar
-                    </a>
-                    <div class="dropdown-menu">
-                        <a href="turkportalgrup.github.io/arac-html1" target="_blank"><i class="fas fa-ruler-combined"></i> Birim Dönüştürücü</a>
-                        <a href="turkportalgrup.github.io/arac-html2" target="_blank"><i class="fas fa-key"></i> Şifre Üretici</a>
-                        <a href="turkportalgrup.github.io/arac-html3" target="_blank"><i class="fas fa-code"></i> JSON Formatlayıcı</a>
-                    </div>
-                </li>
-                <li class="menu-item">
-                    <a href="#linkler" class="menu-link">
-                        <i class="fas fa-link"></i> Linkler
-                    </a>
-                    <div class="dropdown-menu">
-                        <a href="https://stackoverflow.com" target="_blank"><i class="fab fa-stack-overflow"></i> Stack Overflow</a>
-                        <a href="https://codepen.io" target="_blank"><i class="fab fa-codepen"></i> CodePen</a>
-                        <a href="https://developer.mozilla.org" target="_blank"><i class="fas fa-book"></i> MDN Web Docs</a>
-                    </div>
-                </li>
-                <li class="menu-item">
-                    <a href="#github" class="menu-link">
-                        <i class="fab fa-github"></i> GitHub
-                    </a>
-                    <div class="dropdown-menu">
-                        <a href="https://github.com/turkportalgrup" target="_blank"><i class="fab fa-github"></i> Ana Profil</a>
-                        <a href="https://github.com/turkportalgrup/turkportalgrup.github.io" target="_blank"><i class="fas fa-code-branch"></i> GitHub Pages</a>
-                        <a href="https://github.com/turkportalgrup?tab=repositories" target="_blank"><i class="fas fa-star"></i> Popüler Projeler</a>
-                    </div>
-                </li>
-                <li class="menu-item">
-                    <a href="#hakkimda" class="menu-link">
-                        <i class="fas fa-info-circle"></i> Hakkında
-                    </a>
-                    <div class="dropdown-menu">
-                        <a href="turkportalgrup.github.io/hakkimda-html1" target="_blank"><i class="fas fa-history"></i> Tarihçe</a>
-                        <a href="turkportalgrup.github.io/hakkimda-html2" target="_blank"><i class="fas fa-users"></i> Ekibimiz</a>
-                        <a href="turkportalgrup.github.io/hakkimda-html3" target="_blank"><i class="fas fa-envelope-open-text"></i> İletişim</a>
-                    </div>
-                </li>
-            </ul>
-        </nav>
+        <!-- HAMBURGER MENÜ BUTONU -->
+        <div class="hamburger-menu">
+            <i class="fas fa-bars hamburger-icon" id="hamburgerIcon"></i>
+        </div>
     </header>
+    
+    <!-- MENÜ OVERLAY -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    
+    <!-- YAN AÇILIR MENÜ -->
+    <div class="side-menu" id="sideMenu">
+        <div class="menu-category">
+            <h3 class="category-title"><i class="fas fa-home"></i> Ana Sayfa</h3>
+            <div class="category-links">
+                <a href="#home" class="category-link" data-target="home">
+                    <i class="fas fa-rocket"></i> Hoş Geldiniz
+                </a>
+            </div>
+        </div>
+        
+        <div class="menu-category">
+            <h3 class="category-title"><i class="fas fa-bars"></i> Ana Menü</h3>
+            <div class="category-links">
+                <a href="#ana-menu" class="category-link" data-target="ana-menu">
+                    <i class="fab fa-html5"></i> HTML Projeler
+                </a>
+                <a href="#ana-menu" class="category-link" data-target="ana-menu">
+                    <i class="fab fa-css3-alt"></i> CSS Projeler
+                </a>
+                <a href="#ana-menu" class="category-link" data-target="ana-menu">
+                    <i class="fab fa-js-square"></i> JavaScript Projeler
+                </a>
+            </div>
+        </div>
+        
+        <div class="menu-category">
+            <h3 class="category-title"><i class="fas fa-mobile-alt"></i> Uygulamalar</h3>
+            <div class="category-links">
+                <a href="#uygulamalar" class="category-link" data-target="uygulamalar">
+                    <i class="fas fa-calculator"></i> Hesap Makinesi
+                </a>
+                <a href="#uygulamalar" class="category-link" data-target="uygulamalar">
+                    <i class="fas fa-cloud-sun"></i> Hava Durumu
+                </a>
+                <a href="#uygulamalar" class="category-link" data-target="uygulamalar">
+                    <i class="fas fa-tasks"></i> Görev Yöneticisi
+                </a>
+            </div>
+        </div>
+        
+        <div class="menu-category">
+            <h3 class="category-title"><i class="fas fa-laptop-code"></i> Programlar</h3>
+            <div class="category-links">
+                <a href="#programlar" class="category-link" data-target="programlar">
+                    <i class="fas fa-file-code"></i> HTML Editör
+                </a>
+                <a href="#programlar" class="category-link" data-target="programlar">
+                    <i class="fas fa-chart-bar"></i> Veri Analiz
+                </a>
+                <a href="#programlar" class="category-link" data-target="programlar">
+                    <i class="fas fa-palette"></i> Görsel Editör
+                </a>
+            </div>
+        </div>
+        
+        <div class="menu-category">
+            <h3 class="category-title"><i class="fas fa-tools"></i> Araçlar</h3>
+            <div class="category-links">
+                <a href="#araclar" class="category-link" data-target="araclar">
+                    <i class="fas fa-ruler-combined"></i> Birim Dönüştürücü
+                </a>
+                <a href="#araclar" class="category-link" data-target="araclar">
+                    <i class="fas fa-key"></i> Şifre Üretici
+                </a>
+                <a href="#araclar" class="category-link" data-target="araclar">
+                    <i class="fas fa-code"></i> JSON Formatlayıcı
+                </a>
+            </div>
+        </div>
+        
+        <div class="menu-category">
+            <h3 class="category-title"><i class="fas fa-link"></i> Linkler</h3>
+            <div class="category-links">
+                <a href="#linkler" class="category-link" data-target="linkler">
+                    <i class="fab fa-stack-overflow"></i> Stack Overflow
+                </a>
+                <a href="#linkler" class="category-link" data-target="linkler">
+                    <i class="fab fa-codepen"></i> CodePen
+                </a>
+                <a href="#linkler" class="category-link" data-target="linkler">
+                    <i class="fas fa-book"></i> MDN Web Docs
+                </a>
+            </div>
+        </div>
+        
+        <div class="menu-category">
+            <h3 class="category-title"><i class="fab fa-github"></i> GitHub</h3>
+            <div class="category-links">
+                <a href="#github" class="category-link" data-target="github">
+                    <i class="fab fa-github"></i> Ana Profil
+                </a>
+                <a href="#github" class="category-link" data-target="github">
+                    <i class="fas fa-code-branch"></i> GitHub Pages
+                </a>
+                <a href="#github" class="category-link" data-target="github">
+                    <i class="fas fa-star"></i> Popüler Projeler
+                </a>
+            </div>
+        </div>
+        
+        <div class="menu-category">
+            <h3 class="category-title"><i class="fas fa-info-circle"></i> Hakkında</h3>
+            <div class="category-links">
+                <a href="#hakkimda" class="category-link" data-target="hakkimda">
+                    <i class="fas fa-history"></i> Tarihçe
+                </a>
+                <a href="#hakkimda" class="category-link" data-target="hakkimda">
+                    <i class="fas fa-users"></i> Ekibimiz
+                </a>
+                <a href="#hakkimda" class="category-link" data-target="hakkimda">
+                    <i class="fas fa-envelope-open-text"></i> İletişim
+                </a>
+            </div>
+        </div>
+    </div>
     
     <!-- ANA İÇERİK -->
     <main class="container">
@@ -909,44 +990,57 @@
     </footer>
 
     <script>
-        // Menü tıklama işleyicisi
-        document.querySelectorAll('.menu-link').forEach(link => {
+        // HAMBURGER MENÜ İŞLEVLERİ
+        const hamburgerIcon = document.getElementById('hamburgerIcon');
+        const sideMenu = document.getElementById('sideMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        
+        // Menü açma/kapama
+        hamburgerIcon.addEventListener('click', function() {
+            sideMenu.classList.toggle('open');
+            menuOverlay.classList.toggle('active');
+            
+            // Hamburger ikonunu değiştir
+            if (sideMenu.classList.contains('open')) {
+                hamburgerIcon.className = 'fas fa-times hamburger-icon';
+            } else {
+                hamburgerIcon.className = 'fas fa-bars hamburger-icon';
+            }
+        });
+        
+        // Overlay'e tıklayınca menüyü kapat
+        menuOverlay.addEventListener('click', function() {
+            sideMenu.classList.remove('open');
+            menuOverlay.classList.remove('active');
+            hamburgerIcon.className = 'fas fa-bars hamburger-icon';
+        });
+        
+        // Menü bağlantılarına tıklama işleyicisi
+        document.querySelectorAll('.category-link').forEach(link => {
             link.addEventListener('click', function(e) {
-                // Eğer açılır menüye sahipse, sadece içeriği aç/kapa
-                if (this.nextElementSibling && this.nextElementSibling.classList.contains('dropdown-menu')) {
-                    // Açılır menüyü tıklama ile açma/kapama (sadece mobil için)
-                    if (window.innerWidth <= 576) {
-                        e.preventDefault();
-                        const dropdown = this.nextElementSibling;
-                        const isVisible = dropdown.style.display === 'block';
-                        
-                        // Tüm açılır menüleri kapat
-                        document.querySelectorAll('.dropdown-menu').forEach(menu => {
-                            menu.style.display = 'none';
-                        });
-                        
-                        // Tıklanan menüyü aç/kapa
-                        dropdown.style.display = isVisible ? 'none' : 'block';
-                    }
-                } else {
-                    // Normal menü öğesi için içerik göster
-                    e.preventDefault();
-                    
-                    // Tüm içerik bölümlerini gizle
-                    document.querySelectorAll('.content-section').forEach(section => {
-                        section.classList.remove('active');
-                    });
-                    
-                    // Hedef bölümü göster
-                    const targetId = this.getAttribute('data-target') || this.getAttribute('href').substring(1);
-                    const targetSection = document.getElementById(targetId);
-                    if (targetSection) {
-                        targetSection.classList.add('active');
-                    }
+                e.preventDefault();
+                
+                // Menüyü kapat
+                sideMenu.classList.remove('open');
+                menuOverlay.classList.remove('active');
+                hamburgerIcon.className = 'fas fa-bars hamburger-icon';
+                
+                // Hedef bölümü al
+                const targetId = this.getAttribute('data-target');
+                
+                // Tüm içerik bölümlerini gizle
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Hedef bölümü göster
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.classList.add('active');
                     
                     // Mobilde içeriğe kaydır
                     if (window.innerWidth < 992) {
-                        window.scrollTo({top: 140, behavior: 'smooth'});
+                        window.scrollTo({top: 110, behavior: 'smooth'});
                     }
                 }
             });
@@ -971,7 +1065,7 @@
                     
                     // Mobilde içeriğe kaydır
                     if (window.innerWidth < 992) {
-                        window.scrollTo({top: 140, behavior: 'smooth'});
+                        window.scrollTo({top: 110, behavior: 'smooth'});
                     }
                 }
             });
@@ -1008,14 +1102,12 @@
             });
         });
         
-        // Mobilde açılır menüleri kapatmak için dokunma olayı
-        document.addEventListener('click', function(e) {
-            if (window.innerWidth <= 576) {
-                if (!e.target.closest('.menu-item')) {
-                    document.querySelectorAll('.dropdown-menu').forEach(menu => {
-                        menu.style.display = 'none';
-                    });
-                }
+        // ESC tuşuna basınca menüyü kapat
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                sideMenu.classList.remove('open');
+                menuOverlay.classList.remove('active');
+                hamburgerIcon.className = 'fas fa-bars hamburger-icon';
             }
         });
     </script>
