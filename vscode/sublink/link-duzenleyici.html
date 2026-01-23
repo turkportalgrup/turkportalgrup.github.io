@@ -3,16 +3,90 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Link Temizleyici Panel</title>
+<title>TÜRK PORTAL GRUP - Link Temizleyici</title>
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f1f1f1;
-    color: #333;
+:root{
+  --orange:#ff7a00;
+  --blue:#1e88e5;
+  --gray:#607d8b;
+  --bg:#f1f1f1;
+  --card:#ffffff;
+  --text:#333;
+}
+body.dark{
+  --bg:#121212;
+  --card:#1e1e1e;
+  --text:#eaeaea;
+}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
 }
 
+/* ===== HEADER & MENU ===== */
+header{
+  background:var(--card);
+  padding:12px;
+  box-shadow:0 2px 5px rgba(0,0,0,.1);
+}
+.header-top{
+  display:flex;
+  align-items:center;
+}
+.logo{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  margin-right:10px;
+}
+.title{
+  font-weight:bold;
+  color:var(--orange);
+  font-size:18px;
+  flex:1;
+}
+.menu-btn{
+  font-size:26px;
+  cursor:pointer;
+}
+.theme-btn{
+  margin-top:6px;
+  background:var(--gray);
+  color:#fff;
+  border:none;
+  border-radius:15px;
+  padding:4px 10px;
+  font-size:12px;
+  cursor:pointer;
+}
+
+nav{
+  position:fixed;
+  top:0;
+  left:-260px;
+  width:250px;
+  height:100%;
+  background:var(--card);
+  box-shadow:2px 0 6px rgba(0,0,0,.2);
+  transition:.3s;
+  padding-top:60px;
+  z-index:999;
+}
+nav a{
+  display:block;
+  padding:12px 20px;
+  text-decoration:none;
+  color:var(--text);
+  font-weight:bold;
+}
+nav a:hover{
+  background:#00000010;
+}
+
+/* ===== ORİJİNAL PANEL CSS (DOKUNULMADI) ===== */
 .container {
     max-width: 900px;
     margin: auto;
@@ -33,6 +107,8 @@ h1 {
     border: 1px solid #bbb;
     resize: vertical;
     font-size: 14px;
+    background:var(--card);
+    color:var(--text);
 }
 
 .buttons {
@@ -69,7 +145,7 @@ input[type="file"], input[type="text"] {
 
 .info {
     font-size: 13px;
-    color: #555;
+    color: #777;
     margin-top: 6px;
 }
 
@@ -83,6 +159,28 @@ footer {
 </head>
 
 <body>
+
+<header>
+  <div class="header-top">
+    <img src="https://turkportalgrup.github.io/boran.jpg" class="logo">
+    <div class="title">TÜRK PORTAL GRUP</div>
+    <div class="menu-btn" onclick="menu()">☰</div>
+  </div>
+  <button class="theme-btn" onclick="tema()">Tema Değiştir</button>
+</header>
+
+<nav id="nav">
+  <!-- LINKLERİ SEN DÜZENLE -->
+  <a href="index.html">🏠 Ana Sayfa</a>
+  <a href="araclar.html">🛠 Araçlar</a>
+  <a href="uygulamalar.html">📱 Uygulamalar</a>
+  <a href="programlar.html">💻 Programlar</a>
+  <a href="linkler.html">🔗 Linkler</a>
+  <a href="github.html">🐙 GitHub</a>
+  <a href="hakkinda.html">ℹ Hakkında</a>
+</nav>
+
+<!-- ===== ORİJİNAL LİNK TEMİZLEYİCİ (AYNEN) ===== -->
 <div class="container">
 
 <h1>Link Temizleyici Web Panel</h1>
@@ -90,7 +188,6 @@ footer {
 <textarea id="input" class="area" placeholder="Metni veya linkleri buraya yapıştır..."></textarea>
 
 <input type="file" id="fileInput" accept=".txt">
-
 <input type="text" id="extFilter" placeholder="Uzantı filtrele (örnek: .m3u veya .mp4)">
 
 <div class="buttons">
@@ -103,16 +200,21 @@ footer {
 </div>
 
 <textarea id="output" class="area" placeholder="Çıktı burada görünecek..."></textarea>
-
 <div class="info" id="bilgi"></div>
 
-<footer>
-    Turuncu · Mavi · Gri | Mobil Uyumlu
-</footer>
-
+<footer>Turuncu · Mavi · Gri | Mobil Uyumlu</footer>
 </div>
 
 <script>
+/* MENU & TEMA */
+function menu(){
+  nav.style.left = nav.style.left=="0px" ? "-260px":"0px";
+}
+function tema(){
+  document.body.classList.toggle("dark");
+}
+
+/* ORİJİNAL JS */
 const input = document.getElementById("input");
 const output = document.getElementById("output");
 const fileInput = document.getElementById("fileInput");
@@ -130,36 +232,29 @@ function guncelleBilgi(text) {
     const satir = text.split("\n").filter(Boolean).length;
     bilgi.innerText = `Toplam satır: ${satir}`;
 }
-
 function kucukHarf() {
     output.value = input.value.toLowerCase();
     guncelleBilgi(output.value);
 }
-
 function linkleriTopla() {
     const links = input.value.match(/https?:\/\/[^\s]+/gi) || [];
     const temiz = [...new Set(links.map(l => l.toLowerCase()))];
     output.value = temiz.join("\n");
     guncelleBilgi(output.value);
 }
-
 function mukerrerSil() {
-    const satirlar = input.value.split("\n")
-        .map(s => s.trim())
-        .filter(Boolean);
+    const satirlar = input.value.split("\n").map(s => s.trim()).filter(Boolean);
     const temiz = [...new Set(satirlar)];
     output.value = temiz.join("\n");
     guncelleBilgi(output.value);
 }
-
 function uzantiFiltre() {
-    const ext = document.getElementById("extFilter").value.trim();
+    const ext = extFilter.value.trim();
     if (!ext) return;
     const satirlar = input.value.split("\n").filter(s => s.includes(ext));
     output.value = satirlar.join("\n");
     guncelleBilgi(output.value);
 }
-
 function txtIndir() {
     const blob = new Blob([output.value], { type: "text/plain" });
     const a = document.createElement("a");
@@ -167,7 +262,6 @@ function txtIndir() {
     a.download = "cikti.txt";
     a.click();
 }
-
 function temizle() {
     input.value = "";
     output.value = "";
