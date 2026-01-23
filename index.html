@@ -481,6 +481,68 @@
             margin-bottom: 8px;
         }
         
+        /* BİRİM DÖNÜŞTÜRÜCÜ STİLLERİ (Verdiğiniz koda uyumlu) */
+        .unit-converter {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .unit-converter textarea {
+            width: 100%;
+            height: 180px;
+            background-color: var(--medium-gray);
+            color: var(--text-light);
+            font-size: 1em;
+            font-weight: bold;
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            border: 1px solid var(--light-gray);
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .unit-converter input[type=button], 
+        .unit-converter input[type=submit] {
+            background: linear-gradient(to right, var(--primary-orange), var(--secondary-orange));
+            border: none;
+            color: #fff;
+            padding: 10px 30px;
+            text-decoration: none;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        
+        .unit-converter input[type=button]:hover, 
+        .unit-converter input[type=submit]:hover {
+            background: linear-gradient(to right, var(--secondary-orange), var(--primary-orange));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .unit-converter .options {
+            margin: 15px 0;
+            color: var(--text-dark);
+            text-align: left;
+        }
+        
+        .unit-converter label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        
+        .unit-converter input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        .unit-converter #removed {
+            margin-top: 15px;
+            color: var(--text-dark);
+            font-weight: bold;
+        }
+        
         /* RENKLİ BAŞLIKLAR VE KATEGORİLER */
         #home .section-title,
         #home .category-description {
@@ -789,10 +851,26 @@
             </p>
             
             <div class="link-grid">
+                <!-- BİRİM DÖNÜŞTÜRÜCÜ KARTI - VERDİĞİNİZ KOD İLE -->
                 <div class="link-card">
-                    <h3 class="link-card-title"><i class="fas fa-ruler-combined"></i> Birim Dönüştürücü</h3>
-                    <p class="link-card-description">Uzunluk, ağırlık, sıcaklık, hız gibi farklı birimleri birbirine dönüştürebileceğiniz araç. 50'den fazla birim kategorisi ve gerçek zamanlı dönüşüm.</p>
-                    <a href="https://turkportalgrup.github.io/arac-html1" class="link-button" target="_blank">Aracı Aç</a>
+                    <h3 class="link-card-title"><i class="fas fa-exchange-alt"></i> Birim Dönüştürücü</h3>
+                    <p class="link-card-description">Metin işleme ve dönüştürme araçları. Mükerrer satırları temizleme, küçük harfe çevirme ve sıralama işlemleri yapabilirsiniz.</p>
+                    
+                    <div class="unit-converter">
+                        <textarea name="masterlist" id="masterlist" placeholder="Listeyi buraya yapıştırın..." autofocus autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+                        
+                        <div class="options">
+                            <label><input type="checkbox" name="caps" id="caps" value="">Küçük harfe çevir</label>
+                            <label><input type="checkbox" name="kpblanks" id="kpblanks" value="">Satır başındaki boşlukları koru</label>
+                            <label><input type="checkbox" name="sort" id="sort" value="">Sırala</label>
+                        </div>
+                        
+                        <input type="submit" class="button" alt="Submit" title="kaydet" value="KAYDET" onclick="doit()" />
+                        
+                        <div id="removed"></div>
+                        
+                        <textarea name="output" id="output" style="display:none; margin-top: 15px;" onclick="this.focus();this.select()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"> </textarea>
+                    </div>
                 </div>
                 
                 <div class="link-card">
@@ -1032,6 +1110,63 @@
                 hamburgerIcon.className = 'fas fa-bars hamburger-icon';
             }
         });
+        
+        // BİRİM DÖNÜŞTÜRÜCÜ FONKSİYONU (Verdiğiniz kod)
+        function doit() {
+            var txt = document.getElementById('masterlist').value;
+            txt = txt.replace(new RegExp( ">", "g" ), "&gt;");
+            txt = txt.replace(new RegExp( "<", "g" ), "&lt;");
+            var masterarray = txt.split('\n');
+            var itemsInArray = masterarray.length;
+            var dedupe = new Array();
+            i = 0;
+            var editedArray = new Array();
+            while (i < itemsInArray) {
+                masterarray[i]=masterarray[i].replace(/\s+$/, '');
+                masterarray[i]=masterarray[i].replace(new RegExp( "\t", "g" ), ' ');
+                if (!(document.getElementById('kpblanks').checked)) {
+                    masterarray[i]=masterarray[i].replace(/^\s+/, '');
+                } else {
+                    if (masterarray[i].match(/^ +/)) {
+                        var spc = masterarray[i].match(/^ +/);
+                        spc[0] = spc[0].replace(/ /g, ' ');
+                        masterarray[i]=masterarray[i].replace(/^\s+/, spc[0]);
+                    }
+                }
+                if (document.getElementById('caps').checked) {
+                    var ulc = masterarray[i].toLowerCase();
+                } else {
+                    var ulc = masterarray[i];
+                }
+                editedArray[ulc] = ulc;
+                dedupe[ulc]="0";
+                i++;
+            }
+            i = 0;
+            var uniques = new Array();
+            for (key in dedupe) {
+                if (editedArray[key] != '') {
+                    uniques.push(editedArray[key]);
+                }
+                dedupe[key]="dontprint";
+                i++;
+            }
+            if (document.getElementById('sort').checked) {
+                uniques.sort(function(x,y){
+                    var a = String(x).toUpperCase();
+                    var b = String(y).toUpperCase();
+                    if (a > b) return 1;
+                    if (a < b) return -1;
+                    return 0;
+                });
+            }
+            var ulen = uniques.length;
+            var thelist = uniques.join("\n");
+            var rmvd = itemsInArray - ulen;
+            document.getElementById('removed').innerHTML=itemsInArray + ' toplam, ' + rmvd + ' silinen, ' + ulen + ' kalan.';
+            document.getElementById('output').value=thelist;
+            document.getElementById('output').style.display="block";
+        }
     </script>
 </body>
 </html>
