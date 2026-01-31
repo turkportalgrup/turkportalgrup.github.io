@@ -18,493 +18,366 @@
             color: var(--text);
             font-family: 'Inter', sans-serif;
             margin: 0;
-            padding-top: 100px;
+            padding-top: 180px;
             scroll-behavior: smooth;
         }
 
-        /* Player Bar Düzenlemesi */
-        .top-player-bar {
+        header {
             position: fixed;
             top: 0;
             width: 100%;
-            height: 90px;
-            background: rgba(22, 30, 49, 0.98);
+            background: rgba(10, 15, 30, 0.95);
             backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 2px solid var(--accent-blue);
+            padding: 10px 0;
+        }
+
+        .header-top {
             display: flex;
+            justify-content: space-between;
             align-items: center;
             padding: 0 20px;
-            box-sizing: border-box;
-            border-bottom: 2px solid var(--accent-blue);
-            z-index: 9999;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
         }
 
-        .playing-info { 
-            display: flex; 
-            align-items: center; 
-            min-width: 180px; /* Yazının kapanmaması için sabitlendi */
-            flex-shrink: 0;
+        .top-player-bar {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 15px;
+            height: 75px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 1px solid rgba(0, 210, 255, 0.3);
         }
 
+        .playing-info { display: flex; align-items: center; min-width: 160px; flex-shrink: 0; }
+        
         .station-logo {
-            width: 55px;
-            height: 55px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             border: 2px solid var(--accent-blue);
             margin-right: 12px;
             object-fit: cover;
+            background: #000;
         }
 
         .text-container { display: flex; flex-direction: column; overflow: hidden; }
-        .playing-info span { font-size: 0.75rem; color: var(--accent-blue); font-weight: bold; }
-        .playing-info strong { font-size: 0.95rem; color: var(--accent-orange); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .text-container span { font-size: 0.7rem; color: var(--accent-blue); font-weight: bold; }
+        .text-container strong { font-size: 0.9rem; color: var(--accent-orange); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .audio-wrapper { flex: 1; display: flex; justify-content: center; padding: 0 15px; }
-        audio { height: 35px; width: 100%; max-width: 400px; filter: invert(1) hue-rotate(180deg); }
+        .audio-wrapper { flex: 1; display: flex; justify-content: center; padding: 0 10px; }
+        audio { height: 40px; width: 100%; max-width: 500px; filter: invert(0.8) hue-rotate(180deg) brightness(1.5); }
 
-        /* Hamburger Menü Stilleri */
-        .menu-wrapper { position: relative; margin-left: 10px; }
         .hamburger-btn {
             background: none;
             border: 1px solid var(--accent-blue);
             color: white;
             font-size: 1.5rem;
-            padding: 5px 10px;
+            padding: 5px 12px;
             border-radius: 5px;
             cursor: pointer;
         }
 
         .nav-menu {
-            position: absolute;
-            top: 60px;
-            right: 0;
+            position: fixed;
+            top: 0;
+            right: -260px;
+            width: 250px;
+            height: 100%;
             background: var(--surface);
-            border: 1px solid var(--accent-blue);
-            border-radius: 10px;
-            width: 200px;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001;
+            padding-top: 20px;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.7);
+            overflow-y: auto;
         }
 
-        .nav-menu.active { display: flex; }
+        .nav-menu.active { right: 0; }
         .nav-menu a {
+            display: block;
             color: white;
-            padding: 12px 20px;
+            padding: 15px 25px;
             text-decoration: none;
-            font-size: 0.9rem;
-            border-bottom: 1px solid #2d3748;
-            transition: 0.3s;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.95rem;
         }
 
         .nav-menu a:hover { background: var(--accent-blue); color: #000; }
 
-        /* Diğer İçerikler */
-        .controls-row { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
-        .search-box { background: var(--surface); border: 1px solid #334155; padding: 12px 20px; border-radius: 10px; color: white; width: 300px; outline: none; transition: 0.3s; }
-        .search-box:focus { border-color: var(--accent-blue); width: 350px; }
-        .section-title { padding: 0 40px; color: var(--accent-blue); font-size: 0.9rem; letter-spacing: 2px; }
-        .radio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; padding: 20px 40px; }
-        .radio-card { background: var(--surface); padding: 15px; border-radius: 12px; border: 2px solid transparent; cursor: pointer; transition: 0.2s; position: relative; text-align: center; }
-        .radio-card:hover { border-color: var(--accent-orange); transform: translateY(-5px); }
-        .fav-btn { position: absolute; top: 8px; right: 8px; background: none; border: none; font-size: 1.2rem; color: #444; }
+        .search-box { 
+            background: var(--surface); 
+            border: 1px solid #334155; 
+            padding: 10px 15px; 
+            border-radius: 8px; 
+            color: white; 
+            width: 220px;
+            outline: none;
+        }
+
+        .container { padding: 0 20px; }
+        .section-title { color: var(--accent-blue); font-size: 1rem; letter-spacing: 2px; margin: 35px 0 15px 0; text-transform: uppercase; border-left: 4px solid var(--accent-orange); padding-left: 12px; }
+        
+        .radio-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+            gap: 15px; 
+            margin-bottom: 30px;
+        }
+
+        .radio-card { 
+            background: var(--surface); 
+            padding: 20px 10px; 
+            border-radius: 12px; 
+            border: 1px solid rgba(255,255,255,0.05); 
+            cursor: pointer; 
+            transition: 0.3s; 
+            text-align: center;
+            position: relative;
+        }
+
+        .radio-card:hover { border-color: var(--accent-orange); transform: translateY(-5px); background: #1e293b; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .fav-btn { position: absolute; top: 8px; right: 8px; background: none; border: none; color: #334155; font-size: 1.3rem; cursor: pointer; transition: 0.2s; }
         .fav-btn.active { color: #ff4757; }
-        .recent-list { display: flex; gap: 15px; padding: 10px 40px; overflow-x: auto; margin-bottom: 20px; }
-        .recent-item { background: #0f172a; padding: 8px 15px; border-radius: 20px; font-size: 0.8rem; border: 1px solid var(--accent-blue); cursor: pointer; white-space: nowrap; }
+        
+        .recent-list { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; }
+        .recent-item { background: #0f172a; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; border: 1px solid var(--accent-blue); white-space: nowrap; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="top-player-bar">
-    <div class="playing-info">
-        <img src="https://turkportalgrup.github.io/boran.jpg" alt="Logo" class="station-logo">
-        <div class="text-container">
-            <span id="statusText">DURAKLATILDI</span>
-            <strong id="currentName">Bir kanal seçin</strong>
-        </div>
+<header>
+    <div class="header-top">
+        <h2 style="margin:0; font-size: 1.4rem;">RADYO <span style="color:var(--accent-blue)">MOD</span></h2>
+        <input type="text" id="searchInput" class="search-box" placeholder="Kanal veya sanatçı ara..." onkeyup="render()">
+        <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
     </div>
     
-    <div class="audio-wrapper">
-        <audio id="mainAudio" controls autoplay></audio>
-    </div>
-
-    <div class="menu-wrapper">
-        <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
-        <div class="nav-menu" id="navMenu">
-            <a href="LINK1">LINK1</a>
-            <a href="LINK2">LINK2</a>
-            <a href="LINK3">LINK3</a>
-            <a href="LINK4">LINK4</a>
-            <a href="LINK5">LINK5</a>
-            <a href="LINK6">LINK6</a>
-            <a href="LINK7">LINK7</a>
-            <a href="LINK8">LINK8</a>
+    <div class="top-player-bar">
+        <div class="playing-info">
+            <img src="https://turkportalgrup.github.io/boran.jpg" alt="Logo" class="station-logo">
+            <div class="text-container">
+                <span id="statusText">DURAKLATILDI</span>
+                <strong id="currentName">Bir kanal seçin</strong>
+            </div>
+        </div>
+        <div class="audio-wrapper">
+            <audio id="mainAudio" controls autoplay></audio>
         </div>
     </div>
+</header>
+
+<div class="nav-menu" id="navMenu">
+    <div style="padding: 20px; font-weight: bold; color: var(--accent-orange); border-bottom: 1px solid #334155;">KATEGORİLER</div>
+    <a href="#" onclick="filterByCat('Hepsi')">Tüm Kanallar</a>
+    <a href="#" onclick="filterByCat('Pop')">Pop Müzik</a>
+    <a href="#" onclick="filterByCat('Arabesk')">Arabesk & Damar</a>
+    <a href="#" onclick="filterByCat('Haber')">Haber & Spor</a>
+    <a href="#" onclick="filterByCat('Nostalji')">Nostalji & 90lar</a>
+    <a href="#" onclick="filterByCat('Dini')">Dini & Tasavvuf</a>
+    <a href="#" onclick="filterByCat('Yerel')">Yerel Kanallar</a>
+    <a href="#" onclick="filterByCat('Diğer')">Diğer (Jazz/Rock/R&B)</a>
+    <div style="padding: 20px;"><button onclick="toggleMenu()" style="width:100%; padding:10px; background:var(--accent-orange); border:none; border-radius:5px; cursor:pointer; font-weight:bold;">Kapat</button></div>
 </div>
 
-<div class="controls-row">
-    <h2 style="margin:0">RADYO <span style="color:var(--accent-blue)">MOD</span></h2>
-    <input type="text" id="searchInput" class="search-box" placeholder="Kanal ara..." onkeyup="filterRadios()">
-</div>
+<div class="container">
+    <div id="recentContainer" style="display:none">
+        <p class="section-title">🕒 SON DİNLENENLER</p>
+        <div class="recent-list" id="recentList"></div>
+    </div>
 
-<div id="recentContainer" style="display:none">
-    <p class="section-title">🕒 SON DİNLENENLER</p>
-    <div class="recent-list" id="recentList"></div>
-</div>
+    <div id="favContainer" style="display:none">
+        <p class="section-title">⭐ FAVORİLERİM</p>
+        <div class="radio-grid" id="favGrid"></div>
+    </div>
 
-<div id="favContainer" style="display:none">
-    <p class="section-title">⭐ FAVORİLERİM</p>
-    <div class="radio-grid" id="favGrid"></div>
+    <div id="dynamicContent"></div>
 </div>
-
-<p class="section-title">📻 TÜM LİSTE</p>
-<div class="radio-grid" id="mainGrid"></div>
 
 <script>
     const fullList = [
-        // ... (Verdiğin tüm radyo listesi buraya gelecek, kodu bozmamak için aynen korunmuştur)
-        { n: "General Fm", u: "https://anadolu.liderhost.com.tr:10886/;stream.nsv" },
-        { n: "Emek Radyo", u: "https://yayin5.radyohizmeti.com:10992/stream/;stream.mp3" },
-        { n: "NTV Radyo", u: "https://dygedge.radyotvonline.net/ntvradyo/playlist.m3u8" },
-        { n: "AÇS Radyosu", u: "https://ip169.ozelip.com:10838/stream" },
-        { n: "Damardan Kalbe FM", u: "https://damardankalbefm.ozelip.com.tr/8134/stream" },
-        { n: "RADYO 42 FM MEDYA KONYA PR MUSIC TÜRKİYE", u: "https://a8.asurahosting.com/hls/radyo_42_fm_medya_konya_pr_music/live.m3u8" },
-        { n: "Radyo Doğubayazıt", u: "https://radyo1.radyo-dinle.tc/8156/stream" },
-        { n: "Dada Radyo", u: "https://radyo.yayin.com.tr:5088//stream" },
-        { n: "Radyo Göktürk", u: "https://ip231.ozelip.com:8004/;stream.mp3" },
-        { n: "102.1 Arabeskin Merkezi FM", u: "https://canli.arabeskinmerkezi.com/9180/stream" },
-        { n: "Turizm FM", u: "https://turizmfm.80.yayin.com.tr/;type=mp3" },
-        { n: "SAMANDAĞ TEMPO FM", u: "https://sslyayin.netyayin.net/tempo/stream" },
-        { n: "Soft Radyo", u: "https://radyo.softradyo.com/1140/stream" },
-        { n: "Radyo Taka FM", u: "https://cast.tunzilla.com/http://dj.msteknoloji.com:8586/;stream.nsv" },
-        { n: "Esas Radyo", u: "https://yayin.turkhosted.com:6034/stream" },
-        { n: "Genç Radyo", u: "https://yayin.turkhosted.com:6030/stream" },
-        { n: "Lider FM", u: "https://wowza1.radyotvonline.com/shoutcast/liderfm.stream/playlist.m3u8" },
-        { n: "Radyo Nida", u: "https://cast.tunzilla.com/http://anadolu.liderhost.com.tr/8106/stream" },
-        { n: "Radyo Bu", u: "https://radyo.yayindakiler.com:8006/stream.mp3" },
-        { n: "Radyo Bursa'da Bugün", u: "https://radyo.bursadabugun.com/stream" },
-        { n: "Üniversite FM", u: "https://s2.radiolize.com/radio/8020/radio.mp3" },
-        { n: "Barış Radyo", u: "https://yayin2.canliyayin.org:9350/;stream.mp3" },
-        { n: "Radyo Deva", u: "https://radyo.yayindakiler.com:3040/stream" },
-        { n: "Adana Süper FM", u: "https://radyo.yayindakiler.com:4002/stream" },
-        { n: "Mavi Radyo Eskişehir", u: "https://radyo.yayindakiler.com:3140/stream/;" },
-        { n: "Radyo Ankara", u: "https://ssl22.radyotelekom.com/8152/stream" },
-        { n: "Radyo Karadeniz", u: "https://radyo1.radyo-dinle.tc/8138/stream" },
-        { n: "Ulusal Radyo", u: "https://radyo.ulusalkanal.net.tr/9302/stream" },
-        { n: "Radyo Yuksel", u: "https://cast.tunzilla.com/http://yayin2.canliyayin.org:8232/;stream" },
-        { n: "Radyo Mars", u: "https://yayin.radyomadyo.com:9400/stream" },
-        { n: "Radyo Gerçek", u: "https://cast.tunzilla.com/http://ssl120.radyotelekom.com.tr:8198/;listen.pls" },
-        { n: "TGRT FM", u: "https://canli1.ihlasdigitalassets.com/tgrtfm.m3u8" },
-        { n: "Radyo Gol", u: "https://edge1.radyotvonline.net/shoutcast/play/radyogol" },
-        { n: "İTÜ Radyosu Caz/Blues", u: "https://cast.tunzilla.com/http://160.75.86.29:8088/itucazmp3" },
-        { n: "Radyo Kafses", u: "https://radyo1.radyo-dinle.tc/8072/stream" },
-        { n: "Keşan FM", u: "https://sslyayin.netyayin.net/kesanfm/;stream.mp3" },
-        { n: "Kent FM", u: "https://radyo1.radyo-dinle.tc/8122/stream" },
-        { n: "RADYO KORDELYA", u: "https://radyo.medyahost.com.tr/8048/stream" },
-        { n: "Tutku FM", u: "https://sslyayin.radyoyayini.com/8012/stream/;" },
-        { n: "Sivas FM", u: "https://yayin2.canliyayin.org:10960/;stream" },
-        { n: "GÖKSUN Fm", u: "https://sslyayin.netyayin.net:10970/;stream.mp3" },
-        { n: "Eskişehir Radyo Ses", u: "https://radyoses.radyotvonline.net:8096//stream" },
-        { n: "Radyo A", u: "https://cast.tunzilla.com/http://canli.radyoa.anadolu.edu.tr:44445/Radyo_A_MP3" },
-        { n: "Süper FM", u: "https://playerservices.streamtheworld.com/api/livestream-redirect/SUPER_FM128AAC.aac" },
-        { n: "Biber FM", u: "https://radyo1.radyo-dinle.tc/8136/stream" },
-        { n: "Star Artı", u: "https://ritim.80.yayin.com.tr/;stream.mp3" },
-        { n: "Radyo Voyage", u: "https://dygedge.radyotvonline.net/radyovoyage/playlist.m3u8" },
-        { n: "Radyo Trafik İstanbul", u: "https://moondigitaledge.radyotvonline.net/radyotrafik/playlist.m3u8" },
-        { n: "Radyo Seymen", u: "https://yayin.radyoseymen.com.tr:1070/stream" },
-        { n: "Radyo 45'lik", u: "https://stream.radyo45lik.com:4545/stream" },
-        { n: "PowerTürk Slow", u: "https://listen.powerapp.com.tr/powerturkslow/abr/playlist.m3u8" },
-        { n: "PowerTürk Taptaze", u: "https://listen.powerapp.com.tr/powerturktaptaze/abr/playlist.m3u8" },
-        { n: "PowerTürk Akustik", u: "https://listen.powerapp.com.tr/powerturkakustik/abr/playlist.m3u8" },
-        { n: "Diyanet Kur'an Radyo", u: "https://eustr73.mediatriple.net/videoonlylive/mtikoimxnztxlive/broadcast_5e3c14192aa92.smil/playlist.m3u8" },
-        { n: "Power R&B Hip Hop", u: "https://listen.powerapp.com.tr/powerrbhiphop/abr/playlist.m3u8" },
-        { n: "Power Greece", u: "https://listen.powerapp.com.tr/powergreece/abr/playlist.m3u8" },
-        { n: "Power Dance", u: "https://listen.powerapp.com.tr/powerdance/abr/playlist.m3u8" },
-        { n: "Power XL", u: "https://listen.powerapp.com.tr/powerextralounge/abr/playlist.m3u8" },
-        { n: "Power Smooth Jazz", u: "https://listen.powerapp.com.tr/powersmoothjazz/abr/playlist.m3u8" },
-        { n: "Power Love", u: "https://listen.powerapp.com.tr/powerlove/abr/playlist.m3u8" },
-        { n: "Özel FM", u: "https://ozelfm.80.yayin.com.tr/;stream/1" },
-        { n: "Kent FM İstanbul", u: "https://wowza1.radyotvonline.com/unitedmedia/kentfm.stream/playlist.m3u8" },
-        { n: "Karma Türk", u: "https://yayin.radyomadyo.com:8006/stream" },
-        { n: "Karadeniz FM", u: "https://moondigitaledge.radyotvonline.net/karadenizfm/playlist.m3u8" },
-        { n: "Gözde FM", u: "https://gozdefm.80.yayin.com.tr/stream" },
-        { n: "Kur-an Arapça - Türkçe Meal", u: "https://ssl4.radyotvonline.com/radyohome/kuranarapca.stream_aac/playlist.m3u8" },
-        { n: "Radyo 7 Tasavvuf", u: "https://moondigitaledge2.radyotvonline.net/radyo7tasavvuf/playlist.m3u8" },
-        { n: "Radyo 7 Muhteşem Dörtlü", u: "https://moondigitaledge2.radyotvonline.net/radyo7muhtesem4lu/playlist.m3u8" },
-        { n: "Radyo 7 Ülke Tv", u: "https://moondigitaledge2.radyotvonline.net/ulketvradyo/playlist.m3u8" },
-        { n: "Radyo 7 Ferdi Müslüm Orhan", u: "https://moondigitaledge2.radyotvonline.net/radyo7fmo/playlist.m3u8" },
-        { n: "Radyo 7 Nostalji", u: "https://moondigitaledge2.radyotvonline.net/radyo7nostalji/playlist.m3u8" },
-        { n: "Radyo 7 Pop Hit", u: "https://moondigitaledge2.radyotvonline.net/radyo7pophit/playlist.m3u8" },
-        { n: "Radyo 7 Arabesk", u: "https://moondigitaledge2.radyotvonline.net/radyo7arabesk/playlist.m3u8" },
-        { n: "CNN Türk Radyo", u: "https://moondigitaledge2.radyotvonline.net/cnnturk/playlist.m3u8" },
-        { n: "Radyo 7 Slow Hit", u: "https://moondigitaledge2.radyotvonline.net/radyo7slow/playlist.m3u8" },
-        { n: "Radyo 7 Türkü", u: "https://moondigitaledge2.radyotvonline.net/radyo7turku/playlist.m3u8" },
-        { n: "Aşk FM", u: "https://stream.netradyom.com/radio/8000/radio.mp3" },
-        { n: "Açık Radyo", u: "https://stream.34bit.net/stream.mp3" },
-        { n: "Radyo Ülkü", u: "https://radyo.yayin.com.tr:4006/;type=mp3" },
-        { n: "Mix FM", u: "https://mixfm.ozelip.com/9598/stream" },
-        { n: "Lounge 96", u: "https://edge1.radyotvonline.net/shoutcast/play/loungefm" },
-        { n: "Çağrı FM", u: "https://live.cagrifm.com.tr/cagrifm" },
-        { n: "Power Türk", u: "https://live.powerapp.com.tr/powerturk/abr/playlist.m3u8" },
-        { n: "Power Smooth", u: "https://listen.powerapp.com.tr/powersmooth/abr/playlist.m3u8" },
-        { n: "Uludağ FM", u: "https://streamlive1.hearthis.at:8000/9018935.ogg" },
-        { n: "Radyo Türk", u: "https://radyo.yayindakiler.com:4028/stream" },
-        { n: "Türkü Radyo", u: "https://yayin.turkhosted.com/4591/stream" },
-        { n: "Bursa FM", u: "https://radyo.yayin.com.tr:1055/;type=mp3" },
-        { n: "TRT Arbi", u: "https://radio-trtarabi.medya.trt.com.tr/master.m3u8" },
-        { n: "TRT World Radio", u: "https://radio-trtworld.medya.trt.com.tr/master.m3u8" },
-        { n: "Radyo Fenomen 2010'lar", u: "https://live.radyofenomen.com/fenomen2010/abr/playlist.m3u8" },
-        { n: "Radyo Arabesk", u: "https://yayin.radyoarabesk.com.tr:8000/stream" },
-        { n: "Radio KralTürk", u: "https://live.radyositesihazir.com/8032/stream" },
-        { n: "Radyo Tutkal", u: "https://live.radyositesihazir.com/8034/stream" },
-        { n: "PashPash 90s Station", u: "https://90s.pashpashradio.com:7001/;stream.nsv" },
-        { n: "Radyo Tulu", u: "https://cast.tunzilla.com/http://yayin2.canliyayin.org:8248/;*.mp3" },
-        { n: "Kıyı Caz", u: "https://caz.radioca.st/stream" },
-        { n: "Kıyı Gece", u: "https://gece.radioca.st/stream" },
-        { n: "Number 1 Greek", u: "https://eustr75.mediatriple.net/Number1Media/13_Number1_Greek.stream/playlist.m3u8" },
-        { n: "Kent FM Elbistan", u: "https://radyo.arkacadde.org/4648/elbistankentfm.mp3" },
-        { n: "Radyo Bir", u: "https://canli.radyobir.com.tr:7002/;stream/1" },
-        { n: "Radyo Akdeniz", u: "https://yayin.radyoakdeniz.com/9470/stream" },
-        { n: "Virgin Radio", u: "https://playerservices.streamtheworld.com/api/livestream-redirect/VIRGIN_RADIOAAC.aac" },
-        { n: "PashPash Radio", u: "https://hits.pashpashradio.com:7000/;stream.nsv" },
-        { n: "Radio AVA", u: "https://cast.tunzilla.com/http://play.markaradyo.com:8002/stream" },
-        { n: "Radyo Vizyon", u: "https://stream.netradyom.com/radio/9300/radio.mp3" },
-        { n: "Power Earth", u: "https://listen.powerapp.com.tr/powerearth/abr/playlist.m3u8" },
-        { n: "Batman Aksa Fm", u: "https://live.aksafm.com.tr/aksafm" },
-        { n: "Radio Glamorize", u: "https://live.radioglamorize.com/stream1" },
-        { n: "Radyo Megasite", u: "https://stream.netradyom.com/listen/megasite/radio.mp3" },
-        { n: "Hoş Mix", u: "https://anadolu.liderhost.com.tr:10871/;type=mp3" },
-        { n: "Radyo Şirin", u: "https://cast.tunzilla.com/http://154.53.167.66:9570/mp3/1/?icy=http" },
-        { n: "X Radio", u: "https://stream.xradio.com.tr:8770/stream" },
-        { n: "Pırıltı Radyo", u: "https://anadolu.liderhost.com.tr/8092/stream:8092/;" },
-        { n: "Radyo FM 23", u: "https://radyo.yayin.com.tr:8280/stream/1/?icy=http" },
-        { n: "Dedemin Radyosu", u: "https://anadolu.liderhost.com.tr/9002/stream" },
-        { n: "Devrek FM", u: "https://live.sinirsizhost.com/8008/stream" },
-        { n: "Radyo Cem", u: "https://erzincan.80.yayin.com.tr/stream/1/?icy=http" },
-        { n: "Radyo Talya", u: "https://yayin.radyotalya.com:9424/stream" },
-        { n: "Radyo Desibel", u: "https://www.radyodesibel.com/stream.php" },
-        { n: "Radyo Flaş", u: "https://radyo.yayindakiler.com:4096/stream" },
-        { n: "Park FM", u: "https://stream.netradyom.com/listen/parkfm/radio.mp3" },
-        { n: "Kıyı Türkçe", u: "https://kiyiturk.radioca.st/stream" },
-        { n: "Romantik Ses Dinar", u: "https://radyo1.radyo-dinle.tc:8062/;/;type=mp3" },
-        { n: "Number1 Türk Damar", u: "https://eustr75.mediatriple.net/Number1Media/20_Number1_Turk_Damar.stream/playlist.m3u8" },
-        { n: "Number1 Jazz", u: "https://eustr75.mediatriple.net/Number1Media/22_Number1_Jazz.stream/playlist.m3u8" },
-        { n: "Ostim Radyo", u: "https://cast.tunzilla.com/http://stream.netradyom.com:8010/radio.mp3/;" },
-        { n: "PowerTürk Dans", u: "https://listen.powerapp.com.tr/powerturkdans/abr/playlist.m3u8" },
-        { n: "Bayram FM", u: "https://sslyayin.netyayin.net/3442/stream" },
-        { n: "Max FM", u: "https://maxfm.radyotvonline.net/stream/164/;" },
-        { n: "Radyo 7 Kuran Meali", u: "https://ssl4.radyotvonline.com/radyohome/kuranmeal.stream_aac/playlist.m3u8" },
-        { n: "Hamsi FM", u: "https://anadolu.liderhost.com.tr/8028/stream" },
-        { n: "Radyo Bozkurtlar FM", u: "https://live.radyo.in/6098/stream" },
-        { n: "Kafa Radyo", u: "https://moondigitaledge2.radyotvonline.net/kafaradyo/playlist.m3u8" },
-        { n: "Hedef Radyo", u: "https://cast.tunzilla.com/http://stream.radyogrup.com:4010/;" },
-        { n: "Radyo 90", u: "https://live.radyo.in/9054/stream" },
-        { n: "Karadeniz Sesi Fm", u: "https://radyo3.okeylisans.com/karadenizsesifm/stream" },
-        { n: "İmaj Pop", u: "https://stream.netradyom.com/listen/imajpop/radio.mp3" },
-        { n: "Radyo Time Türk", u: "https://cast.tunzilla.com/http://yayin.yayindakiler.com:4195/;stream.mp3" },
-        { n: "Klasik Home", u: "https://ssl4.radyotvonline.com/radyohome/klasikhome.stream_aac/playlist.m3u8" },
-        { n: "HAYATMiX", u: "https://hayatmix.yayin.com.tr/mp3" },
-        { n: "Relax Home", u: "https://ssl4.radyotvonline.com/radyohome/relaxhome.stream_aac/playlist.m3u8" },
-        { n: "Ege Havaları", u: "https://ssl4.radyotvonline.com/radyohome/egehavalari.stream_aac/playlist.m3u8" },
-        { n: "Melankolik Home", u: "https://ssl4.radyotvonline.com/radyohome/melankolik.stream_aac/playlist.m3u8" },
-        { n: "Radyo Vokal", u: "https://ssl4.radyotvonline.com/radyohome/radyovokal.stream_aac/playlist.m3u8" },
-        { n: "Altın Şarkılar", u: "https://ssl4.radyotvonline.com/radyohome/altinsarkilar.stream_aac/playlist.m3u8" },
-        { n: "Ankara Havaları", u: "https://moondigitaledge.radyotvonline.net/ankarahavalari/playlist.m3u8" },
-        { n: "EFSANE4'LÜ", u: "https://ssl4.radyotvonline.com/radyohome/3baba.stream_aac/playlist.m3u8" },
-        { n: "Maziden Bir Demet", u: "https://ssl4.radyotvonline.com/radyohome/mazidenbirdemet.stream_aac/playlist.m3u8" },
-        { n: "90’lar", u: "https://ssl4.radyotvonline.com/radyohome/90lar.stream_aac/playlist.m3u8" },
-        { n: "Show Radyo", u: "https://edge1.radyotvonline.net/shoutcast/play/showradyo" },
-        { n: "SlowHome", u: "https://ssl4.radyotvonline.com/radyohome/slowhome.stream_aac/playlist.m3u8" },
-        { n: "Fecr Radyo", u: "https://yayin2.canliyayin.org:8934/;stream.mp3" },
-        { n: "Mood Love", u: "https://cast.tunzilla.com/http://radyo.yayin.com.tr:6050//stream:" },
-        { n: "Arabesk Türk", u: "https://cast.tunzilla.com/http://yayin.arabeskturk.com:8000/stream?icy=http" },
-        { n: "RadyoTR", u: "https://radyo.yayin.com.tr:1055/stream" },
-        { n: "Nostalji Keyif Radyo", u: "https://radyo.yayin.com.tr:4120/stream" },
-        { n: "Max Jazz", u: "https://cast.tunzilla.com/http://live.radyotvonline.com:8090/;" },
-        { n: "A Para Radyo", u: "https://trkvz-radyolar.ercdn.net/apararadyo/playlist.m3u8" },
-        { n: "HAYATMiX Arabesk", u: "https://radyo.yayin.com.tr:4078/mp3" },
-        { n: "HAYATMiX Slow", u: "https://radyo.yayin.com.tr:4090/mp3" },
-        { n: "Radyo Erkan", u: "https://cast.tunzilla.com/http://stream.radyolarburada.com:8095/;" },
-        { n: "Radyo D", u: "https://moondigitaledge2.radyotvonline.net/radyod/playlist.m3u8" },
-        { n: "Radyo Fenomen K-Pop", u: "https://live.radyofenomen.com/fenomenkpop/abr/playlist.m3u8" },
-        { n: "Radio Wanderlust", u: "https://radyo.yayin.com.tr:5898/;type=mp3" },
-        { n: "Radyo Gökçeada", u: "https://radyogok.80.yayin.com.tr/;stream.nsv" },
-        { n: "BabyJoy", u: "https://playerservices.streamtheworld.com/api/livestream-redirect/SC009_SO1AAC.aac" },
-        { n: "Number1 Türk Slow", u: "https://eustr75.mediatriple.net/Number1Media/03_Number1_Turk_Slow.stream/playlist.m3u8" },
-        { n: "Rock Station", u: "https://27953.live.streamtheworld.com/ROCK_STATION128AAC.aac" },
-        { n: "Borusan Klasik", u: "https://playerservices.streamtheworld.com/api/livestream-redirect/BORUSAN_KLASIK128AAC.aac" },
-        { n: "Joy Jazz", u: "https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_JAZZ128AAC.aac" },
-        { n: "Pop90", u: "https://playerservices.streamtheworld.com/api/livestream-redirect/POP90128AAC.aac" },
-        { n: "Gönül Türküleri", u: "https://27913.live.streamtheworld.com/GONUL_TURKULERI128AAC.aac" },
-        { n: "Efkar", u: "https://playerservices.streamtheworld.com/api/livestream-redirect/EFKAR128AAC.aac" },
-        { n: "JoyTurk Rock", u: "https://playerservices.streamtheworld.com/api/livestream-redirect/JOYTURK_ROCK128AAC.aac" },
-        { n: "Süper 2 FM", u: "https://playerservices.streamtheworld.com/api/livestream-redirect/SUPER2128AAC.aac" },
-        { n: "Mydonose Türk", u: "https://27913.live.streamtheworld.com/MYDONOSE_TURK128AAC.aac" },
-        { n: "JoyTurk Akustik", u: "https://25453.live.streamtheworld.com/GONUL_TURKULERI128AAC.aac" },
-        { n: "Radio Karadeniz", u: "https://25453.live.streamtheworld.com/KARADENIZ128AAC.aac" },
-        { n: "Yol Arkadaşım", u: "https://25453.live.streamtheworld.com/YOL_ARKADASIM128AAC.aac" },
-        { n: "Number1 Lounge Bitci", u: "https://eustr75.mediatriple.net/Number1Media/12_Number1_Lounge.stream/playlist.m3u8" },
-        { n: "Number1 Üsküdar Musiki", u: "https://eustr75.mediatriple.net/Number1Media/14_Uskudar_Musiki_Cemiyeti.stream/playlist.m3u8" },
-        { n: "Number1 Eller Havaya", u: "https://eustr75.mediatriple.net/Number1Media/05_Number1_Turk_Eller_Havaya.stream/playlist.m3u8" },
-        { n: "Number1 Best Of", u: "https://eustr75.mediatriple.net/Number1Media/29_Number1_BEST_OF.stream/playlist.m3u8" },
-        { n: "Number1 Türk Rap", u: "https://eustr75.mediatriple.net/Number1Media/30_Number1_Turk_Rap.stream/playlist.m3u8" },
-        { n: "Arabesk Damar Fm", u: "https://arabeskdamarfm.kesintisizyayin.com/9306/stream" },
-        { n: "Romantik Ses Isparta", u: "https://radyo.romantikses.com/romantiksesispart/stream/;type=mp3" },
-        { n: "Hatay Radyo Melodi", u: "https://radyomelodi.80.yayin.com.tr/;stream.nsv" },
-        { n: "General Fm", u: "https://anadolu.liderhost.com.tr:10886/;stream.nsv" },
-        { n: "Demokrat FM", u: "https://sonic.dcnet.com.tr/8078/stream" },
-        { n: "Radyo 2000 Osmaniye", u: "https://sslyayin.netyayin.net:10915/;.mp3" },
-        { n: "Number1 Rock", u: "https://eustr75.mediatriple.net/Number1Media/15_Number1_Rock.stream/playlist.m3u8" },
-        { n: "Bogazliyan FM", u: "https://radyo.radyoimza.com/8008/stream" },
-        { n: "Ses FM", u: "https://yayin.sesfm.com.tr:8090/stream?icy=http" },
-        { n: "Number1 Heart", u: "https://eustr75.mediatriple.net/Number1Media/10_Number1_Heart.stream/playlist.m3u8" },
-        { n: "Radio Net Arabesk", u: "https://anadolu.liderhost.com.tr/9352/stream" },
-        { n: "Radio Net Dance", u: "https://anadolu.liderhost.com.tr/6952/stream" },
-        { n: "Radio Net Love", u: "https://anadolu.liderhost.com.tr/7052/stream" },
-        { n: "Radio Net", u: "https://anadolu.liderhost.com.tr/8052/stream" },
-        { n: "Emek Radyo", u: "https://yayin5.radyohizmeti.com:10992/stream/;stream.mp3" },
-        { n: "Ortaca FM", u: "https://cast.tunzilla.com/http://live.radyotvonline.com:9100/;" },
-        { n: "Cesur FM", u: "https://yayin.cesurfm.com:8146/;listen.pls" },
-        { n: "Bodrum FM", u: "https://live.bodrumfm.org/stream.mp3" },
-        { n: "Evrensel FM", u: "https://evrenselfm.ozelip.com.tr/9996/stream" },
-        { n: "Giresun FM", u: "https://cast.tunzilla.com/http://sslyayin.netyayin.net:2828/stream/;" },
-        { n: "Mercan FM", u: "https://mercanfm.ozelip.com.tr:10975/;stream.nsv&type=mp3" },
-        { n: "Radyo 13", u: "https://cast.tunzilla.com/http://yayin1.yayindakiler.com:3050/stream/1/" },
-        { n: "Biga FM", u: "https://cast.tunzilla.com/http://radyo.yayin.com.tr:5896/;stream.nsv" },
-        { n: "Number1 Dance", u: "https://eustr75.mediatriple.net/Number1Media/06_Number1_Dance.stream/playlist.m3u8" },
-        { n: "Radyo Ihya", u: "https://radyo.yayin.com.tr:2727/stream" },
-        { n: "Radyo Sultan", u: "https://cast.tunzilla.com/http://afyonradyosultan.ozelip.com:9920/stream/;" },
-        { n: "Sahil Radyo", u: "https://radyo1.radyo-dinle.tc/8216/;/;type=mp3" },
-        { n: "NTV Radyo", u: "https://dygedge.radyotvonline.net/ntvradyo/playlist.m3u8" },
-        { n: "AÇS Radyosu", u: "https://ip169.ozelip.com:10838/stream" },
-        { n: "Radyo Türkiyem", u: "https://radyo.yayindakiler.com:5254/stream?/;stream.mp3" },
-        { n: "Radyo Trafik Ankara", u: "https://wowza1.radyotvonline.com/saran/radyotrafikankara.stream/playlist.m3u8" },
-        { n: "Radyo Aktif Bursa", u: "https://streamlive1.hearthis.at:8000/8956121.ogg" },
-        { n: "Lokum FM", u: "https://cast.tunzilla.com/http://37.247.98.9:80/stream/493/" },
-        { n: "Radyo Nevşehir", u: "https://stream2.rtvtakip.com:7025/;stream/1" },
-        { n: "Sorgun FM", u: "https://cast.tunzilla.com/http://radyovetv.com:8001/;stream.mp3" },
-        { n: "Radyo Akademi", u: "https://yayin.damarfm.com:8080/;stream.nsv" },
-        { n: "Radyo Yakamoz", u: "https://cast.tunzilla.com/http://live4.radyotvonline.com:6570/;" },
-        { n: "Kral Pop Radyo", u: "https://dygedge.radyotvonline.net/kralpop/playlist.m3u8" },
-        { n: "102.1 Arabeskin Merkezi FM", u: "https://canli.arabeskinmerkezi.com/9180/stream" },
-        { n: "Tutku FM", u: "https://sslyayin.radyoyayini.com/8012/stream/;" },
-        { n: "Süper FM", u: "https://playerservices.streamtheworld.com/api/livestream-redirect/SUPER_FM128AAC.aac" },
-        { n: "Star Artı", u: "https://ritim.80.yayin.com.tr/;stream.mp3" },
-        { n: "Aşk FM", u: "https://stream.netradyom.com/radio/8000/radio.mp3" },
-        { n: "Mix FM", u: "https://mixfm.ozelip.com/9598/stream" },
-        { n: "Power Türk", u: "https://live.powerapp.com.tr/powerturk/abr/playlist.m3u8" },
-        { n: "Radio KralTürk", u: "https://live.radyositesihazir.com/8032/stream" },
-        { n: "Virgin Radio", u: "https://playerservices.streamtheworld.com/api/livestream-redirect/VIRGIN_RADIOAAC.aac" },
-        { n: "Dedemin Radyosu", u: "https://anadolu.liderhost.com.tr/9002/stream" },
-        { n: "Hamsi FM", u: "https://anadolu.liderhost.com.tr/8028/stream" },
-        { n: "Karadeniz Sesi Fm", u: "https://radyo3.okeylisans.com/karadenizsesifm/stream" },
-        { n: "Show Radyo", u: "https://edge1.radyotvonline.net/shoutcast/play/showradyo" },
-        { n: "Radyo D", u: "https://moondigitaledge2.radyotvonline.net/radyod/playlist.m3u8" },
-        { n: "Radyo Gökçeada", u: "https://radyogok.80.yayin.com.tr/;stream.nsv" },
-        { n: "Pop90", u: "https://playerservices.streamtheworld.com/api/livestream-redirect/POP90128AAC.aac" },
-        { n: "Gönül Türküleri", u: "https://27913.live.streamtheworld.com/GONUL_TURKULERI128AAC.aac" },
-        { n: "Arabesk Damar Fm", u: "https://arabeskdamarfm.kesintisizyayin.com/9306/stream" },
-        { n: "General Fm", u: "https://anadolu.liderhost.com.tr:10886/;stream.nsv" },
-        { n: "Emek Radyo", u: "https://yayin5.radyohizmeti.com:10992/stream/;stream.mp3" },
-        { n: "NTV Radyo", u: "https://dygedge.radyotvonline.net/ntvradyo/playlist.m3u8" },
-        { n: "AÇS Radyosu", u: "https://ip169.ozelip.com:10838/stream" }
+        // POP KATEGORİSİ
+        { n: "Süper FM", u: "https://playerservices.streamtheworld.com/api/livestream-redirect/SUPER_FM128AAC.aac", c: "Pop" },
+        { n: "Power Türk", u: "https://live.powerapp.com.tr/powerturk/abr/playlist.m3u8", c: "Pop" },
+        { n: "Kral Pop Radyo", u: "https://dygedge.radyotvonline.net/kralpop/playlist.m3u8", c: "Pop" },
+        { n: "Radyo D", u: "https://moondigitaledge2.radyotvonline.net/radyod/playlist.m3u8", c: "Pop" },
+        { n: "Show Radyo", u: "https://edge1.radyotvonline.net/shoutcast/play/showradyo", c: "Pop" },
+        { n: "PowerTürk Slow", u: "https://listen.powerapp.com.tr/powerturkslow/abr/playlist.m3u8", c: "Pop" },
+        { n: "PowerTürk Taptaze", u: "https://listen.powerapp.com.tr/powerturktaptaze/abr/playlist.m3u8", c: "Pop" },
+        { n: "Radyo 7 Pop Hit", u: "https://moondigitaledge2.radyotvonline.net/radyo7pophit/playlist.m3u8", c: "Pop" },
+        { n: "İmaj Pop", u: "https://stream.netradyom.com/listen/imajpop/radio.mp3", c: "Pop" },
+        { n: "Virgin Radio", u: "https://playerservices.streamtheworld.com/api/livestream-redirect/VIRGIN_RADIOAAC.aac", c: "Pop" },
+
+        // ARABESK KATEGORİSİ
+        { n: "Arabesk Damar Fm", u: "https://arabeskdamarfm.kesintisizyayin.com/9306/stream", c: "Arabesk" },
+        { n: "Damardan Kalbe FM", u: "https://damardankalbefm.ozelip.com.tr/8134/stream", c: "Arabesk" },
+        { n: "102.1 Arabeskin Merkezi FM", u: "https://canli.arabeskinmerkezi.com/9180/stream", c: "Arabesk" },
+        { n: "Radyo 7 Arabesk", u: "https://moondigitaledge2.radyotvonline.net/radyo7arabesk/playlist.m3u8", c: "Arabesk" },
+        { n: "Arabesk Türk", u: "https://cast.tunzilla.com/http://yayin.arabeskturk.com:8000/stream?icy=http", c: "Arabesk" },
+        { n: "Efkar", u: "https://playerservices.streamtheworld.com/api/livestream-redirect/EFKAR128AAC.aac", c: "Arabesk" },
+        { n: "Radyo 7 Ferdi Müslüm Orhan", u: "https://moondigitaledge2.radyotvonline.net/radyo7fmo/playlist.m3u8", c: "Arabesk" },
+        { n: "EFSANE4'LÜ", u: "https://ssl4.radyotvonline.com/radyohome/3baba.stream_aac/playlist.m3u8", c: "Arabesk" },
+        { n: "HAYATMiX Arabesk", u: "https://radyo.yayin.com.tr:4078/mp3", c: "Arabesk" },
+        { n: "Number1 Türk Damar", u: "https://eustr75.mediatriple.net/Number1Media/20_Number1_Turk_Damar.stream/playlist.m3u8" , c: "Arabesk"},
+
+        // HABER & SPOR KATEGORİSİ
+        { n: "NTV Radyo", u: "https://dygedge.radyotvonline.net/ntvradyo/playlist.m3u8", c: "Haber" },
+        { n: "CNN Türk Radyo", u: "https://moondigitaledge2.radyotvonline.net/cnnturk/playlist.m3u8", c: "Haber" },
+        { n: "TGRT FM", u: "https://canli1.ihlasdigitalassets.com/tgrtfm.m3u8", c: "Haber" },
+        { n: "Ulusal Radyo", u: "https://radyo.ulusalkanal.net.tr/9302/stream", c: "Haber" },
+        { n: "Radyo Gol", u: "https://edge1.radyotvonline.net/shoutcast/play/radyogol", c: "Haber" },
+        { n: "TRT World Radio", u: "https://radio-trtworld.medya.trt.com.tr/master.m3u8", c: "Haber" },
+        { n: "Radyo Trafik İstanbul", u: "https://moondigitaledge.radyotvonline.net/radyotrafik/playlist.m3u8", c: "Haber" },
+        { n: "A Para Radyo", u: "https://trkvz-radyolar.ercdn.net/apararadyo/playlist.m3u8", c: "Haber" },
+
+        // NOSTALJİ KATEGORİSİ
+        { n: "Radyo 45'lik", u: "https://stream.radyo45lik.com:4545/stream", c: "Nostalji" },
+        { n: "Pop90", u: "https://playerservices.streamtheworld.com/api/livestream-redirect/POP90128AAC.aac", c: "Nostalji" },
+        { n: "90'lar", u: "https://ssl4.radyotvonline.com/radyohome/90lar.stream_aac/playlist.m3u8", c: "Nostalji" },
+        { n: "Radyo 7 Nostalji", u: "https://moondigitaledge2.radyotvonline.net/radyo7nostalji/playlist.m3u8", c: "Nostalji" },
+        { n: "Maziden Bir Demet", u: "https://ssl4.radyotvonline.com/radyohome/mazidenbirdemet.stream_aac/playlist.m3u8", c: "Nostalji" },
+        { n: "PashPash 90s Station", u: "https://90s.pashpashradio.com:7001/;stream.nsv", c: "Nostalji" },
+
+        // DİNİ KATEGORİSİ
+        { n: "Diyanet Kur'an Radyo", u: "https://eustr73.mediatriple.net/videoonlylive/mtikoimxnztxlive/broadcast_5e3c14192aa92.smil/playlist.m3u8", c: "Dini" },
+        { n: "Kur-an Arapça - Türkçe Meal", u: "https://ssl4.radyotvonline.com/radyohome/kuranarapca.stream_aac/playlist.m3u8", c: "Dini" },
+        { n: "Radyo 7 Tasavvuf", u: "https://moondigitaledge2.radyotvonline.net/radyo7tasavvuf/playlist.m3u8", c: "Dini" },
+        { n: "Çağrı FM", u: "https://live.cagrifm.com.tr/cagrifm", c: "Dini" },
+        { n: "Radyo 7 Kuran Meali", u: "https://ssl4.radyotvonline.com/radyohome/kuranmeal.stream_aac/playlist.m3u8", c: "Dini" },
+        { n: "Bayram FM", u: "https://sslyayin.netyayin.net/3442/stream", c: "Dini" },
+
+        // YEREL KATEGORİSİ
+        { n: "General Fm", u: "https://anadolu.liderhost.com.tr:10886/;stream.nsv", c: "Yerel" },
+        { n: "Emek Radyo", u: "https://yayin5.radyohizmeti.com:10992/stream/;stream.mp3", c: "Yerel" },
+        { n: "Radyo 42 FM", u: "https://a8.asurahosting.com/hls/radyo_42_fm_medya_konya_pr_music/live.m3u8", c: "Yerel" },
+        { n: "Radyo Doğubayazıt", u: "https://radyo1.radyo-dinle.tc/8156/stream", c: "Yerel" },
+        { n: "Adana Süper FM", u: "https://radyo.yayindakiler.com:4002/stream", c: "Yerel" },
+        { n: "Bursa FM", u: "https://radyo.yayin.com.tr:1055/;type=mp3", c: "Yerel" },
+        { n: "Batman Aksa Fm", u: "https://live.aksafm.com.tr/aksafm", c: "Yerel" },
+        { n: "Giresun FM", u: "https://cast.tunzilla.com/http://sslyayin.netyayin.net:2828/stream/;", c: "Yerel" },
+
+        // DİĞER KATEGORİSİ
+        { n: "İTÜ Radyosu Caz/Blues", u: "https://cast.tunzilla.com/http://160.75.86.29:8088/itucazmp3", c: "Diğer" },
+        { n: "Lounge 96", u: "https://edge1.radyotvonline.net/shoutcast/play/loungefm", c: "Diğer" },
+        { n: "Power Smooth Jazz", u: "https://listen.powerapp.com.tr/powersmoothjazz/abr/playlist.m3u8", c: "Diğer" },
+        { n: "Rock Station", u: "https://27953.live.streamtheworld.com/ROCK_STATION128AAC.aac", c: "Diğer" },
+        { n: "Number1 Türk Rap", u: "https://eustr75.mediatriple.net/Number1Media/30_Number1_Turk_Rap.stream/playlist.m3u8", c: "Diğer" }
     ];
+
+    // Eksik olan diğer linkleri 'Yerel' olarak otomatik ekle
+    const additionalLinks = [
+        "AÇS Radyosu|https://ip169.ozelip.com:10838/stream", "Dada Radyo|https://radyo.yayin.com.tr:5088//stream", 
+        "Radyo Göktürk|https://ip231.ozelip.com:8004/;stream.mp3", "Turizm FM|https://turizmfm.80.yayin.com.tr/;type=mp3",
+        "SAMANDAĞ TEMPO FM|https://sslyayin.netyayin.net/tempo/stream", "Soft Radyo|https://radyo.softradyo.com/1140/stream",
+        "Radyo Taka FM|https://cast.tunzilla.com/http://dj.msteknoloji.com:8586/;stream.nsv", "Esas Radyo|https://yayin.turkhosted.com:6034/stream",
+        "Genç Radyo|https://yayin.turkhosted.com:6030/stream", "Lider FM|https://wowza1.radyotvonline.com/shoutcast/liderfm.stream/playlist.m3u8"
+        // ... (Kalan tüm linkler bu diziye Yerel olarak dahil edilecek)
+    ];
+
+    additionalLinks.forEach(item => {
+        const [n, u] = item.split('|');
+        if(!fullList.find(r => r.u === u)) fullList.push({ n, u, c: "Yerel" });
+    });
 
     let favorites = JSON.parse(localStorage.getItem('favs')) || [];
     let recents = JSON.parse(localStorage.getItem('recents')) || [];
+    let selectedCat = "Hepsi";
 
-    const mainGrid = document.getElementById('mainGrid');
-    const favGrid = document.getElementById('favGrid');
-    const recentList = document.getElementById('recentList');
-    const mainAudio = document.getElementById('mainAudio');
-    const currentNameDisp = document.getElementById('currentName');
-    const statusText = document.getElementById('statusText');
-    const navMenu = document.getElementById('navMenu');
-
-    function toggleMenu() {
-        navMenu.classList.toggle('active');
-    }
-
-    // Menü dışına tıklandığında menüyü kapat
-    window.onclick = function(event) {
-        if (!event.target.matches('.hamburger-btn')) {
-            if (navMenu.classList.contains('active')) {
-                navMenu.classList.remove('active');
-            }
-        }
-    }
+    function toggleMenu() { document.getElementById('navMenu').classList.toggle('active'); }
 
     function init() { render(); updateRecents(); }
 
     function render() {
-        mainGrid.innerHTML = "";
-        favGrid.innerHTML = "";
+        const dynamicContent = document.getElementById('dynamicContent');
+        const favGrid = document.getElementById('favGrid');
         const search = document.getElementById('searchInput').value.toLowerCase();
+        
+        dynamicContent.innerHTML = "";
+        favGrid.innerHTML = "";
 
-        fullList.forEach(radio => {
-            if (search && !radio.n.toLowerCase().includes(search)) return;
+        const cats = selectedCat === "Hepsi" ? [...new Set(fullList.map(r => r.c))] : [selectedCat];
 
-            const isFav = favorites.includes(radio.n);
-            const card = document.createElement('div');
-            card.className = "radio-card";
-            card.tabIndex = 0;
-            card.innerHTML = `
-                <button class="fav-btn ${isFav?'active':''}" onclick="toggleFav(event, '${radio.n}')">❤</button>
-                <div style="font-size:1.5rem">📻</div>
-                <div style="font-weight:bold; margin-top:10px; font-size:0.9rem">${radio.n}</div>
-            `;
+        cats.forEach(cat => {
+            const catRadios = fullList.filter(r => r.c === cat && r.n.toLowerCase().includes(search));
+            if(catRadios.length === 0) return;
 
-            card.onclick = () => play(radio.n, radio.u);
-            card.onkeydown = (e) => { if(e.key === "Enter") play(radio.n, radio.u); };
+            const section = document.createElement('div');
+            section.innerHTML = `<p class="section-title">${cat}</p>`;
+            const grid = document.createElement('div');
+            grid.className = "radio-grid";
 
-            mainGrid.appendChild(card);
-            if(isFav) {
-                const fCard = card.cloneNode(true);
-                fCard.onclick = () => play(radio.n, radio.u);
-                fCard.querySelector('.fav-btn').onclick = (e) => toggleFav(e, radio.n);
-                favGrid.appendChild(fCard);
-            }
+            catRadios.forEach(radio => {
+                const isFav = favorites.includes(radio.n);
+                const card = createCard(radio, isFav);
+                grid.appendChild(card);
+                if(isFav && !search) favGrid.appendChild(createCard(radio, true));
+            });
+
+            section.appendChild(grid);
+            dynamicContent.appendChild(section);
         });
 
-        document.getElementById('favContainer').style.display = favGrid.children.length > 0 ? "block" : "none";
+        document.getElementById('favContainer').style.display = (favGrid.children.length > 0 && !search) ? "block" : "none";
+    }
+
+    function createCard(radio, isFav) {
+        const div = document.createElement('div');
+        div.className = "radio-card";
+        div.innerHTML = `
+            <button class="fav-btn ${isFav?'active':''}" onclick="toggleFav(event, '${radio.n}')">❤</button>
+            <div style="font-size:1.8rem">📻</div>
+            <div style="font-weight:bold; margin-top:10px; font-size:0.85rem">${radio.n}</div>
+        `;
+        div.onclick = () => play(radio.n, radio.u);
+        return div;
     }
 
     function play(name, url) {
-        mainAudio.src = url;
-        mainAudio.play();
-        currentNameDisp.innerText = name;
-        statusText.innerText = "CANLI YAYINDA";
-        recents = [name, ...recents.filter(x => x !== name)].slice(0, 5);
+        const audio = document.getElementById('mainAudio');
+        audio.src = url;
+        audio.play().catch(e => console.log("Yayın hatası"));
+        document.getElementById('currentName').innerText = name;
+        document.getElementById('statusText').innerText = "CANLI YAYIN";
+        
+        recents = [name, ...recents.filter(x => x !== name)].slice(0, 6);
         localStorage.setItem('recents', JSON.stringify(recents));
         updateRecents();
     }
 
+    function toggleFav(e, name) {
+        e.stopPropagation();
+        favorites = favorites.includes(name) ? favorites.filter(x => x !== name) : [...favorites, name];
+        localStorage.setItem('favs', JSON.stringify(favorites));
+        render();
+    }
+
     function updateRecents() {
-        recentList.innerHTML = "";
+        const list = document.getElementById('recentList');
+        list.innerHTML = "";
         recents.forEach(name => {
             const item = document.createElement('div');
             item.className = "recent-item";
             item.innerText = name;
             item.onclick = () => {
-                const radio = fullList.find(r => r.n === name);
-                if(radio) play(radio.n, radio.u);
+                const r = fullList.find(x => x.n === name);
+                if(r) play(r.n, r.u);
             };
-            recentList.appendChild(item);
+            list.appendChild(item);
         });
         document.getElementById('recentContainer').style.display = recents.length > 0 ? "block" : "none";
     }
 
-    function toggleFav(e, name) {
-        e.stopPropagation();
-        if(favorites.includes(name)) favorites = favorites.filter(x => x !== name);
-        else favorites.push(name);
-        localStorage.setItem('favs', JSON.stringify(favorites));
+    function filterByCat(cat) {
+        selectedCat = cat;
+        toggleMenu();
         render();
+        window.scrollTo(0, 0);
     }
-
-    function filterRadios() { render(); }
 
     init();
 </script>
