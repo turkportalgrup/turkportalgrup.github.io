@@ -22,70 +22,125 @@
             scroll-behavior: smooth;
         }
 
+        /* Player Bar Düzenlemesi */
         .top-player-bar {
             position: fixed;
             top: 0;
             width: 100%;
-            height: 80px;
-            background: rgba(22, 30, 49, 0.95);
+            height: 90px;
+            background: rgba(22, 30, 49, 0.98);
             backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
-            padding: 0 30px;
+            padding: 0 20px;
             box-sizing: border-box;
             border-bottom: 2px solid var(--accent-blue);
             z-index: 9999;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
 
-        .playing-info { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-        .playing-info span { font-size: 0.8rem; color: var(--accent-blue); }
-        .playing-info strong { font-size: 1.1rem; color: var(--accent-orange); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .playing-info { 
+            display: flex; 
+            align-items: center; 
+            min-width: 180px; /* Yazının kapanmaması için sabitlendi */
+            flex-shrink: 0;
+        }
 
-        .audio-wrapper { flex: 2; display: flex; justify-content: center; }
-        audio { height: 35px; width: 100%; max-width: 500px; filter: invert(1) hue-rotate(180deg); }
+        .station-logo {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-blue);
+            margin-right: 12px;
+            object-fit: cover;
+        }
 
+        .text-container { display: flex; flex-direction: column; overflow: hidden; }
+        .playing-info span { font-size: 0.75rem; color: var(--accent-blue); font-weight: bold; }
+        .playing-info strong { font-size: 0.95rem; color: var(--accent-orange); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .audio-wrapper { flex: 1; display: flex; justify-content: center; padding: 0 15px; }
+        audio { height: 35px; width: 100%; max-width: 400px; filter: invert(1) hue-rotate(180deg); }
+
+        /* Hamburger Menü Stilleri */
+        .menu-wrapper { position: relative; margin-left: 10px; }
+        .hamburger-btn {
+            background: none;
+            border: 1px solid var(--accent-blue);
+            color: white;
+            font-size: 1.5rem;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .nav-menu {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: var(--surface);
+            border: 1px solid var(--accent-blue);
+            border-radius: 10px;
+            width: 200px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .nav-menu.active { display: flex; }
+        .nav-menu a {
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #2d3748;
+            transition: 0.3s;
+        }
+
+        .nav-menu a:hover { background: var(--accent-blue); color: #000; }
+
+        /* Diğer İçerikler */
         .controls-row { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
         .search-box { background: var(--surface); border: 1px solid #334155; padding: 12px 20px; border-radius: 10px; color: white; width: 300px; outline: none; transition: 0.3s; }
         .search-box:focus { border-color: var(--accent-blue); width: 350px; }
-
         .section-title { padding: 0 40px; color: var(--accent-blue); font-size: 0.9rem; letter-spacing: 2px; }
         .radio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; padding: 20px 40px; }
-
-        .radio-card {
-            background: var(--surface);
-            padding: 15px;
-            border-radius: 12px;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: 0.2s;
-            position: relative;
-            outline: none;
-            text-align: center;
-        }
-
-        .radio-card:focus, .radio-card:hover { border-color: var(--accent-orange); background: #1e293b; transform: translateY(-5px); }
-        .fav-btn { position: absolute; top: 8px; right: 8px; background: none; border: none; font-size: 1.2rem; color: #444; cursor: pointer; }
+        .radio-card { background: var(--surface); padding: 15px; border-radius: 12px; border: 2px solid transparent; cursor: pointer; transition: 0.2s; position: relative; text-align: center; }
+        .radio-card:hover { border-color: var(--accent-orange); transform: translateY(-5px); }
+        .fav-btn { position: absolute; top: 8px; right: 8px; background: none; border: none; font-size: 1.2rem; color: #444; }
         .fav-btn.active { color: #ff4757; }
-
         .recent-list { display: flex; gap: 15px; padding: 10px 40px; overflow-x: auto; margin-bottom: 20px; }
         .recent-item { background: #0f172a; padding: 8px 15px; border-radius: 20px; font-size: 0.8rem; border: 1px solid var(--accent-blue); cursor: pointer; white-space: nowrap; }
-
-        .radio-card:focus::after { content: "SEÇİLDİ"; position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%); font-size: 10px; color: var(--accent-orange); }
     </style>
 </head>
 <body>
 
 <div class="top-player-bar">
     <div class="playing-info">
-        <span id="statusText">DURAKLATILDI</span>
-        <strong id="currentName">Bir kanal seçin</strong>
+        <img src="https://turkportalgrup.github.io/boran.jpg" alt="Logo" class="station-logo">
+        <div class="text-container">
+            <span id="statusText">DURAKLATILDI</span>
+            <strong id="currentName">Bir kanal seçin</strong>
+        </div>
     </div>
+    
     <div class="audio-wrapper">
         <audio id="mainAudio" controls autoplay></audio>
     </div>
-    <div style="flex:1; text-align: right;">
-        <button onclick="location.reload()" style="background:none; border:1px solid #333; color:white; border-radius:5px; padding:5px 10px; cursor:pointer;">Yenile</button>
+
+    <div class="menu-wrapper">
+        <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
+        <div class="nav-menu" id="navMenu">
+            <a href="LINK1">LINK1</a>
+            <a href="LINK2">LINK2</a>
+            <a href="LINK3">LINK3</a>
+            <a href="LINK4">LINK4</a>
+            <a href="LINK5">LINK5</a>
+            <a href="LINK6">LINK6</a>
+            <a href="LINK7">LINK7</a>
+            <a href="LINK8">LINK8</a>
+        </div>
     </div>
 </div>
 
@@ -109,6 +164,7 @@
 
 <script>
     const fullList = [
+        // ... (Verdiğin tüm radyo listesi buraya gelecek, kodu bozmamak için aynen korunmuştur)
         { n: "General Fm", u: "https://anadolu.liderhost.com.tr:10886/;stream.nsv" },
         { n: "Emek Radyo", u: "https://yayin5.radyohizmeti.com:10992/stream/;stream.mp3" },
         { n: "NTV Radyo", u: "https://dygedge.radyotvonline.net/ntvradyo/playlist.m3u8" },
@@ -365,6 +421,20 @@
     const mainAudio = document.getElementById('mainAudio');
     const currentNameDisp = document.getElementById('currentName');
     const statusText = document.getElementById('statusText');
+    const navMenu = document.getElementById('navMenu');
+
+    function toggleMenu() {
+        navMenu.classList.toggle('active');
+    }
+
+    // Menü dışına tıklandığında menüyü kapat
+    window.onclick = function(event) {
+        if (!event.target.matches('.hamburger-btn')) {
+            if (navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+            }
+        }
+    }
 
     function init() { render(); updateRecents(); }
 
