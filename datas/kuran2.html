@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kur'an-ı Kerim - Dinle ve Meal Takip</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-blue: #1a5fb4;
+            --secondary-blue: #3584e4;
+            --light-blue: #62a0ea;
+            --primary-orange: #ff7800;
+            --secondary-orange: #ff9d5c;
+            --light-orange: #ffc18c;
+            --dark-bg: #1e1e1e;
+            --light-bg: #f8f8f8;
+            --text-dark: #333;
+            --text-light: #f0f0f0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-orange));
+            color: white;
+            padding: 15px 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+        
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .hamburger-menu {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .hamburger-menu:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, var(--primary-blue), var(--light-blue));
+            color: white;
+            position: fixed;
+            left: -300px;
+            top: 0;
+            height: 100%;
+            overflow-y: auto;
+            padding: 80px 20px 20px;
+            transition: left 0.4s ease;
+            z-index: 999;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .sidebar.active {
+            left: 0;
+        }
+        
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1.8rem;
+        }
+        
+        .sure-list {
+            list-style: none;
+            max-height: calc(100vh - 150px);
+            overflow-y: auto;
+        }
+        
+        .sure-list li {
+            margin-bottom: 8px;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+        
+        .sure-list li:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sure-list a {
+            display: block;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.05rem;
+            transition: all 0.2s ease;
+        }
+        
+        .sure-list a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding-left: 20px;
+        }
+        
+        .sure-list a.active {
+            background-color: var(--primary-orange);
+            font-weight: bold;
+        }
+        
+        /* Ana İçerik */
+        .main-content {
+            padding-top: 90px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Player Bölümü */
+        .player-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin: 0 30px 30px;
+        }
+        
+        .current-sure-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .current-sure-name {
+            color: var(--primary-orange);
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .current-sure-details {
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+        }
+        
+        .audio-player {
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 10px;
+        }
+        
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .player-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .player-btn:hover {
+            background: var(--secondary-blue);
+            transform: translateY(-2px);
+        }
+        
+        .player-btn.orange {
+            background: var(--primary-orange);
+        }
+        
+        .player-btn.orange:hover {
+            background: var(--secondary-orange);
+        }
+        
+        /* Meal Bölümü */
+        .meal-section {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin: 0 30px 30px;
+            height: calc(100vh - 300px);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .meal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-blue);
+            flex-shrink: 0;
+        }
+        
+        .meal-title {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .meal-content-container {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .meal-content {
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 10px;
+            transition: transform 0.5s ease;
+        }
+        
+        .meal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .meal-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .meal-content::-webkit-scrollbar-thumb {
+            background: var(--light-blue);
+            border-radius: 10px;
+        }
+        
+        .meal-content::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-blue);
+        }
+        
+        .meal-verse {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            transition: all 0.5s ease;
+            border-left: 4px solid transparent;
+            background-color: #f9f9f9;
+            transform-origin: top;
+            animation-duration: 0.5s;
+            animation-timing-function: ease;
+        }
+        
+        .meal-verse.active {
+            background-color: rgba(255, 120, 0, 0.15);
+            border-left: 4px solid var(--primary-orange);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transform: scale(1.01);
+        }
+        
+        @keyframes verseHighlight {
+            0% {
+                background-color: #f9f9f9;
+                transform: scale(1);
+            }
+            50% {
+                background-color: rgba(255, 120, 0, 0.2);
+                transform: scale(1.02);
+            }
+            100% {
+                background-color: rgba(255, 120, 0, 0.15);
+                transform: scale(1.01);
+            }
+        }
+        
+        .meal-verse.new-active {
+            animation-name: verseHighlight;
+        }
+        
+        .verse-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .verse-number {
+            display: inline-block;
+            background: var(--primary-blue);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .verse-number.active {
+            background: var(--primary-orange);
+            transform: scale(1.1);
+            box-shadow: 0 3px 10px rgba(255, 120, 0, 0.3);
+        }
+        
+        .verse-audio {
+            background: transparent;
+            border: none;
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        .verse-audio:hover {
+            color: var(--primary-orange);
+            transform: scale(1.1);
+            background-color: rgba(255, 120, 0, 0.1);
+        }
+        
+        .arabic-text {
+            font-family: 'Traditional Arabic', 'Amiri', serif;
+            font-size: 1.6rem;
+            text-align: right;
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+            line-height: 2.2;
+            direction: rtl;
+            transition: all 0.3s ease;
+        }
+        
+        .meal-verse.active .arabic-text {
+            color: var(--primary-orange);
+            font-weight: bold;
+        }
+        
+        .meal-text {
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            font-size: 1.15rem;
+            line-height: 1.7;
+            border-top: 2px solid var(--light-orange);
+            transition: all 0.3s ease;
+        }
+        
+        .meal-verse.active .meal-text {
+            background-color: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border-top: 2px solid var(--primary-orange);
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background-color: #f0f0f0;
+            border-radius: 3px;
+            margin-top: 15px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-orange));
+            width: 0%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+        }
+        
+        .loading i {
+            margin-right: 10px;
+        }
+        
+        .error-message {
+            text-align: center;
+            padding: 40px;
+            color: #d32f2f;
+            font-size: 1.2rem;
+            background-color: #ffebee;
+            border-radius: 8px;
+            margin: 10px;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--primary-blue);
+            color: white;
+            margin-top: auto;
+            flex-shrink: 0;
+        }
+        
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 120, 0, 0.8);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .scroll-indicator.visible {
+            opacity: 1;
+        }
+        
+        /* Responsive Tasarım */
+        @media (max-width: 768px) {
+            .header {
+                padding: 12px 20px;
+            }
+            
+            .header-title {
+                font-size: 1.5rem;
+            }
+            
+            .player-section, .meal-section {
+                margin: 0 15px 20px;
+                padding: 20px;
+            }
+            
+            .current-sure-name {
+                font-size: 1.5rem;
+            }
+            
+            .meal-section {
+                height: calc(100vh - 280px);
+            }
+            
+            .arabic-text {
+                font-size: 1.4rem;
+            }
+            
+            .meal-text {
+                font-size: 1.1rem;
+            }
+            
+            .sidebar {
+                width: 250px;
+                left: -270px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 1.3rem;
+            }
+            
+            .player-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .player-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .arabic-text {
+                font-size: 1.3rem;
+            }
+            
+            .meal-verse {
+                padding: 15px;
+            }
+        }
+        
+        /* Overlay (sidebar açıkken) */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: none;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        /* Auto-scroll toggle */
+        .auto-scroll-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-blue);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .toggle-switch {
+            width: 40px;
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 10px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-switch.active {
+            background-color: var(--primary-orange);
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-switch.active::after {
+            left: 22px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-title">Kur'an-ı Kerim</div>
+        <button class="hamburger-menu" id="hamburgerMenu">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+    
+    <!-- Sidebar Overlay -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h2>Sûreler</h2>
+        <ul class="sure-list" id="sureList">
+            <!-- Sureler JavaScript ile eklenecek -->
+        </ul>
+    </div>
+    
+    <!-- Ana İçerik -->
+    <div class="main-content">
+        <!-- Player Bölümü -->
+        <div class="player-section">
+            <div class="current-sure-info">
+                <div class="current-sure-name" id="currentSureName">Fatiha Suresi</div>
+                <div class="current-sure-details" id="currentSureDetails">7 Ayet • Mekke</div>
+            </div>
+            
+            <audio id="audioPlayer" class="audio-player" controls>
+                <source src="https://audio.acikkuran.com/tr/1.mp3" type="audio/mpeg">
+                Tarayıcınız audio elementini desteklemiyor.
+            </audio>
+            
+            <div class="player-controls">
+                <button class="player-btn" id="prevBtn">
+                    <i class="fas fa-step-backward"></i> Önceki Sure
+                </button>
+                <button class="player-btn orange" id="nextBtn">
+                    Sonraki Sure <i class="fas fa-step-forward"></i>
+                </button>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+        
+        <!-- Meal Bölümü -->
+        <div class="meal-section">
+            <div class="meal-header">
+                <div class="meal-title">Meal</div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div class="auto-scroll-toggle" id="autoScrollToggle">
+                        <span>Otomatik Kaydırma</span>
+                        <div class="toggle-switch active" id="toggleSwitch"></div>
+                    </div>
+                    <div class="meal-status" id="mealStatus">Fatiha Suresi</div>
+                </div>
+            </div>
+            
+            <div class="meal-content-container">
+                <div class="scroll-indicator" id="scrollIndicator">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+                <div class="meal-content" id="mealContent">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Kur'an verileri yükleniyor...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <p>Kur'an-ı Kerim • Açık Kuran API • Dinle ve Meal Takip</p>
+    </div>
+
+    <script>
+        // Değişkenler
+        let currentSureIndex = 0;
+        let allSurahs = [];
+        let currentSurahData = null;
+        let autoScrollEnabled = true;
+        let lastActiveVerse = -1;
+        const audioPlayer = document.getElementById('audioPlayer');
+        const currentSureName = document.getElementById('currentSureName');
+        const currentSureDetails = document.getElementById('currentSureDetails');
+        const mealContent = document.getElementById('mealContent');
+        const sureListElement = document.getElementById('sureList');
+        const hamburgerMenu = document.getElementById('hamburgerMenu');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const mealStatus = document.getElementById('mealStatus');
+        const progressBar = document.getElementById('progressBar');
+        const autoScrollToggle = document.getElementById('autoScrollToggle');
+        const toggleSwitch = document.getElementById('toggleSwitch');
+        const scrollIndicator = document.getElementById('scrollIndicator');
+        
+        // Türkçe meal yazarı ID'si (Erhan Aktaş)
+        const turkishAuthorId = 105;
+        
+        // Sayfa yüklendiğinde çalışacak fonksiyon
+        document.addEventListener('DOMContentLoaded', function() {
+            // API'den sureleri yükle
+            loadSurahsFromAPI();
+            
+            // Event listener'ları ekle
+            setupEventListeners();
+            
+            // Klavye kısayollarını ekle
+            setupKeyboardShortcuts();
+        });
+        
+        // API'den sureleri yükle
+        async function loadSurahsFromAPI() {
+            try {
+                mealContent.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Kur\'an verileri yükleniyor...</div>';
+                
+                // Açık Kuran API'sine istek at
+                const response = await fetch('https://api.acikkuran.com/surahs');
+                const data = await response.json();
+                
+                // API yapısı: { data: [ {id, name, audio: {mp3}, ...}, ... ] }
+                allSurahs = data.data;
+                
+                // Sure listesini oluştur
+                renderSureList();
+                
+                // İlk sureyi yükle
+                if (allSurahs.length > 0) {
+                    await loadSure(0);
+                }
+            } catch (error) {
+                console.error('API yükleme hatası:', error);
+                mealContent.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-triangle"></i> API\'ye bağlanırken hata oluştu. Lütfen sayfayı yenileyin.</div>';
+            }
+        }
+        
+        // Sure listesini oluştur
+        function renderSureList() {
+            sureListElement.innerHTML = '';
+            
+            allSurahs.forEach((surah, index) => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#';
+                a.textContent = `${surah.id.toString().padStart(3, '0')} - ${surah.name}`;
+                
+                a.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    await loadSure(index);
+                    toggleSidebar();
+                });
+                
+                li.appendChild(a);
+                sureListElement.appendChild(li);
+            });
+        }
+        
+        // Sure yükleme fonksiyonu
+        async function loadSure(index) {
+            // Geçerli indeksi güncelle
+            currentSureIndex = index;
+            lastActiveVerse = -1;
+            
+            // Sure bilgilerini al
+            const surah = allSurahs[currentSureIndex];
+            
+            // Sayfa başlıklarını güncelle
+            currentSureName.textContent = `${surah.name} Suresi`;
+            currentSureDetails.textContent = `${surah.verse_count} Ayet • ${surah.id <= 92 ? 'Mekke' : 'Medine'}`;
+            mealStatus.textContent = `${surah.name} Suresi`;
+            
+            // Sure listesindeki aktif öğeyi güncelle
+            updateActiveSureInList();
+            
+            // MP3 linkini API'den al (Türkçe tilavet)
+            audioPlayer.src = surah.audio.mp3;
+            
+            // Meal içeriğini yükle
+            await loadMealContent(surah);
+            
+            // Audio'yu oynat
+            setTimeout(() => {
+                audioPlayer.play().catch(e => {
+                    console.log("Otomatik oynatma engellendi:", e);
+                });
+            }, 500);
+        }
+        
+        // Meal içeriğini yükle
+        async function loadMealContent(surah) {
+            mealContent.innerHTML = `<div class="loading"><i class="fas fa-spinner fa-spin"></i> ${surah.name} Suresi yükleniyor...</div>`;
+            
+            try {
+                // Tek API çağrısıyla sure detayını ve ayetleri al
+                const response = await fetch(`https://api.acikkuran.com/surah/${surah.id}?author=${turkishAuthorId}`);
+                const surahDetail = await response.json();
+                
+                if (surahDetail.data && surahDetail.data.verses) {
+                    currentSurahData = surahDetail.data;
+                    renderMealContent(currentSurahData);
+                } else {
+                    throw new Error("Sure detayı alınamadı.");
+                }
+            } catch (error) {
+                console.error('Sure detayı yükleme hatası:', error);
+                mealContent.innerHTML = `<div class="error-message"><i class="fas fa-exclamation-triangle"></i> ${surah.name} Suresi yüklenirken hata oluştu.</div>`;
+            }
+        }
+        
+        // Meal içeriğini render et
+        function renderMealContent(surahData) {
+            let mealHTML = '';
+            
+            // "zero" nesnesi Besmele için (ilk ayet)
+            if (surahData.zero) {
+                mealHTML += `
+                    <div class="meal-verse active" data-verse="0" id="verse-0">
+                        <div class="verse-header">
+                            <div class="verse-number active">0</div>
+                            <button class="verse-audio" data-verse="0">
+                                <i class="fas fa-play-circle"></i>
+                            </button>
+                        </div>
+                        <div class="arabic-text">${surahData.zero.verse}</div>
+                        <div class="meal-text">${surahData.zero.translation.text}</div>
+                    </div>
+                `;
+            }
+            
+            // Tüm ayetleri döngüye al
+            surahData.verses.forEach((verse, index) => {
+                const verseNum = verse.verse_number;
+                const activeClass = (surahData.zero && index === 0) || (!surahData.zero && index === 0) ? 'active' : '';
+                
+                mealHTML += `
+                    <div class="meal-verse ${activeClass}" data-verse="${verseNum}" id="verse-${verseNum}">
+                        <div class="verse-header">
+                            <div class="verse-number ${activeClass}">${verseNum}</div>
+                            <button class="verse-audio" data-verse="${verseNum}">
+                                <i class="fas fa-play-circle"></i>
+                            </button>
+                        </div>
+                        <div class="arabic-text">${verse.verse}</div>
+                        <div class="meal-text">${verse.translation.text}</div>
+                    </div>
+                `;
+            });
+            
+            mealContent.innerHTML = mealHTML;
+            
+            // Ayet dinleme butonlarına event listener ekle
+            setupVerseAudioButtons();
+            
+            // İlk ayeti görünür yap
+            setTimeout(() => {
+                const firstVerse = document.querySelector('.meal-verse');
+                if (firstVerse) {
+                    scrollToVerse(firstVerse, false);
+                }
+            }, 100);
+        }
+        
+        // Ayet dinleme butonlarını kur
+        function setupVerseAudioButtons() {
+            const verseButtons = document.querySelectorAll('.verse-audio');
+            
+            verseButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const verseNum = parseInt(this.getAttribute('data-verse'));
+                    playVerseAudio(verseNum);
+                });
+            });
+        }
+        
+        // Belirli bir ayetten itibaren ses çal
+        function playVerseAudio(verseNum) {
+            // Mevcut ayetin konumunu hesapla
+            const verses = document.querySelectorAll('.meal-verse');
+            const totalVerses = verses.length;
+            
+            if (totalVerses > 0) {
+                // Ayetin başlangıç zamanını hesapla
+                const duration = audioPlayer.duration;
+                let targetTime;
+                
+                if (verseNum === 0) {
+                    targetTime = 0;
+                } else {
+                    // Daha hassas bir hesaplama için her ayetin yaklaşık süresini kullan
+                    const verseIndex = Array.from(verses).findIndex(v => parseInt(v.dataset.verse) === verseNum);
+                    targetTime = (verseIndex / totalVerses) * duration;
+                }
+                
+                // Audio zamanını ayarla ve oynat
+                audioPlayer.currentTime = targetTime;
+                audioPlayer.play();
+                
+                // İlgili ayeti aktif yap
+                highlightVerse(verseNum, true);
+            }
+        }
+        
+        // Event listener'ları kur
+        function setupEventListeners() {
+            // Audio zaman güncelleme olayı
+            audioPlayer.addEventListener('timeupdate', updateVerseHighlight);
+            
+            // Audio bittiğinde bir sonraki sureye geç
+            audioPlayer.addEventListener('ended', loadNextSure);
+            
+            // Hamburger menü
+            hamburgerMenu.addEventListener('click', toggleSidebar);
+            
+            // Overlay'a tıklayınca menüyü kapat
+            overlay.addEventListener('click', toggleSidebar);
+            
+            // Önceki/Sonraki butonları
+            prevBtn.addEventListener('click', loadPrevSure);
+            nextBtn.addEventListener('click', loadNextSure);
+            
+            // Otomatik kaydırma toggle
+            autoScrollToggle.addEventListener('click', function() {
+                autoScrollEnabled = !autoScrollEnabled;
+                toggleSwitch.classList.toggle('active', autoScrollEnabled);
+                
+                // Kullanıcıya bildirim göster
+                showNotification(autoScrollEnabled ? 
+                    'Otomatik kaydırma açık' : 'Otomatik kaydırma kapalı');
+            });
+            
+            // Audio hata verdiğinde
+            audioPlayer.addEventListener('error', function(e) {
+                console.error("Audio hatası:", e);
+                mealContent.innerHTML = `<div class="error-message"><i class="fas fa-exclamation-triangle"></i> Ses dosyası yüklenirken hata oluştu. Lütfen internet bağlantınızı kontrol edin.</div>`;
+            });
+            
+            // Progress bar güncelleme
+            audioPlayer.addEventListener('timeupdate', function() {
+                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressBar.style.width = progress + '%';
+            });
+            
+            // Meal içeriği scroll edildiğinde
+            mealContent.addEventListener('scroll', function() {
+                // Scroll indicator'ı göster/gizle
+                if (mealContent.scrollTop > 50) {
+                    scrollIndicator.classList.add('visible');
+                } else {
+                    scrollIndicator.classList.remove('visible');
+                }
+            });
+            
+            // Scroll indicator'a tıklandığında en üste git
+            scrollIndicator.addEventListener('click', function() {
+                mealContent.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+        
+        // Ayet vurgulama ve kaydırma
+        function updateVerseHighlight() {
+            const currentTime = audioPlayer.currentTime;
+            const duration = audioPlayer.duration;
+            
+            if (!duration || duration <= 0) return;
+            
+            // Mevcut ayeti hesapla
+            const verses = document.querySelectorAll('.meal-verse');
+            const totalVerses = verses.length;
+            
+            if (totalVerses > 0) {
+                // Sürenin yüzdesine göre ayet indeksini hesapla
+                const progressPercent = currentTime / duration;
+                let currentVerseIndex = Math.min(Math.floor(progressPercent * totalVerses), totalVerses - 1);
+                
+                // Aktif ayeti bul
+                if (currentVerseIndex >= 0 && currentVerseIndex < verses.length) {
+                    const currentVerse = verses[currentVerseIndex];
+                    const verseNum = parseInt(currentVerse.getAttribute('data-verse'));
+                    
+                    // Eğer ayet değiştiyse
+                    if (verseNum !== lastActiveVerse) {
+                        highlightVerse(verseNum, true);
+                        lastActiveVerse = verseNum;
+                    }
+                }
+            }
+        }
+        
+        // Belirli bir ayeti vurgula
+        function highlightVerse(verseNum, scrollToVerse = true) {
+            const verses = document.querySelectorAll('.meal-verse');
+            let foundVerse = null;
+            
+            // Tüm ayetlerin aktifliğini kaldır
+            verses.forEach((verse) => {
+                verse.classList.remove('active', 'new-active');
+                const verseNumber = verse.querySelector('.verse-number');
+                if (verseNumber) {
+                    verseNumber.classList.remove('active');
+                }
+            });
+            
+            // Belirtilen ayeti bul ve aktif yap
+            verses.forEach((verse) => {
+                const verseData = parseInt(verse.getAttribute('data-verse'));
+                
+                if (verseData === verseNum) {
+                    foundVerse = verse;
+                    verse.classList.add('active', 'new-active');
+                    const verseNumber = verse.querySelector('.verse-number');
+                    if (verseNumber) {
+                        verseNumber.classList.add('active');
+                    }
+                    
+                    // Animasyon tamamlandıktan sonra new-active class'ını kaldır
+                    setTimeout(() => {
+                        verse.classList.remove('new-active');
+                    }, 500);
+                }
+            });
+            
+            // Eğer ayet bulunduysa ve otomatik kaydırma açıksa, kaydır
+            if (foundVerse && autoScrollEnabled && scrollToVerse) {
+                scrollToVerse(foundVerse);
+            }
+        }
+        
+        // Belirli bir ayete kaydır
+        function scrollToVerse(verseElement, smooth = true) {
+            const mealContainer = mealContent;
+            const verseTop = verseElement.offsetTop;
+            const containerHeight = mealContainer.clientHeight;
+            const verseHeight = verseElement.offsetHeight;
+            
+            // Ayeti container'ın üst kısmına hizala
+            const scrollTop = verseTop - 20; // 20px margin
+            
+            mealContainer.scrollTo({
+                top: scrollTop,
+                behavior: smooth ? 'smooth' : 'auto'
+            });
+        }
+        
+        // Bildirim göster
+        function showNotification(message) {
+            // Basit bir bildirim oluştur
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background-color: var(--primary-orange);
+                color: white;
+                padding: 10px 20px;
+                border-radius: 5px;
+                z-index: 1001;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                animation: fadeInOut 3s ease;
+            `;
+            
+            // CSS animation tanımla
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0% { opacity: 0; transform: translateY(-20px); }
+                    10% { opacity: 1; transform: translateY(0); }
+                    90% { opacity: 1; transform: translateY(0); }
+                    100% { opacity: 0; transform: translateY(-20px); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(notification);
+            
+            // 3 saniye sonra kaldır
+            setTimeout(() => {
+                notification.remove();
+                style.remove();
+            }, 3000);
+        }
+        
+        // Sure listesindeki aktif öğeyi güncelle
+        function updateActiveSureInList() {
+            const sureLinks = document.querySelectorAll('.sure-list a');
+            sureLinks.forEach((link, index) => {
+                if (index === currentSureIndex) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+        
+        // Hamburger menü aç/kapa
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            // Hamburger ikonunu değiştir
+            const icon = hamburgerMenu.querySelector('i');
+            if (sidebar.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+        
+        // Önceki sureye git
+        async function loadPrevSure() {
+            if (currentSureIndex > 0) {
+                await loadSure(currentSureIndex - 1);
+            } else {
+                // İlk sureden önce son sureye git
+                await loadSure(allSurahs.length - 1);
+            }
+        }
+        
+        // Sonraki sureye git
+        async function loadNextSure() {
+            if (currentSureIndex < allSurahs.length - 1) {
+                await loadSure(currentSureIndex + 1);
+            } else {
+                // Son sureden sonra ilk sureye git
+                await loadSure(0);
+            }
+        }
+        
+        // Klavye kısayollarını kur
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', function(e) {
+                // Sol ok tuşu: önceki sure
+                if (e.key === 'ArrowLeft') {
+                    loadPrevSure();
+                }
+                // Sağ ok tuşu: sonraki sure
+                else if (e.key === 'ArrowRight') {
+                    loadNextSure();
+                }
+                // Space tuşu: oynat/durdur
+                else if (e.key === ' ' && !e.target.matches('input, textarea')) {
+                    e.preventDefault();
+                    if (audioPlayer.paused) {
+                        audioPlayer.play();
+                    } else {
+                        audioPlayer.pause();
+                    }
+                }
+                // M tuşu: menüyü aç/kapa
+                else if (e.key === 'm' || e.key === 'M') {
+                    toggleSidebar();
+                }
+                // A tuşu: otomatik kaydırmayı aç/kapa
+                else if (e.key === 'a' || e.key === 'A') {
+                    autoScrollEnabled = !autoScrollEnabled;
+                    toggleSwitch.classList.toggle('active', autoScrollEnabled);
+                    showNotification(autoScrollEnabled ? 
+                        'Otomatik kaydırma açık' : 'Otomatik kaydırma kapalı');
+                }
+                // ESC tuşu: menüyü kapat
+                else if (e.key === 'Escape') {
+                    if (sidebar.classList.contains('active')) {
+                        toggleSidebar();
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
