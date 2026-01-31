@@ -119,7 +119,16 @@ audio{
 </div>
 
 <main>
-    <audio id="player" controls></audio>
+    <!-- ✅ DEĞİŞTİRİLEN PLAYER (HTML İÇİ – HARİCİ PLAYER AÇMAZ) -->
+    <audio
+        id="player"
+        preload="auto"
+        playsinline
+        webkit-playsinline
+        controls
+        controlsList="nodownload noplaybackrate"
+    ></audio>
+
     <div id="meal"></div>
 </main>
 
@@ -145,6 +154,10 @@ let ayetIndex=0;
 let ayetTimer=null;
 
 const menu=document.getElementById("menu");
+const player=document.getElementById("player");
+const meal=document.getElementById("meal");
+const currentSure=document.getElementById("currentSure");
+
 sureler.forEach((s,i)=>{
     const d=document.createElement("div");
     d.className="sure";
@@ -154,7 +167,7 @@ sureler.forEach((s,i)=>{
 });
 
 function toggleMenu(){
-    menu.style.left = menu.style.left=="0px" ? "-330px" : "0px";
+    menu.style.left = menu.style.left==="0px" ? "-330px" : "0px";
 }
 
 function loadSure(i){
@@ -165,8 +178,11 @@ function loadSure(i){
 
     const no=i+1;
     currentSure.innerText=no+" - "+sureler[i];
-    player.src=baseMp3+no.toString().padStart(3,"0")+".mp3";
-    player.play();
+
+    player.src = baseMp3 + no.toString().padStart(3,"0") + ".mp3";
+    player.load();
+    const p = player.play();
+    if(p){ p.catch(()=>{}); }
 
     loadAyetler(no);
 }
@@ -175,7 +191,9 @@ player.addEventListener("ended",()=>{
     if(currentIndex<sureler.length-1) loadSure(currentIndex+1);
 });
 
-function kelimeSayisi(t){return t.trim().split(/\s+/).length;}
+function kelimeSayisi(t){
+    return t.trim().split(/\s+/).length;
+}
 
 function loadAyetler(no){
     clearTimeout(ayetTimer);
@@ -210,8 +228,7 @@ function scrollAyet(){
     cur.classList.add("active");
     cur.scrollIntoView({behavior:"smooth",block:"center"});
 
-    const kelime=kelimeSayisi(cur.innerText);
-    let sure=(kelime/160)*60*1000;
+    let sure=(kelimeSayisi(cur.innerText)/160)*60*1000;
     if(sure<3000) sure=3000;
     if(sure>10000) sure=10000;
     sure+=1000;
