@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Kur’an-ı Kerim ve Meali</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#050b14;
+    color:#e5e7eb;
+    overflow:hidden;
+}
+header{
+    height:70px;
+    background:linear-gradient(90deg,#0ea5e9,#f97316);
+    display:flex;
+    align-items:center;
+    padding:0 20px;
+}
+.menu-btn{
+    font-size:30px;
+    cursor:pointer;
+    margin-right:15px;
+}
+.header-text{
+    display:flex;
+    flex-direction:column;
+}
+.main-title{
+    font-size:20px;
+    font-weight:bold;
+}
+.sub-title{
+    font-size:14px;
+    opacity:.9;
+}
+#menu{
+    position:fixed;
+    top:0;
+    left:-330px;
+    width:310px;
+    height:100%;
+    background:#020617;
+    overflow-y:auto;
+    transition:.3s;
+    z-index:10;
+}
+#menu h3{
+    padding:15px;
+    margin:0;
+    background:#0ea5e9;
+    color:#000;
+}
+.sure{
+    padding:12px 15px;
+    border-bottom:1px solid #1e293b;
+    cursor:pointer;
+}
+.sure:hover,.sure.active{
+    background:#f97316;
+    color:#000;
+}
+main{
+    padding:15px;
+}
+audio{
+    width:100%;
+    margin-top:10px;
+}
+#meal{
+    margin-top:15px;
+    padding:15px;
+    background:#020617;
+    height:52vh;
+    overflow:hidden;
+    line-height:1.9;
+    border:2px solid #0ea5e9;
+}
+.ayet{
+    padding:14px;
+    margin-bottom:10px;
+    transition:.4s;
+}
+.arapca{
+    font-size:22px;
+    direction:rtl;
+    text-align:right;
+    font-family:"Scheherazade","Amiri",serif;
+    color:#f8fafc;
+}
+.meal{
+    font-size:15px;
+    color:#cbd5f5;
+    margin-top:6px;
+}
+.ayet.active{
+    background:rgba(249,115,22,0.18);
+    box-shadow:0 0 20px rgba(249,115,22,0.9);
+    border-left:4px solid #f97316;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+    <div class="header-text">
+        <div class="main-title">Kur’an-ı Kerim ve Meali</div>
+        <div class="sub-title" id="currentSure">Sure seçiniz</div>
+    </div>
+</header>
+
+<div id="menu">
+    <h3>Sureler</h3>
+</div>
+
+<main>
+    <audio id="player" controls></audio>
+    <div id="meal"></div>
+</main>
+
+<script>
+const baseMp3="http://www.all-quran.com/documents/Abu-Bakr-Al-Shatery/Abu-Bakr-Al-Shatery_files/";
+const sureler=[
+"Fatiha","Bakara","Âl-i İmrân","Nisâ","Mâide","En'âm","A'râf","Enfâl","Tevbe","Yûnus",
+"Hûd","Yûsuf","Ra'd","İbrâhîm","Hicr","Nahl","İsrâ","Kehf","Meryem","Tâhâ",
+"Enbiyâ","Hac","Mü'minûn","Nûr","Furkân","Şuarâ","Neml","Kasas","Ankebût","Rûm",
+"Lokmân","Secde","Ahzâb","Sebe","Fâtır","Yâsîn","Sâffât","Sâd","Zümer","Mü'min",
+"Fussilet","Şûrâ","Zuhruf","Duhân","Câsiye","Ahkâf","Muhammed","Fetih","Hucurât","Kâf",
+"Zâriyât","Tûr","Necm","Kamer","Rahmân","Vâkıa","Hadîd","Mücâdele","Haşr","Mümtehine",
+"Saf","Cuma","Münâfikûn","Teğâbun","Talâk","Tahrîm","Mülk","Kalem","Hâkka","Meâric",
+"Nûh","Cin","Müzzemmil","Müddessir","Kıyâme","İnsan","Mürselât","Nebe","Nâziât","Abese",
+"Tekvîr","İnfitâr","Mutaffifîn","İnşikâk","Bürûc","Târık","A'lâ","Gâşiye","Fecr","Beled",
+"Şems","Leyl","Duhâ","İnşirâh","Tîn","Alak","Kadr","Beyyine","Zilzâl","Âdiyât",
+"Kâria","Tekâsür","Asr","Hümeze","Fil","Kureyş","Mâûn","Kevser","Kâfirûn","Nasr",
+"Leheb","İhlâs","Felak","Nâs"
+];
+
+let currentIndex=-1;
+let ayetIndex=0;
+let ayetTimer=null;
+
+const menu=document.getElementById("menu");
+sureler.forEach((s,i)=>{
+    const d=document.createElement("div");
+    d.className="sure";
+    d.innerText=(i+1).toString().padStart(3,"0")+" - "+s;
+    d.onclick=()=>loadSure(i);
+    menu.appendChild(d);
+});
+
+function toggleMenu(){
+    menu.style.left = menu.style.left=="0px" ? "-330px" : "0px";
+}
+
+function loadSure(i){
+    currentIndex=i;
+    document.querySelectorAll(".sure").forEach(x=>x.classList.remove("active"));
+    menu.children[i+1].classList.add("active");
+    toggleMenu();
+
+    const no=i+1;
+    currentSure.innerText=no+" - "+sureler[i];
+    player.src=baseMp3+no.toString().padStart(3,"0")+".mp3";
+    player.play();
+
+    loadAyetler(no);
+}
+
+player.addEventListener("ended",()=>{
+    if(currentIndex<sureler.length-1) loadSure(currentIndex+1);
+});
+
+function kelimeSayisi(t){return t.trim().split(/\s+/).length;}
+
+function loadAyetler(no){
+    clearTimeout(ayetTimer);
+    ayetIndex=0;
+    meal.innerHTML="";
+
+    Promise.all([
+        fetch("https://api.alquran.cloud/v1/surah/"+no+"/ar").then(r=>r.json()),
+        fetch("https://api.alquran.cloud/v1/surah/"+no+"/tr.diyanet").then(r=>r.json())
+    ]).then(res=>{
+        const ar=res[0].data.ayahs;
+        const tr=res[1].data.ayahs;
+
+        ar.forEach((a,i)=>{
+            const div=document.createElement("div");
+            div.className="ayet";
+            div.innerHTML=
+                `<div class="arapca">${a.text}</div>
+                 <div class="meal">${tr[i].numberInSurah}. ${tr[i].text}</div>`;
+            meal.appendChild(div);
+        });
+        scrollAyet();
+    });
+}
+
+function scrollAyet(){
+    const ayetler=document.querySelectorAll(".ayet");
+    ayetler.forEach(a=>a.classList.remove("active"));
+    if(ayetIndex>=ayetler.length) return;
+
+    const cur=ayetler[ayetIndex];
+    cur.classList.add("active");
+    cur.scrollIntoView({behavior:"smooth",block:"center"});
+
+    const kelime=kelimeSayisi(cur.innerText);
+    let sure=(kelime/160)*60*1000;
+    if(sure<3000) sure=3000;
+    if(sure>10000) sure=10000;
+    sure+=1000;
+
+    ayetIndex++;
+    ayetTimer=setTimeout(scrollAyet,sure);
+}
+</script>
+
+</body>
+</html>
